@@ -42,3 +42,6 @@ post |   |                                             |   |
                              [Happy player]
 
 ~~~~
+
+What is important is that the game is run on the server and that it is sent to the client in a formalised XML structure. This will make writing clients easy as poop, and keeps everything (kind of) tidy.
+
