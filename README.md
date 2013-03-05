@@ -26,6 +26,7 @@ Design
 		+ Cons:
 			+ Painful set up for noobs
 			+ Or we need to host it
+
 	+ HTML5/JS + PHP
 		+ Pros:
 			+ cf: Node.js

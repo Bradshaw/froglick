@@ -22,8 +22,9 @@ WHEN IN MISSION:
 Players can inspect their character and information visible to them.
 Information includes:
 + Map:
-	+ Visible
-	+ Friend's visible
+	+ Granted info
+	+ Line of sight
+	+ Friend's line of sight
 	+ Hacked info
 	+ Historically known
 + Characters:
@@ -74,8 +75,8 @@ Kevin spends 200 credits on repairing the armor, then accepts mission "Rescue ou
 This mission is more difficult, so Kevin invites William and Hannes.
 William's character, Rufus, is a soldier. Hannes' character, Lupus, has good detection capabilities.
 
-During the mission, Rufus manages to extract the scientists, Lupus finds secret documents and Rufus dies under fire.
+During the mission, Rufus manages to extract the scientists, Lupus finds secret documents and Dufus dies under fire.
 
-Rufus gains reputation and contacts, Lupus also gains reputation and unlocks a story arc with his documents, and since Rufus died, Kevin now has to create a new character.
+Rufus gains reputation and contacts, Lupus also gains reputation and unlocks a story arc with his documents, and since Dufus died, Kevin now has to create a new character.
 
 All is not lost though, having unlocked the Milliwave scanner module, Kevin now has this option permenantly, and decides to create a new character with this module.
