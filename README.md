@@ -4,18 +4,20 @@ Hannes, William and Kevin's epic Froglick game!
 Hannes, William and Kevin are awesome game makers in Montpellier France, and they're participating in 7-day Rogue Like [7drl.org][1].
 
 Design
-------
+======
 
-+ Multiplayer?
++ Multiplayer
+  ===========
 	+ Competitive?
-		> No, doesn't feel like a rogue-like
+		+ No,doesn't feel like a rogue-like
 
 	+ Coop?
-		> Yes, it's awesome!
-		> It's fun to play with friends
-		> Works well in Cyber-Dogs
+		+ Yes, it's awesome!
+		+ It's fun to play with friends
+		+ Works well in Cyber-Dogs
 
 + Tech
+  ====
 	+ HTML5/JS + Node.js
 		+ Pros:
 			+ Runs in a browser
@@ -41,6 +43,7 @@ Design
 			+ TCP is the spawn of the devil
 
 + Game design
+  ===========
 	+ I will detail this in another segment...
 
 
