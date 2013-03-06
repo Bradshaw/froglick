@@ -1,7 +1,8 @@
 Hannes, William and Kevin's epic Froglick game!
 ===============================================
 
-Hannes, William and Kevin are awesome game makers in Montpellier France, and they're participating in 7-day Rogue Like [7drl.org][1].
+Hannes, William and Kevin are awesome game makers in Montpellier France, 
+and they're participating in 7-day Rogue Like [7drl.org][1].
 
 Design
 ======
@@ -9,7 +10,7 @@ Design
 + Multiplayer
   ===========
 	+ Competitive?
-		+ No,doesn't feel like a rogue-like
+		+ No, doesn't feel like a rogue-like
 
 	+ Coop?
 		+ Yes, it's awesome!
