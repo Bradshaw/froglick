@@ -63,6 +63,48 @@ What is important is that the game is run on the server and that it is sent to
 the client in a formalised XML structure. This will make writing clients easy 
 as poop, and keeps everything (kind of) tidy.
 
+
+Example communcication
+----------------------
+This is an example of a first-time player's interactions with the server:
+
++ Client: GET *index*
++ Server: send *login* page
++ Client: GET *create account* page
++ Server: send *create account* page
++ Client: POST user name, password, email
++ Server: send session cookie, *character creation* page
++ Client: POST character
++ Server: send *campaign* page
++ Client: GET *shop*
++ Server: send *shop* page
++ Client: GET *silenced pistol* 
++ Server: send *silenced pistol* page
++ Client: POST buy silenced pistol
++ Server: send *shop* page
++ ...
++ Client: GET *loadout*
++ Server: send *loadout* page
++ Client: POST equip silenced pistol, equip stealth suit
++ Server: send *loadout* page
++ Client: GET *missions*
++ Server: send *missions* page
++ Client: GET *mission 1*
++ Server: send *lobby* page
++ Client: POST invite my friend John
++ Server: send *lobby* page
++ Client: AJAX refresh
++ ...
++ Client: POST start mission
++ Server: send *mission* page
++ ...
++ Client: get *debriefing*
++ Server: send *debriefing* page
++ Client: get *campaign*
++ Server: send *campaign* page
++ ...
+
+
 HTML5 Web Storage?
 ------------------
 Using the HTML 5 *localStorage* object we can store this XML data client-side:
