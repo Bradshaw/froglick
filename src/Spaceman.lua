@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
+
 --[[----------------------------------------------------------------------------
 IMPORTS
 --]]----------------------------------------------------------------------------
@@ -23,19 +24,22 @@ local Animal, Animal_mt = require("Animal")
 
 
 --[[----------------------------------------------------------------------------
-SPACEMAN METATABLE (PROTOTYPE)
+METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local Spaceman_mt = setmetatable({},{ __index = Animal_mt })
+local Spaceman_mt = {}
+setmetatable(Spaceman_mt, { __index = Animal_mt })
+
 
 --[[----------------------------------------------------------------------------
-ANIMAL CLASS METHODS
+CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function Spaceman_mt.update(self, dt)
   --! override me
 end
   
+
 --[[----------------------------------------------------------------------------
 ANIMAL CLASS
 --]]----------------------------------------------------------------------------
@@ -44,7 +48,7 @@ local Spaceman = {}
 
 
 --[[----------------------------------------------------------------------------
-ANIMAL CLASS (STATIC) FUNCTIONS
+CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 function Spaceman.new()

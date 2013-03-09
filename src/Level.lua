@@ -17,6 +17,14 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
 
 --[[----------------------------------------------------------------------------
+IMPORTS
+--]]----------------------------------------------------------------------------
+
+require("useful")
+
+
+
+--[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
@@ -27,10 +35,9 @@ local Level_mt = {}
 CLASS METHODS
 --]]----------------------------------------------------------------------------
 
-function Level_mt(self, dt)
-  --! override me
+function Level_mt.update(self, dt)
+  useful.doFor(self.game_objects, function(object) object:update(dt) end)
 end
-
   
 --[[----------------------------------------------------------------------------
 CLASS
@@ -53,13 +60,12 @@ function Level.get()
   else
     self = {}
     setmetatable(self, {__index = Level_mt })
+    
+    self.game_objects = {}
   end
   
   return self
 end
-
-function Level.clear()
-  Level.instance 
 
 
 --[[----------------------------------------------------------------------------
