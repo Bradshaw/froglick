@@ -1,6 +1,6 @@
 useful = { }
 
-function useful.multimap(objects, functions)
+function useful.map(objects, ...)
   local oi = 1
   -- for each object...
   while oi <= #objects do
@@ -10,19 +10,12 @@ function useful.multimap(objects, functions)
       table.remove(objects, oi)
     else
       -- for each function...
-      while fi <= #functions do
-        local fun = functions[fi]
+      for fi, fun in ipairs(arg) do
         -- map function to object
-        fun(object, oi, objects)
-        -- next function
-        fi = fi + 1
-      end
+        fun(obj, oi, objects)
+      end -- fi, fun in ipairs(arg)
       -- next object
       oi = oi + 1
     end -- if obj.purge
   end -- while oi <= #objects
 end -- useful.map(objects, functions)
-
-function useful.map(object, _function)
-  return useful.multimap(object, { _function })
-end

@@ -21,6 +21,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 require("useful")
+require("Spaceman")
 
 
 
@@ -54,7 +55,8 @@ end
 CLASS
 --]]----------------------------------------------------------------------------
 
-local Level = {}
+-- global-scoped
+Level = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -62,13 +64,6 @@ CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 --! this is a 'singleton': we should only have one in memory at a time
-function Level.get()
-  if not Level.instance
-    Level.instance Level.__new()
-  end
-  return Level.instance
-end
-
 function Level.__new()
   -- set up metatable
   local self = {}
@@ -76,14 +71,26 @@ function Level.__new()
   
   -- create game object holder
   self.game_objects = {}
+  --! FIXME player should only be created once per playthrough
+  table.insert(self.game_objects, Spaceman.new(10, 10))
   
   -- create tile holder
+  
+  -- export new instance
+  return self
 end
 
+function Level.get()
+  -- create new Level if one does not already exist
+  if not Level.instance then
+    Level.instance = Level.__new()
+  end
+  return Level.instance
+end
 
 
 --[[----------------------------------------------------------------------------
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Level, Level_mt
+return Level_mt

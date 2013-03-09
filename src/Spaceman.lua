@@ -20,7 +20,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local Animal, Animal_mt = require("Animal")
+local Animal_mt = require("Animal")
 
 
 --[[----------------------------------------------------------------------------
@@ -44,7 +44,8 @@ end
 ANIMAL CLASS
 --]]----------------------------------------------------------------------------
 
-local Spaceman = {}
+-- global-scoped
+Spaceman = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -63,4 +64,4 @@ end
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Spaceman, Spaceman_mt
+return Spaceman_mt

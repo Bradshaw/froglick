@@ -19,7 +19,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local GameObject, GameObject_mt = require("GameObject")
+local GameObject_mt = require("GameObject")
 
 
 --[[----------------------------------------------------------------------------
@@ -37,7 +37,8 @@ Animal_mt.speed = 1
 CLASS
 --]]----------------------------------------------------------------------------
 
-local Animal = {}
+-- global-scoped
+Animal = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -56,4 +57,4 @@ end
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Animal, Animal_mt
+return Animal_mt
