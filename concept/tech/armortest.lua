@@ -36,7 +36,7 @@ function test(armbon, fleshbon)
 		io.write("Damage: "..(dmg*10).."\t\t");
 		for arm=1,10 do
 			local a, h = hit(dmg*10,arm*10,100,    armbon,   fleshbon  )
-			io.write(tri(h>0,h,0).."/"..tri(a>0,a,0).."\t")
+			io.write(tri(h>0,h,"dead").."/"..tri(a>0,a,0).."\t")
 		end
 		print()
 	end
