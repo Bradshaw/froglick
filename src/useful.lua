@@ -1,5 +1,6 @@
 useful = { }
 
+-- map a set of functions to a set of objects
 function useful.map(objects, ...)
   local oi = 1
   -- for each object...

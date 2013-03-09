@@ -24,20 +24,44 @@ local vector = require("vector")
 
 
 --[[----------------------------------------------------------------------------
+PRIVATE SUBROUTINES
+--]]----------------------------------------------------------------------------
+
+local next_id = 0
+local generate_id = function()
+  local result = next_id
+  next_id = next_id + 1
+  return result
+end
+
+
+--[[----------------------------------------------------------------------------
+CLASS
+--]]----------------------------------------------------------------------------
+
+-- global-scoped
+GameObject = {}
+
+
+--[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local GameObject_mt = {}
 
-GameObject_mt.w = 0;
-GameObject_mt.h = 0;
+-- identifier generator
+GameObject_mt.next_id = 0
+
+-- default object width and height
+GameObject_mt.w = 0
+GameObject_mt.h = 0
 
 --[[----------------------------------------------------------------------------
-CLASS METHODS
+METHODS
 --]]----------------------------------------------------------------------------
 
 function GameObject_mt.__tostring(self)
-  return "GameObject"
+  return "GameObject(" .. self.id .. ")"
 end
 
 function GameObject_mt.update(self, dt)
@@ -56,18 +80,18 @@ function GameObject_mt.draw(self)
     self.view:draw(self)
   end
 end
-  
---[[----------------------------------------------------------------------------
-CLASS
---]]----------------------------------------------------------------------------
-
--- global-scoped
-GameObject = {}
-
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
+
+-- private subroutine
+local next_id = 0
+local generate_id = function()
+  local result = next_id
+  next_id = next_id + 1
+  return result
+end
 
 function GameObject.new(x, y)
   -- attach metatable
@@ -75,6 +99,7 @@ function GameObject.new(x, y)
   setmetatable(self, {__index = GameObject_mt })
   
   -- create attributes
+  self.id = generate_id()
   self.pos = vector(x, y)
   
   return self
