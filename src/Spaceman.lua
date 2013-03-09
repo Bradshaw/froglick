@@ -15,21 +15,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
-
 --[[----------------------------------------------------------------------------
-ANIMAL METATABLE (PROTOTYPE)
+IMPORTS
 --]]----------------------------------------------------------------------------
 
-local Animal_mt = {}
+local Animal, Animal_mt = require("Animal")
 
-Animal_mt.hp = 100
-Animal_mt.speed = 1
+
+--[[----------------------------------------------------------------------------
+SPACEMAN METATABLE (PROTOTYPE)
+--]]----------------------------------------------------------------------------
+
+local Spaceman_mt = setmetatable({},{ __index = Animal_mt })
 
 --[[----------------------------------------------------------------------------
 ANIMAL CLASS METHODS
 --]]----------------------------------------------------------------------------
 
-function Animal_mt.update(self, dt)
+function Spaceman_mt.update(self, dt)
   --! override me
 end
   
@@ -37,16 +40,16 @@ end
 ANIMAL CLASS
 --]]----------------------------------------------------------------------------
 
-local Animal = {}
+local Spaceman = {}
 
 
 --[[----------------------------------------------------------------------------
 ANIMAL CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Animal.new()
+function Spaceman.new()
   local self = {}
-  setmetatable(self, {__index = Animal_mt })
+  setmetatable(self, {__index = Spaceman_mt })
   
   return self
 end
@@ -56,4 +59,4 @@ end
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Animal, Animal_mt
+return Spaceman, Spaceman_mt
