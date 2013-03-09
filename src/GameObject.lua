@@ -33,8 +33,17 @@ function GameObject_mt.update(self, dt)
   --! override me
 end
 
+function GameObject_mt.control(self)
+  if self.controller then
+    self.controller:control(self)
+  end
+end
+
+
 function GameObject_mt.draw(self)
-  --! override me
+  if self.view then
+    self.view:draw(self)
+  end
 end
   
 --[[----------------------------------------------------------------------------

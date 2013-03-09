@@ -36,11 +36,18 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function Level_mt.update(self, dt)
-  useful.cleanFor(self.game_objects, function(object) object:update(dt) end)
+  useful.map(self.game_objects, 
+      function(object)
+        object:update(dt)
+        object:control()
+      end)
 end
   
 function Level_mt.draw(self)
-  for i, object in self.game_objects do object:draw() end
+  useful.map(self.game_objects, 
+      function(object) 
+        object:draw() 
+      end)
 end
 
 --[[----------------------------------------------------------------------------
@@ -54,22 +61,25 @@ local Level = {}
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
---! this is a 'singleton': we can only have one in memory at a time
+--! this is a 'singleton': we should only have one in memory at a time
 function Level.get()
-  
-  local self
-  
-  if Level.instance then
-    self = Level.instance
-  else
-    self = {}
-    setmetatable(self, {__index = Level_mt })
-    
-    self.game_objects = {}
+  if not Level.instance
+    Level.instance Level.__new()
   end
-  
-  return self
+  return Level.instance
 end
+
+function Level.__new()
+  -- set up metatable
+  local self = {}
+  setmetatable(self, {__index = Level_mt })
+  
+  -- create game object holder
+  self.game_objects = {}
+  
+  -- create tile holder
+end
+
 
 
 --[[----------------------------------------------------------------------------
