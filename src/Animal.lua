@@ -15,27 +15,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
+--[[----------------------------------------------------------------------------
+IMPORTS
+--]]----------------------------------------------------------------------------
+
+local GameObject, GameObject_mt = require("GameObject")
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local Animal_mt = {}
+setmetatable(Animal_mt, { __index = GameObject_mt })
 
 Animal_mt.hp = 100
 Animal_mt.speed = 1
 
---[[----------------------------------------------------------------------------
-CLASS METHODS
---]]----------------------------------------------------------------------------
-
-function Animal_mt.update(self, dt)
-  --! override me
-end
-
-function Animal_mt.draw(self)
-  --! override me
-end
   
 --[[----------------------------------------------------------------------------
 CLASS
@@ -48,8 +44,8 @@ local Animal = {}
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Animal.new()
-  local self = {}
+function Animal.new(x, y)
+  local self = GameObject.new(x, y)
   setmetatable(self, {__index = Animal_mt })
   
   return self

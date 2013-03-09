@@ -17,43 +17,44 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
 
 --[[----------------------------------------------------------------------------
-IMPORTS
---]]----------------------------------------------------------------------------
-
-local Animal, Animal_mt = require("Animal")
-
-
---[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local Spaceman_mt = {}
-setmetatable(Spaceman_mt, { __index = Animal_mt })
+local GameObject_mt = {}
 
+GameObject_mt.w = 0;
+GameObject_mt.h = 0;
 
 --[[----------------------------------------------------------------------------
 CLASS METHODS
 --]]----------------------------------------------------------------------------
 
-function Spaceman_mt.update(self, dt)
+function GameObject_mt.update(self, dt)
+  --! override me
+end
+
+function GameObject_mt.draw(self)
   --! override me
 end
   
-
 --[[----------------------------------------------------------------------------
-ANIMAL CLASS
+CLASS
 --]]----------------------------------------------------------------------------
 
-local Spaceman = {}
+local GameObject = {}
 
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Spaceman.new(x, y)
-  local self = Animal.new(x, y)
-  setmetatable(self, {__index = Spaceman_mt })
+function GameObject.new(x, y)
+  -- attach metatable
+  local self = {}
+  setmetatable(self, {__index = GameObject_mt })
+  
+  -- create attributes
+  self.pos = vector(x, y)
   
   return self
 end
@@ -63,4 +64,4 @@ end
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Spaceman, Spaceman_mt
+return GameObject, GameObject_mt
