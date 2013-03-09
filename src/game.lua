@@ -2,7 +2,6 @@ local state = gstate.new()
 
 
 function state:init()
-
 end
 
 
@@ -49,17 +48,15 @@ end
 
 
 function state:keyreleased(key, uni)
-	
 end
 
 
 function state:update(dt)
-
+  
 end
 
 
 function state:draw()
-
 end
 
 return state
