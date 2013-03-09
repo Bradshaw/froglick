@@ -22,6 +22,7 @@ IMPORTS
 
 local Animal_mt = require("Animal")
 require("DebugView")
+require("KeyboardController")
 
 
 --[[----------------------------------------------------------------------------
@@ -38,9 +39,9 @@ METATABLE (PROTOTYPE)
 local Spaceman_mt = {}
 setmetatable(Spaceman_mt, { __index = Animal_mt })
 
+-- default attributes
 Spaceman_mt.w = 10
 Spaceman_mt.h = 20
-
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -50,9 +51,14 @@ function Spaceman_mt.__tostring(self)
   return "Spaceman(" .. self.id .. ")"
 end
 
-function Spaceman_mt.update(self, dt)
+function Spaceman_mt.update(self, direction)
   --! override me
 end
+
+function Spaceman_mt.tryMove(self, direction)
+  self.pos = self.pos + direction
+end
+
   
 
 --[[----------------------------------------------------------------------------
@@ -65,7 +71,8 @@ function Spaceman.new(x, y)
   setmetatable(self, {__index = Spaceman_mt })
   
   -- attributes
-  self.view = DebugView
+  self.view = DebugView --! FIXME
+  self.controller = KeyboardController
   
   return self
 end
