@@ -1,6 +1,6 @@
 useful = {}
 
-function useful.cleanFlor(tab, fn)
+function useful.cleanFor(tab, fn)
 	local i = 1
 	while i<= #tab do
 		local v = tab[i]
