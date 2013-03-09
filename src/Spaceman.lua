@@ -21,6 +21,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local Animal_mt = require("Animal")
+require("DebugView")
 
 
 --[[----------------------------------------------------------------------------
@@ -36,6 +37,9 @@ METATABLE (PROTOTYPE)
 
 local Spaceman_mt = {}
 setmetatable(Spaceman_mt, { __index = Animal_mt })
+
+Spaceman_mt.w = 10
+Spaceman_mt.h = 20
 
 
 --[[----------------------------------------------------------------------------
@@ -56,15 +60,19 @@ CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 function Spaceman.new(x, y)
+  -- metatable
   local self = Animal.new(x, y)
   setmetatable(self, {__index = Spaceman_mt })
+  
+  -- attributes
+  self.view = DebugView
   
   return self
 end
 
 
 --[[----------------------------------------------------------------------------
-EXPORT THE CLASS
+EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------
 
 return Spaceman_mt

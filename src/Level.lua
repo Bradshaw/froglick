@@ -73,7 +73,6 @@ function Level.__new()
   self.game_objects = {}
   --! FIXME player should only be created once per playthrough
   table.insert(self.game_objects, Spaceman.new(10, 10))
-  print(self.game_objects[1])
   
   -- create tile holder
   

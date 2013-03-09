@@ -49,9 +49,6 @@ METATABLE (PROTOTYPE)
 
 local GameObject_mt = {}
 
--- identifier generator
-GameObject_mt.next_id = 0
-
 -- default object width and height
 GameObject_mt.w = 0
 GameObject_mt.h = 0
@@ -107,7 +104,7 @@ end
 
 
 --[[----------------------------------------------------------------------------
-EXPORT THE CLASS
+EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------
 
 return GameObject_mt
