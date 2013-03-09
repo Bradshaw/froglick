@@ -32,6 +32,10 @@ CLASS METHODS
 function Animal_mt.update(self, dt)
   --! override me
 end
+
+function Animal_mt.draw(self)
+  --! override me
+end
   
 --[[----------------------------------------------------------------------------
 CLASS

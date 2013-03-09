@@ -36,9 +36,13 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function Level_mt.update(self, dt)
-  useful.doFor(self.game_objects, function(object) object:update(dt) end)
+  useful.cleanFor(self.game_objects, function(object) object:update(dt) end)
 end
   
+function Level_mt.draw(self)
+  for i, object in self.game_objects do object:draw() end
+end
+
 --[[----------------------------------------------------------------------------
 CLASS
 --]]----------------------------------------------------------------------------
