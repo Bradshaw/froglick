@@ -1,7 +1,4 @@
 function love.load(arg)
-
-	require("example")
-
 	gstate = require "gamestate"
 	game = require("game")
 	gstate.switch(game)
