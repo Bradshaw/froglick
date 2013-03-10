@@ -65,6 +65,30 @@ function prototype.draw(self)
   end)
 end
 
+function prototype.validGridPos(self, grid_pos)
+  return grid_pos.x >= 1 
+      and grid_pos.y >= 1
+      and grid_pos.x < self.size.x
+      and grid_pos.y < self.size.y
+end
+
+function prototype.gridToTile(self, grid_pos
+end
+  
+function prototype.pointCollision(x, y)
+end
+
+function prototype.collision(go, x, y)
+  x = x or go.pos.x
+  y = y or go.pos.y
+  
+  local left = , 
+        right = , 
+        top = ,
+        bottom =
+  
+end
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
@@ -80,7 +104,7 @@ function TileGrid.new(n_cols, n_rows)
   for row = 1, self.size.y do
     self.tiles[row] = {}
     for col = 1, self.size.x do
-      self.tiles[row][col] = Tile.new(row, col, useful.tri(row+col<10 and row ~= 1 and col ~= 1, 0, 5))
+      self.tiles[row][col] = Tile.new(row, col, useful.tri(row+col<20 and row ~= 1 and col ~= 1, 0, 5))
     end
   end
   
