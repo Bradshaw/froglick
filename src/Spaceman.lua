@@ -53,7 +53,9 @@ function prototype.__tostring(self)
 end
 
 function prototype.tryMove(self, direction)
-  self.pos:plusequals(direction)
+  direction:divequals(10)
+  direction.y = direction.y * 5
+  self.inertia:plusequals(direction)
 end
 
   
@@ -72,7 +74,7 @@ function Spaceman.new(x, y)
   self.controller = KeyboardController
   self.collides_walls = true
   self.gravity = 10
-  
+  self.friction = 1
   
   self.bink = false
   

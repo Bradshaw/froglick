@@ -74,7 +74,8 @@ function prototype.update(self, dt)
   
   -- check if we're on the ground
   if self.collides_walls then
-    self.airborne = (not Level.get().tilegrid:pixelCollision(self.pos))
+    self.airborne = 
+      (not Level.get().tilegrid:pixelCollision(self.pos.x, self.pos.y+1))
     if not self.airborne and self.inertia.y > 0 then
       self.inertia.y = 0
     end 

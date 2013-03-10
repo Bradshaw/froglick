@@ -103,28 +103,47 @@ return new(a.x/b.x, a.y/b.y)
 end
 
 function vector:plusequals(v)
-assert(isvector(v), "plusequals: wrong argument types (<vector> expected)")
-self.x = self.x + v.x
-self.y = self.y + v.y
-return self
+  if isvector(v) then
+    self.x, self.y = self.x + v.x, self.y + v.y
+  elseif y then
+    self.x, self.y = self.x + v, self.y + y
+  else
+    self.x, self.y = self.x + v, self.y + v
+  return self
+  end
 end
 
 function vector:minequals(v)
-assert(isvector(v), "minequals: wrong argument types (<vector> expected)")
-self.x, self.y = self.x - v.x, self.y - v.y
-return self
+  if isvector(v) then
+    self.x, self.y = self.x - v.x, self.y - v.y
+  elseif y then
+    self.x, self.y = self.x - v, self.y - y
+  else
+    self.x, self.y = self.x - v, self.y - v
+  return self
+  end
 end
 
 function vector:mulequals(v)
-assert(isvector(v), "mulequals: wrong argument types (<vector> expected)")
-self.x, self.y = self.x * v.x, self.y * v.y
-return self
+  if isvector(v) then
+    self.x, self.y = self.x * v.x, self.y * v.y
+  elseif y then
+    self.x, self.y = self.x * v, self.y * y
+  else
+    self.x, self.y = self.x * v, self.y * v
+  end
+  return self
 end
 
-function vector:divequals(v)
-assert(isvector(v), "divequals: wrong argument types (<vector> expected)")
-self.x, self.y = self.x / v.x, self.y / v.y
-return self
+function vector:divequals(v, y)
+  if isvector(v) then
+    self.x, self.y = self.x / v.x, self.y / v.y
+  elseif y then
+    self.x, self.y = self.x / v, self.y / y
+  else
+    self.x, self.y = self.x / v, self.y / v
+  end
+  return self
 end
 
 

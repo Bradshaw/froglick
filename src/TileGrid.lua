@@ -84,9 +84,9 @@ function prototype.gridToTile(self, x, y)
   end
 end
 
-function prototype.pixelToTile(self, pos)
-  return self:gridToTile(math.floor(pos.x / Tile.SIZE.x),
-                         math.floor(pos.y / Tile.SIZE.y))
+function prototype.pixelToTile(self, x, y)
+  return self:gridToTile(math.floor(x / Tile.SIZE.x),
+                         math.floor(y / Tile.SIZE.y))
 end
   
 
@@ -106,13 +106,13 @@ pixel_collision[Tile.BOTTOM_RIGHT] = function(off_x, off_y)
 end
 pixel_collision[Tile.FULL] = function(off_x, off_y) return true end
 
-function prototype.pixelCollision(self, pixel_pos)
-  local tile = self:pixelToTile(pixel_pos)
+function prototype.pixelCollision(self, x, y)
+  local tile = self:pixelToTile(x, y)
   if not tile then
     return true
   else
-    local off_x = pixel_pos.x - useful.floor(pixel_pos.x, Tile.SIZE.x)
-    local off_y = pixel_pos.y - useful.floor(pixel_pos.y, Tile.SIZE.y)
+    local off_x, off_y 
+      = x - useful.floor(x, Tile.SIZE.x), y - useful.floor(y, Tile.SIZE.y)
     return pixel_collision[tile.wall](off_x / Tile.SIZE.x, off_y / Tile.SIZE.y)
   end
 end
