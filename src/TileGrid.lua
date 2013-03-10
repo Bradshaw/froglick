@@ -85,7 +85,30 @@ function prototype.pixelToTile(self, pixel_pos)
   return self:gridToTile(grid_pos)
 end
   
-function prototype.pointCollision(x, y)
+
+local pixel_collision = {}
+pixel_collision[Tile.EMPTY] = function(offset) return false end
+pixel_collision[Tile.TOP_LEFT] = function(offset)
+  return (offset.x + offset.y > 1)
+end
+pixel_collision[Tile.TOP_RIGHT] = function(offset)
+  return (offset.x - offset.y > 1)
+end
+pixel_collision[Tile.BOTTOM_LEFT] = function(offset)
+  return (offset.x - offset.y < 1)
+end
+pixel_collision[Tile.BOTTOM_RIGHT] = function(offset)
+  return (offset.x + offset.y < 1)
+end
+pixel_collision[Tile.FULL] = function(offset) return true end
+
+function prototype.pixelCollision(pixel_pos)
+  local tile = pixelToTile(pixel_pos)
+  if not tile then
+    return true
+  else
+    return pixel_collision[tile.wall]((pixel_pos - tile.__pos) / Tile.SIZE)
+  end
 end
 
 --[[function prototype.collision(go, x, y)

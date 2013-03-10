@@ -34,6 +34,7 @@ Tile = {}
 Tile.SIZE = vector(32, 32)
 
 -- enum values
+Tile.EMPTY = 0
 Tile.TOP_LEFT = 1
 Tile.TOP_RIGHT = 2
 Tile.BOTTOM_LEFT = 3
