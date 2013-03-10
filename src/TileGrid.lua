@@ -20,9 +20,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local Animal_mt = require("Animal")
-require("DebugView")
-require("KeyboardController")
+local vector = require("vector")
+require("Tile")
 
 
 --[[----------------------------------------------------------------------------
@@ -30,56 +29,56 @@ CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-Spaceman = {}
+TileGrid = {}
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local prototype = {}
-setmetatable(prototype, { __index = Animal_mt })
 
--- default attributes
-prototype.w = 10
-prototype.h = 20
+-- default object width and height
+prototype.w = 0
+prototype.h = 0
 
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
 
-function prototype.__tostring(self)
-  return "Spaceman(" .. self.id .. ")"
+function prototype.map(self, ...)
+  for row = 1, self.size.y do
+    for col = 1, self.size.x do
+      for fi, func in ipairs(arg) do
+        func(self.tiles[row][col], row, col)
+      end
+    end
+  end
 end
 
-function prototype.update(self, direction)
-  --! override me
+function prototype.draw(self)
+  self:map(function(tile) 
+    tile:draw() 
+  end)
 end
-
-function prototype.tryMove(self, direction)
-  self.pos = self.pos + direction
-end
-
-  
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Spaceman.new(x, y)
-  -- metatable
-  local self = Animal.new(x, y)
+function TileGrid.new(n_cols, n_rows)
+  -- attach metatable
+  local self = {}
   setmetatable(self, {__index = prototype })
   
-  -- attributes
-  self.view = DebugView --! FIXME
-  self.controller = KeyboardController
+  -- create attributes
+  self.size = vector(n_cols, n_rows)
+  self.tiles = {}
+  for row = 1, self.size.y do
+    self.tiles[row] = {}
+    for col = 1, self.size.x do
+      self.tiles[row][col] = Tile.new(row, col, math.random(6)-1)
+    end
+  end
   
-  return self
 end
-
-
---[[----------------------------------------------------------------------------
-EXPORT THE METATABLE
---]]----------------------------------------------------------------------------
-
-return prototype

@@ -1,15 +1,22 @@
-useful = {}
+useful = { }
 
-function useful.cleanFor(tab, fn)
-	local i = 1
-	while i<= #tab do
-		local v = tab[i]
-		if v.purge then
-			table.remove(tab, i)
-		else
-			fn(v, i, tab)
-			i = i + 1
-		end
-	end
-end
-
+-- map a set of functions to a set of objects
+function useful.map(objects, ...)
+  local oi = 1
+  -- for each object...
+  while oi <= #objects do
+    local obj = objects[oi]
+    -- check if the object needs to be removed
+    if obj.purge then
+      table.remove(objects, oi)
+    else
+      -- for each function...
+      for fi, func in ipairs(arg) do
+        -- map function to object
+        func(obj, oi, objects)
+      end -- for fi, func in ipairs(arg)
+      -- next object
+      oi = oi + 1
+    end -- if obj.purge
+  end -- while oi <= #objects
+end -- useful.map(objects, functions)

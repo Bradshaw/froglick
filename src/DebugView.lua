@@ -15,77 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
---[[----------------------------------------------------------------------------
-IMPORTS
---]]----------------------------------------------------------------------------
-
-local GameObject_mt = require("Level")
-
 
 --[[----------------------------------------------------------------------------
-'GAME' GAMESTATE - state during which the game is played
+CLASS
 --]]----------------------------------------------------------------------------
 
-local state = gstate.new()
+-- global-scoped
+DebugView = {}
 
 
-function state:init()
+--[[----------------------------------------------------------------------------
+CLASS (STATIC) FUNCTIONS
+--]]----------------------------------------------------------------------------
+
+function DebugView.draw(self, go) -- GameObject
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y, go.w, go.h)
+  love.graphics.printf(go:__tostring(), go.pos.x, go.pos.y + go.h, 
+                        go.w, "center")
 end
-
-
-function state:enter()
-
-end
-
-
-function state:focus()
-
-end
-
-
-function state:mousepressed(x, y, btn)
-
-end
-
-
-function state:mousereleased(x, y, btn)
-	
-end
-
-
-function state:joystickpressed(joystick, button)
-	
-end
-
-
-function state:joystickreleased(joystick, button)
-	
-end
-
-
-function state:quit()
-	
-end
-
-
-function state:keypressed(key, uni)
-	if key=="escape" then
-		love.event.push("quit")
-	end
-end
-
-
-function state:keyreleased(key, uni)
-end
-
-
-function state:update(dt)
-  Level.get():update(dt)
-end
-
-
-function state:draw()
-  Level.get():draw()
-end
-
-return state

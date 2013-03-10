@@ -19,58 +19,56 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local GameObject_mt = require("GameObject")
+local vector = require("vector")
 
- 
+
 --[[----------------------------------------------------------------------------
 CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-Animal = {}
+KeyboardController = {}
 
-
---[[----------------------------------------------------------------------------
-METATABLE (PROTOTYPE)
---]]----------------------------------------------------------------------------
-
-local prototype = {}
-setmetatable(prototype, { __index = GameObject_mt })
-
--- default attributes
-prototype.hp = 100
-prototype.speed = 1
-
---[[----------------------------------------------------------------------------
-METHODS
---]]----------------------------------------------------------------------------
-
-function prototype.__tostring(self)
-  return "Animal(" .. self.id .. ")"
-end
-
-function prototype.tryMove(self, direction)
-  --! override me!
-end
-
-function prototype.tryAttack(self, direction)
-  --! override me!
-end
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Animal.new(x, y)
-  local self = GameObject.new(x, y)
-  setmetatable(self, {__index = prototype })
+function KeyboardController.control(self, animal) -- Animal
+
+  local direction
   
-  return self
+  --! movement
+  direction = vector(0, 0)
+  if love.keyboard.isDown("up") then
+    direction.y = direction.y - 1
+  end
+  if love.keyboard.isDown("down") then
+    direction.y = direction.y + 1
+  end
+  if love.keyboard.isDown("left") then
+    direction.x = direction.x - 1
+  end
+  if love.keyboard.isDown("right") then
+    direction.x = direction.x + 1
+  end
+  animal:tryMove(direction:normalize_inplace())
+  
+  --! combat
+  direction.x = 0 direction.y = 0
+  if love.keyboard.isDown("z", "w") then -- QWERTY and AZERTY compatible
+    direction.y = direction.y - 1
+  end
+  if love.keyboard.isDown("s") then
+    direction.y = direction.y + 1
+  end
+  if love.keyboard.isDown("q", "a") then -- QWERTY and AZERTY compatible
+  direction.x = direction.x - 1
+  end
+  if love.keyboard.isDown("d") then
+    direction.x = direction.x + 1
+  end
+  animal:tryAttack(direction:normalize_inplace())
+  
+  
 end
-
-
---[[----------------------------------------------------------------------------
-EXPORT THE METATABLE
---]]----------------------------------------------------------------------------
-
-return prototype

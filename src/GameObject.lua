@@ -20,10 +20,27 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-require("useful")
-require("Spaceman")
-require("TileGrid")
+local vector = require("vector")
 
+
+--[[----------------------------------------------------------------------------
+PRIVATE SUBROUTINES
+--]]----------------------------------------------------------------------------
+
+local next_id = 0
+local generate_id = function()
+  local result = next_id
+  next_id = next_id + 1
+  return result
+end
+
+
+--[[----------------------------------------------------------------------------
+CLASS
+--]]----------------------------------------------------------------------------
+
+-- global-scoped
+GameObject = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -32,87 +49,65 @@ METATABLE (PROTOTYPE)
 
 local prototype = {}
 
+-- default object width and height
+prototype.w = 0
+prototype.h = 0
+
+-- default layer of the object (for Z-ordering)
+prototype.layer = 0
 
 --[[----------------------------------------------------------------------------
-CLASS METHODS
+METHODS
 --]]----------------------------------------------------------------------------
+
+function prototype.__tostring(self)
+  return "GameObject(" .. self.id .. ")"
+end
 
 function prototype.update(self, dt)
-  local previous = nil
-  useful.map(self.game_objects, 
-      
-      -- update and control game objects
-      function(object)
-        object:update(dt)
-        object:control()
-      end,
-          
-      -- sort objects by layer
-      function(object, object_index)
-        if(previous && previous.layer < object.layer) then
-          self.game_objects[object_index] = previous
-          self.game_objects[object_index - 1] = object
-        end 
-        previous = object
-      end
-          )
+  --! override me
 end
-  
+
+function prototype.control(self)
+  if self.controller then
+    self.controller:control(self)
+  end
+end
+
+
 function prototype.draw(self)
-  
-  -- draw the background
-  -- TODO
-  
-  -- draw the terrain
-  
-  -- draw game objects (characters, particles, etc)
-  useful.map(self.game_objects, 
-      function(object) 
-        object:draw() 
-      end)
+  if self.view then
+    self.view:draw(self)
+  end
 end
-
---[[----------------------------------------------------------------------------
-CLASS
---]]----------------------------------------------------------------------------
-
--- global-scoped
-Level = {}
-
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
---! this is a 'singleton': we should only have one in memory at a time
-function Level.__new()
-  -- set up metatable
+-- private subroutine
+local next_id = 0
+local generate_id = function()
+  local result = next_id
+  next_id = next_id + 1
+  return result
+end
+
+function GameObject.new(x, y)
+  -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
-  -- create game object holder
-  self.game_objects = {}
-  --! FIXME player should only be created once per playthrough
-  table.insert(self.game_objects, Spaceman.new(10, 10))
+  -- create attributes
+  self.id = generate_id()
+  self.pos = vector(x, y)
   
-  -- create tile holder
-  self.tilegrid = TileGrid.new(20, 20)
-  
-  -- export new instance
   return self
-end
-
-function Level.get()
-  -- create new Level if one does not already exist
-  if not Level.instance then
-    Level.instance = Level.__new()
-  end
-  return Level.instance
 end
 
 
 --[[----------------------------------------------------------------------------
-EXPORT THE CLASS
+EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------
 
 return prototype
