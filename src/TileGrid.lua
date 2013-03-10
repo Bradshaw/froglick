@@ -109,7 +109,6 @@ function prototype.pixelCollision(self, pixel_pos)
     return true
   else
     local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor)
-    
     local offset = pixel_pos - grid_pos:permul(Tile.SIZE) 
     return pixel_collision[tile.wall](offset)
   end
