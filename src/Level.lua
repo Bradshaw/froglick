@@ -23,6 +23,7 @@ IMPORTS
 require("useful")
 require("Spaceman")
 require("TileGrid")
+LevelGen = require("LevelGen")
 Camera = require("Camera")
 
 
@@ -119,7 +120,8 @@ function Level.__new()
   table.insert(self.game_objects, Spaceman[1])
   
   -- create tile holder
-  self.tilegrid = TileGrid.new(20, 20) -- 20 by 20 tiles
+  self.tilegrid = LevelGen.new(20,20)
+  --self.tilegrid = TileGrid.new(20, 20) -- 20 by 20 tiles
 
   -- create a camera to point at interest
   self.camera = Camera.new(Spaceman[1].pos.x, Spaceman[1].pos.y)
