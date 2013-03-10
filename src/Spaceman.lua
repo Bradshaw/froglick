@@ -75,6 +75,10 @@ function Spaceman.new(x, y)
   self.view = DebugView --! FIXME
   self.controller = KeyboardController
   
+  
+  
+  self.bink = false
+  
   -- store player
   table.insert(Spaceman, self) -- there can only be one
   

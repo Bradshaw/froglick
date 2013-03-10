@@ -81,7 +81,8 @@ function prototype.gridToTile(self, grid_pos)
 end
 
 function prototype.pixelToTile(self, pixel_pos)
-  local grid_pos = pixel_pos:permul(Tile.SIZE) + vector(1, 1) -- lua start at 1
+  local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor) 
+                      + vector(1, 1) -- lua start at 1
   return self:gridToTile(grid_pos)
 end
   
@@ -102,12 +103,15 @@ pixel_collision[Tile.BOTTOM_RIGHT] = function(offset)
 end
 pixel_collision[Tile.FULL] = function(offset) return true end
 
-function prototype.pixelCollision(pixel_pos)
-  local tile = pixelToTile(pixel_pos)
+function prototype.pixelCollision(self, pixel_pos)
+  local tile = self:pixelToTile(pixel_pos)
   if not tile then
     return true
   else
-    return pixel_collision[tile.wall]((pixel_pos - tile.__pos) / Tile.SIZE)
+    local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor)
+    
+    local offset = pixel_pos - grid_pos:permul(Tile.SIZE) 
+    return pixel_collision[tile.wall](offset)
   end
 end
 

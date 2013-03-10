@@ -97,6 +97,11 @@ assert(isvector(a) and isvector(b), "permul: wrong argument types (<vector> expe
 return new(a.x*b.x, a.y*b.y)
 end
 
+function vector.perdiv(a,b)
+assert(isvector(a) and isvector(b), "perdiv: wrong argument types (<vector> expected)")
+return new(a.x/b.x, a.y/b.y)
+end
+
 function vector:len2()
 return self.x * self.x + self.y * self.y
 end
@@ -158,6 +163,11 @@ assert(isvector(v), "cross: wrong argument types (<vector> expected)")
 return self.x * v.y - self.y * v.x
 end
 
+function vector:map(f)
+assert(type(f) == "function", ":map: wrong argument types (<function> expected)")
+self.x, self.y = f(self.x), f(self.y)
+return self
+end
 
 -- the module
 return setmetatable({new = new, isvector = isvector},

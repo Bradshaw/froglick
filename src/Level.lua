@@ -57,7 +57,15 @@ function prototype.update(self, dt)
         previous = object
       end
           )
+  
+  -- camera follows player 1      
   self.camera:pointAt(Spaceman[1])
+  
+  if self.tilegrid:pixelCollision(Spaceman[1].pos) then
+    Spaceman[1].bink = true
+  else
+    Spaceman[1].bink = false
+  end
 end
   
 function prototype.draw(self)
