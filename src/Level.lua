@@ -23,6 +23,7 @@ IMPORTS
 require("useful")
 require("Spaceman")
 require("TileGrid")
+Camera = require("Camera")
 
 
 
@@ -56,21 +57,30 @@ function prototype.update(self, dt)
         previous = object
       end
           )
+  self.camera:pointAt(Joe)
 end
   
 function prototype.draw(self)
   
-  -- draw the background
-  -- TODO
-  
-  -- draw the terrain
-  self.tilegrid:draw()
-  
-  -- draw game objects (characters, particles, etc)
-  useful.map(self.game_objects, 
-      function(object) 
-        object:draw() 
-      end)
+  love.graphics.push()
+    --Indent to show graphics stack level
+    local camx, camy = self.camera:getBounds()
+    love.graphics.translate(-camx, -camy)
+
+    -- draw the background
+    -- TOD0
+    
+    -- draw the terrain
+    self.tilegrid:draw()
+    
+    -- draw game objects (characters, particles, etc)
+    useful.map(self.game_objects, 
+        function(object) 
+          object:draw() 
+        end)
+
+    --unindent to show graphics stack level
+  love.graphics.pop()
 end
 
 --[[----------------------------------------------------------------------------
@@ -98,6 +108,9 @@ function Level.__new()
   
   -- create tile holder
   self.tilegrid = TileGrid.new(20, 20)
+
+  -- create a camera to point at interest
+  self.camera = Camera.new(Joe.pos.x, Joe.pos.y)
   
   -- export new instance
   return self

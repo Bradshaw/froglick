@@ -31,6 +31,7 @@ CLASS
 
 -- global-scoped
 Spaceman = {}
+Joe = Animal.new(10, 10) -- Joe is the one and only Spaceman
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -74,6 +75,7 @@ function Spaceman.new(x, y)
   self.view = DebugView --! FIXME
   self.controller = KeyboardController
   
+  Joe = self
   return self
 end
 

@@ -47,31 +47,31 @@ PRIVATE SUBROUTINES
 
 local draw_wall = {}
 draw_wall[Tile.TOP_LEFT] = function(t)
-  love.graphics.triangle("line", t.__pos.x, t.__pos.y, 
+  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
                                 t.__pos.x + Tile.SIZE.x, t.__pos.y, 
                                 t.__pos.x, t.__pos.y + Tile.SIZE.y )
 end
 
 draw_wall[Tile.TOP_RIGHT] = function(t)
-  love.graphics.triangle("line", t.__pos.x, t.__pos.y, 
+  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
                               t.__pos.x + Tile.SIZE.x, t.__pos.y, 
                               t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
 end
 
 draw_wall[Tile.BOTTOM_LEFT] = function(t)
-  love.graphics.triangle("line", t.__pos.x, t.__pos.y, 
+  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
                               t.__pos.x, t.__pos.y + Tile.SIZE.y, 
                               t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
 end
 
 draw_wall[Tile.BOTTOM_RIGHT] = function(t)
-  love.graphics.triangle("line", t.__pos.x + Tile.SIZE.x, t.__pos.y, 
+  love.graphics.triangle("fill", t.__pos.x + Tile.SIZE.x, t.__pos.y, 
                               t.__pos.x, t.__pos.y + Tile.SIZE.y, 
                               t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
 end
 
 draw_wall[Tile.FULL] = function(t)
-  love.graphics.rectangle("line", t.__pos.x, t.__pos.y, 
+  love.graphics.rectangle("fill", t.__pos.x, t.__pos.y, 
                                   Tile.SIZE.x, Tile.SIZE.y)
 end
 
