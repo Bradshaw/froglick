@@ -21,7 +21,6 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local vector = require("vector")
-require("Tile")
 
 
 --[[----------------------------------------------------------------------------
@@ -96,14 +95,14 @@ CLASS (NAMESPACE) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 -- constructor
-function Tile.new(grid_pos, wall)
+function Tile.new(row, col, wall)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  self.__grid_pos = grid_pos:clone()
-  self.__pos = grid_pos:permul(Tile.SIZE) -- element-wise multiplication
+  self.__grid_pos = vector(row, col)
+  self.__pos = self.__grid_pos:permul(Tile.SIZE) -- element-wise multiplication
   self.wall = wall
   
 end

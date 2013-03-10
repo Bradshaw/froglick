@@ -47,7 +47,6 @@ METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.map(self, ...)
-  local row, col
   for row = 1, self.size.y do
     for col = 1, self.size.x do
       for fi, func in ipairs(arg) do
@@ -67,18 +66,18 @@ end
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function TileGrid.new(size)
+function TileGrid.new(n_cols, n_rows)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  local row, col
+  self.size = vector(n_cols, n_rows)
   self.tiles = {}
   for row = 1, self.size.y do
     self.tiles[row] = {}
     for col = 1, self.size.x do
-      self.tiles[row][col] = 
+      self.tiles[row][col] = Tile.new(row, col, math.random(6)-1)
     end
   end
   

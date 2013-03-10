@@ -22,6 +22,7 @@ IMPORTS
 
 require("useful")
 require("Spaceman")
+require("TileGrid")
 
 
 
@@ -75,6 +76,7 @@ function Level.__new()
   table.insert(self.game_objects, Spaceman.new(10, 10))
   
   -- create tile holder
+  self.tilegrid = TileGrid.new(20, 20)
   
   -- export new instance
   return self
