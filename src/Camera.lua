@@ -77,6 +77,24 @@ end
 
 
 --[[
+Returns the tiles inside the bounds
+
+]]
+function Camera_mt.getTileBounds(self)
+	local x1, y1, x2, y2 = self:getBounds()
+	return math.floor(x1/Tile.SIZE.x), math.floor(y1/Tile.SIZE.y), math.ceil(x2/Tile.SIZE.x), math.ceil(y2/Tile.SIZE.y)
+end
+
+function Camera_mt.doForTiles(self, fn, ...)
+	local x1, y1, x2, y2 = self:getTileBounds()
+	for i=x1,x2 do
+		for j=y1,y2 do
+			fn(i, j, ...)
+		end
+	end
+end
+
+--[[
 Utilisation:
 if maCamera:check( obj:getX(), obj:getY() ) then
 	obj:draw()

@@ -60,9 +60,32 @@ function prototype.map(self, ...)
 end
 
 function prototype.draw(self)
+  Level.get().camera:doForTiles(
+    function(i,j,TG)
+      TG:get(i,j):draw()
+    end,
+    self
+    )
+  --[[]
   self:map(function(tile) 
     tile:draw() 
   end)
+  --]]
+end
+
+function prototype.get(self, row, col)
+  -- If row, col is inside
+  if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
+    return self.tiles[row][col]  -- Return the tile
+  else
+    return Tile.new(row, col, Tile.FULL) -- Return a new FULL tile (outside map is rock)
+  end
+end
+
+function prototype.set(self, col, row, wall)
+  if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
+    self.tiles[row][col]:set(wall)
+  end
 end
 
 --[[----------------------------------------------------------------------------
@@ -80,7 +103,7 @@ function TileGrid.new(n_cols, n_rows)
   for row = 1, self.size.y do
     self.tiles[row] = {}
     for col = 1, self.size.x do
-      self.tiles[row][col] = Tile.new(row, col, useful.tri(row+col<10 and row ~= 1 and col ~= 1, 0, 5))
+      self.tiles[row][col] = Tile.new(row, col, Tile.EMPTY)
     end
   end
   

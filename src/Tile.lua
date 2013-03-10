@@ -34,6 +34,7 @@ Tile = {}
 Tile.SIZE = vector(32, 32)
 
 -- enum values
+Tile.EMPTY = 0
 Tile.TOP_LEFT = 1
 Tile.TOP_RIGHT = 2
 Tile.BOTTOM_LEFT = 3
@@ -87,6 +88,10 @@ function prototype.draw(self)
   if self.wall and self.wall > 0 then
     draw_wall[self.wall](self)
   end
+end
+
+function prototype.set(self, wall)
+  self.wall = wall
 end
 
 
