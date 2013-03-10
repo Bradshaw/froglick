@@ -47,32 +47,32 @@ PRIVATE SUBROUTINES
 --]]----------------------------------------------------------------------------
 
 local draw_wall = {}
-draw_wall[Tile.TOP_LEFT] = function(t)
-  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
-                                t.__pos.x + Tile.SIZE.x, t.__pos.y, 
-                                t.__pos.x, t.__pos.y + Tile.SIZE.y )
+draw_wall[Tile.TOP_LEFT] = function(t,x,y)
+  love.graphics.triangle("fill", x, y, 
+                                x + Tile.SIZE.x, y, 
+                                x, y + Tile.SIZE.y )
 end
 
-draw_wall[Tile.TOP_RIGHT] = function(t)
-  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
-                              t.__pos.x + Tile.SIZE.x, t.__pos.y, 
-                              t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
+draw_wall[Tile.TOP_RIGHT] = function(t,x,y)
+  love.graphics.triangle("fill", x, y, 
+                              x + Tile.SIZE.x, y, 
+                              x + Tile.SIZE.x, y + Tile.SIZE.y)
 end
 
-draw_wall[Tile.BOTTOM_LEFT] = function(t)
-  love.graphics.triangle("fill", t.__pos.x, t.__pos.y, 
-                              t.__pos.x, t.__pos.y + Tile.SIZE.y, 
-                              t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
+draw_wall[Tile.BOTTOM_LEFT] = function(t,x,y)
+  love.graphics.triangle("fill", x, y, 
+                              x, y + Tile.SIZE.y, 
+                              x + Tile.SIZE.x, y + Tile.SIZE.y)
 end
 
-draw_wall[Tile.BOTTOM_RIGHT] = function(t)
-  love.graphics.triangle("fill", t.__pos.x + Tile.SIZE.x, t.__pos.y, 
-                              t.__pos.x, t.__pos.y + Tile.SIZE.y, 
-                              t.__pos.x + Tile.SIZE.x, t.__pos.y + Tile.SIZE.y)
+draw_wall[Tile.BOTTOM_RIGHT] = function(t,x,y)
+  love.graphics.triangle("fill", x + Tile.SIZE.x, y, 
+                              x, y + Tile.SIZE.y, 
+                              x + Tile.SIZE.x, y + Tile.SIZE.y)
 end
 
-draw_wall[Tile.FULL] = function(t)
-  love.graphics.rectangle("fill", t.__pos.x, t.__pos.y, 
+draw_wall[Tile.FULL] = function(t,x,y)
+  love.graphics.rectangle("fill", x, y, 
                                   Tile.SIZE.x, Tile.SIZE.y)
 end
 
@@ -84,9 +84,9 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 
 -- methods
-function prototype.draw(self)
+function prototype.draw(self,x,y)
   if self.wall and self.wall > 0 then
-    draw_wall[self.wall](self)
+    draw_wall[self.wall](self,x,y)
   end
 end
 
@@ -100,20 +100,22 @@ CLASS (NAMESPACE) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 -- constructor
-function Tile.new(row, col, wall)
+function Tile.new(wall)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  self.__grid_pos = vector(row, col)
-  self.__pos = self.__grid_pos:permul(Tile.SIZE) 
-                              - Tile.SIZE -- arrays start at 1!
+  --self.__grid_pos = vector(row, col)
+  --self.__pos = self.__grid_pos:permul(Tile.SIZE) 
+  --                            - Tile.SIZE -- arrays start at 1!
   self.wall = wall
   
   -- return the instance
   return self
 end
+
+Tile.DEFAULT = Tile.new(Tile.FULL)
 
 
 --[[----------------------------------------------------------------------------

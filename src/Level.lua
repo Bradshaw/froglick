@@ -107,7 +107,7 @@ function Level.__new()
   
   -- create the player character if one doesn't exist
   if not Spaceman[1] then
-    Spaceman.new(10, 10)
+    Spaceman.new(100, 100)
   end
   table.insert(self.game_objects, Spaceman[1])
   

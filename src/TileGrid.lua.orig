@@ -62,7 +62,7 @@ end
 function prototype.draw(self)
   Level.get().camera:doForTiles(
     function(i,j,TG)
-      TG:gridToTile(i,j):draw(i*Tile.SIZE.x,j*Tile.SIZE.y)
+      TG:get(i,j):draw()
     end,
     self
     )
@@ -73,26 +73,41 @@ function prototype.draw(self)
   --]]
 end
 
-function prototype.gridToTile(self, row, col)
+function prototype.get(self, row, col)
   -- If row, col is inside
   if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
     return self.tiles[row][col]  -- Return the tile
   else
-    return Tile.DEFAULT -- Return a new FULL tile (outside map is rock)
+    return Tile.new(row, col, Tile.FULL) -- Return a new FULL tile (outside map is rock)
   end
 end
 
-function prototype.pixelToTile(self, x, y)
-  return self:gridToTile(math.floor(x/Tile.SIZE.x),math.floor(y/Tile.SIZE.y))
-end
-
-function prototype.setTile(self, col, row, wall)
+function prototype.set(self, col, row, wall)
   if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
     self.tiles[row][col]:set(wall)
   end
 end
 
- 
+function prototype.validGridPos(self, grid_pos)
+  return grid_pos.x >= 1 
+      and grid_pos.y >= 1
+      and grid_pos.x <= self.size.x
+      and grid_pos.y <= self.size.y 
+end
+
+function prototype.gridToTile(self, grid_pos)
+  if self:validGridPos(grid_pos) then
+    return self.tiles[grid_pos.y][grid_pos.x]
+  else
+    return nil
+  end
+end
+
+function prototype.pixelToTile(self, pixel_pos)
+  local grid_pos = pixel_pos:permul(Tile.SIZE) + vector(1, 1) -- lua start at 1
+  return self:gridToTile(grid_pos)
+end
+  
 function prototype.pointCollision(x, y)
 end
 
@@ -122,7 +137,11 @@ function TileGrid.new(n_cols, n_rows)
   for row = 1, self.size.y do
     self.tiles[row] = {}
     for col = 1, self.size.x do
-      self.tiles[row][col] = Tile.new(Tile.EMPTY)
+<<<<<<< HEAD
+      self.tiles[row][col] = Tile.new(row, col, Tile.EMPTY)
+=======
+      self.tiles[row][col] = Tile.new(row, col, useful.tri(row+col<20 and row ~= 1 and col ~= 1, 0, 5))
+>>>>>>> 3048450fd613ec0e6c7d6fbb03d2efefa927d471
     end
   end
   
