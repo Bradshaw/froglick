@@ -53,6 +53,12 @@ local prototype = {}
 prototype.w = 0
 prototype.h = 0
 
+-- default physical properties
+prototype.collides_walls = false
+prototype.airborne = false
+prototype.gravity = 0
+prototype.friction = 0
+
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
 
@@ -65,7 +71,34 @@ function prototype.__tostring(self)
 end
 
 function prototype.update(self, dt)
-  --! override me
+  
+  -- check if we're on the ground
+  if self.collides_walls then
+    self.airborne = (not Level.get().tilegrid:pixelCollision(self.pos))
+    if not self.airborne and self.inertia.y > 0 then
+      self.inertia.y = 0
+    end 
+  end
+  
+  -- apply gravity
+  if self.airborne or not self.collides_walls then
+    self.inertia.y = self.inertia.y + self.gravity*dt
+  end
+  
+  -- apply friction
+  if self.friction then
+    self.inertia.x = useful.absminus(self.inertia.x, self.friction*dt)
+    self.inertia.y = useful.absminus(self.inertia.y, self.friction*dt)
+  end
+  
+  --print(self, self.inertia, self.pos)
+  
+  -- move the object
+  if self.inertia.x ~= 0 or self.inertia.y ~= 0 then
+    self.pos:plusequals(self.inertia)
+  end
+  
+  --! extend me
 end
 
 function prototype.control(self)
@@ -101,6 +134,7 @@ function GameObject.new(x, y)
   -- create attributes
   self.id = generate_id()
   self.pos = vector(x, y)
+  self.inertia = vector(0, 0)
   
   return self
 end

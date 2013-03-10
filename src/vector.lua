@@ -102,6 +102,32 @@ assert(isvector(a) and isvector(b), "perdiv: wrong argument types (<vector> expe
 return new(a.x/b.x, a.y/b.y)
 end
 
+function vector:plusequals(v)
+assert(isvector(v), "plusequals: wrong argument types (<vector> expected)")
+self.x = self.x + v.x
+self.y = self.y + v.y
+return self
+end
+
+function vector:minequals(v)
+assert(isvector(v), "minequals: wrong argument types (<vector> expected)")
+self.x, self.y = self.x - v.x, self.y - v.y
+return self
+end
+
+function vector:mulequals(v)
+assert(isvector(v), "mulequals: wrong argument types (<vector> expected)")
+self.x, self.y = self.x * v.x, self.y * v.y
+return self
+end
+
+function vector:divequals(v)
+assert(isvector(v), "divequals: wrong argument types (<vector> expected)")
+self.x, self.y = self.x / v.x, self.y / v.y
+return self
+end
+
+
 function vector:len2()
 return self.x * self.x + self.y * self.y
 end

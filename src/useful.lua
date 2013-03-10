@@ -45,6 +45,15 @@ function useful.tri(cond, a, b)
   end
 end
 
+-- reduce the absolute value of something
+function useful.absminus(v, minus)
+  if v > 0 then
+    return math.max(0, v - minus)
+  else
+    return math.min(0, v + minus)
+  end
+end
+
 -- function missing from math
 function useful.round(x, n) 
   if n then

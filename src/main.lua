@@ -37,7 +37,9 @@ function keyreleased(key, uni)
 	gstate.keyreleased(key)
 end
 
+local MAX_DT = 1/30
 function love.update(dt)
+  dt = math.min(MAX_DT, dt)
 	gstate.update(dt)
 end
 
