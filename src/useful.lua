@@ -44,3 +44,8 @@ function useful.tri(cond, a, b)
     return b
   end
 end
+
+-- round to nearest multiple of 
+function useful.nearest(x, n)
+  return math.round(x / n) * n
+end

@@ -62,7 +62,7 @@ end
 function prototype.draw(self)
   Level.get().camera:doForTiles(
     function(i,j,TG)
-      TG:gridToTile(i,j):draw(i*Tile.SIZE.x,j*Tile.SIZE.y)
+      TG:gridToTile(vector(i,j)):draw(i*Tile.SIZE.x,j*Tile.SIZE.y)
     end,
     self
     )
@@ -73,27 +73,54 @@ function prototype.draw(self)
   --]]
 end
 
-function prototype.gridToTile(self, row, col)
-  -- If row, col is inside
-  if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
-    return self.tiles[row][col]  -- Return the tile
+function prototype.validGridPos(self, grid_pos)
+  return grid_pos.x >= 1 
+      and grid_pos.y >= 1
+      and grid_pos.x <= self.size.x
+      and grid_pos.y <= self.size.y 
+end
+
+function prototype.gridToTile(self, grid_pos)
+  if self:validGridPos(grid_pos) then
+    return self.tiles[grid_pos.y][grid_pos.x]
   else
-    return Tile.DEFAULT -- Return a new FULL tile (outside map is rock)
+    return Tile.DEFAULT
   end
 end
 
-function prototype.pixelToTile(self, x, y)
-  return self:gridToTile(math.floor(x/Tile.SIZE.x),math.floor(y/Tile.SIZE.y))
+function prototype.pixelToTile(self, pixel_pos)
+  local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor) 
+                      + vector(1, 1) -- lua start at 1
+  return self:gridToTile(grid_pos)
 end
+  
 
-function prototype.setTile(self, col, row, wall)
-  if col>0 and col<self.size.x+1 and row>0 and row<self.size.y+1 then
-    self.tiles[row][col]:set(wall)
+local pixel_collision = {}
+pixel_collision[Tile.EMPTY] = function(offset) return false end
+pixel_collision[Tile.TOP_LEFT] = function(offset)
+  return (offset.x + offset.y > 1)
+end
+pixel_collision[Tile.TOP_RIGHT] = function(offset)
+  return (offset.x - offset.y > 1)
+end
+pixel_collision[Tile.BOTTOM_LEFT] = function(offset)
+  return (offset.x - offset.y < 1)
+end
+pixel_collision[Tile.BOTTOM_RIGHT] = function(offset)
+  return (offset.x + offset.y < 1)
+end
+pixel_collision[Tile.FULL] = function(offset) return true end
+
+function prototype.pixelCollision(self, pixel_pos)
+  local tile = self:pixelToTile(pixel_pos)
+  if not tile then
+    return true
+  else
+    local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor)
+    
+    local offset = pixel_pos - grid_pos:permul(Tile.SIZE) 
+    return pixel_collision[tile.wall](offset)
   end
-end
-
- 
-function prototype.pointCollision(x, y)
 end
 
 --[[function prototype.collision(go, x, y)
