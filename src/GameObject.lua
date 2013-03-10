@@ -53,6 +53,9 @@ local prototype = {}
 prototype.w = 0
 prototype.h = 0
 
+-- default layer of the object (for Z-ordering)
+prototype.layer = 0
+
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------

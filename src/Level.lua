@@ -38,14 +38,34 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.update(self, dt)
+  local previous = nil
   useful.map(self.game_objects, 
+      
+      -- update and control game objects
       function(object)
         object:update(dt)
         object:control()
-      end)
+      end,
+          
+      -- sort objects by layer
+      function(object, object_index)
+        if(previous && previous.layer < object.layer) then
+          self.game_objects[object_index] = previous
+          self.game_objects[object_index - 1] = object
+        end 
+        previous = object
+      end
+          )
 end
   
 function prototype.draw(self)
+  
+  -- draw the background
+  -- TODO
+  
+  -- draw the terrain
+  
+  -- draw game objects (characters, particles, etc)
   useful.map(self.game_objects, 
       function(object) 
         object:draw() 
