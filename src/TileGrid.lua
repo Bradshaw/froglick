@@ -48,11 +48,11 @@ METHODS
 
 function prototype.map(self, ...)
   args = useful.packArgs(...)
-  for row = 1, self.size.y do
-    for col = 1, self.size.x do
+  for x = 1, self.size.x do
+    for y = 1, self.size.y do
       for fi, func in ipairs(args) do
         if type(func)=="function" then -- self is an argument, but not a function
-          func(self.tiles[row][col], row, col)
+          func(self.tiles[x][y], x, y)
         end
       end
     end
@@ -61,48 +61,48 @@ end
 
 function prototype.draw(self)
   Level.get().camera:doForTiles(
-    function(row, col, TG)
-      TG:gridToTile(row, col) : draw(row*Tile.SIZE.x, col*Tile.SIZE.y) -- FIXME rows are y
+    function(x, y, tilegrid)
+      tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
     end,
     self
     )
 end
 
-function prototype.validGridPos(self, row, col)
-  return row >= 1 
-      and col >= 1
-      and row <= self.size.y 
-      and col <= self.size.x
+function prototype.validGridPos(self, x, y)
+  return x >= 1 
+      and y >= 1
+      and x <= self.size.x 
+      and y <= self.size.y
       
 end
 
-function prototype.gridToTile(self, row, col)
-  if self:validGridPos(row, col) then
-    return self.tiles[row][col]
+function prototype.gridToTile(self, x, y)
+  if self:validGridPos(x, y) then
+    return self.tiles[x][y]
   else
     return Tile.DEFAULT
   end
 end
 
 function prototype.pixelToTile(self, pos)
-  return self:gridToTile(math.floor(pos.y / Tile.SIZE.y) + 1,
-                         math.floor(pos.x / Tile.SIZE.x) + 1)
+  return self:gridToTile(math.floor(pos.x / Tile.SIZE.x),
+                         math.floor(pos.y / Tile.SIZE.y))
 end
   
 
 local pixel_collision = {}
 pixel_collision[Tile.EMPTY] = function(off_x, off_y) return false end
 pixel_collision[Tile.TOP_LEFT] = function(off_x, off_y)
-  return (off_x + off_y > 1)
+  return (off_x + off_y < 1)
 end
 pixel_collision[Tile.TOP_RIGHT] = function(off_x, off_y)
-  return (off_x - off_y > 1)
+  return (off_x - off_y > 0)
 end
 pixel_collision[Tile.BOTTOM_LEFT] = function(off_x, off_y)
-  return (off_x - off_y < 1)
+  return (off_x - off_y < 0)
 end
 pixel_collision[Tile.BOTTOM_RIGHT] = function(off_x, off_y)
-  return (off_x + off_y < 1)
+  return (off_x + off_y > 1)
 end
 pixel_collision[Tile.FULL] = function(off_x, off_y) return true end
 
@@ -113,7 +113,7 @@ function prototype.pixelCollision(self, pixel_pos)
   else
     local off_x = pixel_pos.x - useful.floor(pixel_pos.x, Tile.SIZE.x)
     local off_y = pixel_pos.y - useful.floor(pixel_pos.y, Tile.SIZE.y)
-    return pixel_collision[tile.wall](off_x, off_y)
+    return pixel_collision[tile.wall](off_x / Tile.SIZE.x, off_y / Tile.SIZE.y)
   end
 end
 
@@ -134,18 +134,18 @@ end
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function TileGrid.new(n_cols, n_rows)
+function TileGrid.new(xsize, ysize)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  self.size = vector(n_cols, n_rows)
+  self.size = vector(xsize, ysize)
   self.tiles = {}
-  for row = 1, self.size.y do
-    self.tiles[row] = {}
-    for col = 1, self.size.x do
-      self.tiles[row][col] = Tile.new(Tile.EMPTY)
+  for x = 1, self.size.x do
+    self.tiles[x] = {}
+    for y = 1, self.size.y do
+      self.tiles[x][y] = Tile.new(Tile.EMPTY)
     end
   end
   
