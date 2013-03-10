@@ -45,7 +45,38 @@ function useful.tri(cond, a, b)
   end
 end
 
--- round to nearest multiple of 
-function useful.nearest(x, n)
-  return math.round(x / n) * n
+-- function missing from math
+function useful.round(x, n) 
+  if n then
+    -- round to nearest n
+    return useful.round(x / n) * n
+  else
+    -- round to nearest integer
+    local floor = math.floor(x)
+    if (x - floor) > 0.5 then
+      return floor
+    else
+      return math.ceil(x)
+    end
+  end
+end
+
+function useful.floor(x, n)
+  if n then
+    -- floor to nearest n
+    return math.floor(x / n) * n
+  else
+    -- floor to nearest integer
+    return math.floor(x)
+  end
+end
+
+function useful.ceil(x, n)
+  if n then
+    -- ceil to nearest n
+    return math.ceil(x / n) * n
+  else
+    -- ceil to nearest integer
+    return math.ceil(x)
+  end
 end

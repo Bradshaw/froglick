@@ -61,77 +61,74 @@ end
 
 function prototype.draw(self)
   Level.get().camera:doForTiles(
-    function(i,j,TG)
-      TG:gridToTile(vector(i,j)):draw(i*Tile.SIZE.x,j*Tile.SIZE.y)
+    function(row, col, TG)
+      TG:gridToTile(row, col) : draw(row*Tile.SIZE.x, col*Tile.SIZE.y) -- FIXME rows are y
     end,
     self
     )
-  --[[]
-  self:map(function(tile) 
-    tile:draw() 
-  end)
-  --]]
 end
 
-function prototype.validGridPos(self, grid_pos)
-  return grid_pos.x >= 1 
-      and grid_pos.y >= 1
-      and grid_pos.x <= self.size.x
-      and grid_pos.y <= self.size.y 
+function prototype.validGridPos(self, row, col)
+  return row >= 1 
+      and col >= 1
+      and row <= self.size.y 
+      and col <= self.size.x
+      
 end
 
-function prototype.gridToTile(self, grid_pos)
-  if self:validGridPos(grid_pos) then
-    return self.tiles[grid_pos.y][grid_pos.x]
+function prototype.gridToTile(self, row, col)
+  if self:validGridPos(row, col) then
+    return self.tiles[row][col]
   else
     return Tile.DEFAULT
   end
 end
 
-function prototype.pixelToTile(self, pixel_pos)
-  local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor) 
-                      + vector(1, 1) -- lua start at 1
-  return self:gridToTile(grid_pos)
+function prototype.pixelToTile(self, pos)
+  return self:gridToTile(math.floor(pos.y / Tile.SIZE.y) + 1,
+                         math.floor(pos.x / Tile.SIZE.x) + 1)
 end
   
 
 local pixel_collision = {}
-pixel_collision[Tile.EMPTY] = function(offset) return false end
-pixel_collision[Tile.TOP_LEFT] = function(offset)
-  return (offset.x + offset.y > 1)
+pixel_collision[Tile.EMPTY] = function(off_x, off_y) return false end
+pixel_collision[Tile.TOP_LEFT] = function(off_x, off_y)
+  return (off_x + off_y > 1)
 end
-pixel_collision[Tile.TOP_RIGHT] = function(offset)
-  return (offset.x - offset.y > 1)
+pixel_collision[Tile.TOP_RIGHT] = function(off_x, off_y)
+  return (off_x - off_y > 1)
 end
-pixel_collision[Tile.BOTTOM_LEFT] = function(offset)
-  return (offset.x - offset.y < 1)
+pixel_collision[Tile.BOTTOM_LEFT] = function(off_x, off_y)
+  return (off_x - off_y < 1)
 end
-pixel_collision[Tile.BOTTOM_RIGHT] = function(offset)
-  return (offset.x + offset.y < 1)
+pixel_collision[Tile.BOTTOM_RIGHT] = function(off_x, off_y)
+  return (off_x + off_y < 1)
 end
-pixel_collision[Tile.FULL] = function(offset) return true end
+pixel_collision[Tile.FULL] = function(off_x, off_y) return true end
 
 function prototype.pixelCollision(self, pixel_pos)
   local tile = self:pixelToTile(pixel_pos)
   if not tile then
     return true
   else
-    local grid_pos = (pixel_pos:perdiv(Tile.SIZE)):map(math.floor)
-    local offset = pixel_pos - grid_pos:permul(Tile.SIZE) 
-    return pixel_collision[tile.wall](offset)
+    local off_x = pixel_pos.x - useful.floor(pixel_pos.x, Tile.SIZE.x)
+    local off_y = pixel_pos.y - useful.floor(pixel_pos.y, Tile.SIZE.y)
+    return pixel_collision[tile.wall](off_x, off_y)
   end
 end
 
---[[function prototype.collision(go, x, y)
+--[[
+function prototype.collision(go, x, y)
   x = x or go.pos.x
   y = y or go.pos.y
   
-  local left = , 
+  local left = self:pixelCollision, 
         right = , 
         top = ,
         bottom =
   
-end]]--
+end
+--]]
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
