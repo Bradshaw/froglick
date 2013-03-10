@@ -2,7 +2,7 @@ useful = { }
 
 -- map a set of functions to a set of objects
 function useful.map(objects, ...)
-  local args = useful.unpackArgs(...)
+  local args = useful.packArgs(...)
   local oi = 1
   -- for each object...
   while oi <= #objects do
@@ -26,9 +26,9 @@ end -- useful.map(objects, functions)
 
 
 -- Because Love2D implementation of args is different?
-function useful.unpackArgs(a, ...)
+function useful.packArgs(a, ...)
   if a then
-    local ret = useful.unpackArgs(...)
+    local ret = useful.packArgs(...)
     table.insert(ret,1,a)
     return ret
   else

@@ -47,9 +47,10 @@ METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.map(self, ...)
+  args = useful.packArgs(...)
   for row = 1, self.size.y do
     for col = 1, self.size.x do
-      for fi, func in ipairs(arg) do
+      for fi, func in ipairs(args) do
         if type(func)=="function" then -- self is an argument, but not a function
           func(self.tiles[row][col], row, col)
         end
