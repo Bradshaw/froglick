@@ -68,17 +68,27 @@ end
 function prototype.validGridPos(self, grid_pos)
   return grid_pos.x >= 1 
       and grid_pos.y >= 1
-      and grid_pos.x < self.size.x
-      and grid_pos.y < self.size.y
+      and grid_pos.x <= self.size.x
+      and grid_pos.y <= self.size.y 
 end
 
-function prototype.gridToTile(self, grid_pos
+function prototype.gridToTile(self, grid_pos)
+  if self:validGridPos(grid_pos) then
+    return self.tiles[grid_pos.y][grid_pos.x]
+  else
+    return nil
+  end
+end
+
+function prototype.pixelToTile(self, pixel_pos)
+  local grid_pos = pixel_pos:permul(Tile.SIZE) + vector(1, 1) -- lua start at 1
+  return self:gridToTile(grid_pos)
 end
   
 function prototype.pointCollision(x, y)
 end
 
-function prototype.collision(go, x, y)
+--[[function prototype.collision(go, x, y)
   x = x or go.pos.x
   y = y or go.pos.y
   
@@ -87,7 +97,7 @@ function prototype.collision(go, x, y)
         top = ,
         bottom =
   
-end
+end]]--
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
