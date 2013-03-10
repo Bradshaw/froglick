@@ -81,4 +81,6 @@ function TileGrid.new(n_cols, n_rows)
     end
   end
   
+  -- return the instance
+  return self
 end

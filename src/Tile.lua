@@ -84,7 +84,7 @@ local prototype = {}
 
 -- methods
 function prototype.draw(self)
-  if self.wall then
+  if self.wall and self.wall > 0 then
     draw_wall[self.wall](self)
   end
 end
@@ -105,6 +105,8 @@ function Tile.new(row, col, wall)
   self.__pos = self.__grid_pos:permul(Tile.SIZE) -- element-wise multiplication
   self.wall = wall
   
+  -- return the instance
+  return self
 end
 
 
