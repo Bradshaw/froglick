@@ -80,7 +80,7 @@ function TileGrid.new(n_cols, n_rows)
   for row = 1, self.size.y do
     self.tiles[row] = {}
     for col = 1, self.size.x do
-      self.tiles[row][col] = Tile.new(row, col, math.random(6)-1)
+      self.tiles[row][col] = Tile.new(row, col, useful.tri(row+col<10 and row ~= 1 and col ~= 1, 0, 5))
     end
   end
   

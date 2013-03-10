@@ -57,7 +57,7 @@ function prototype.update(self, dt)
         previous = object
       end
           )
-  self.camera:pointAt(Joe)
+  self.camera:pointAt(Spaceman[1])
 end
   
 function prototype.draw(self)
@@ -68,7 +68,7 @@ function prototype.draw(self)
     love.graphics.translate(-camx, -camy)
 
     -- draw the background
-    -- TOD0
+    -- TODO
     
     -- draw the terrain
     self.tilegrid:draw()
@@ -103,14 +103,18 @@ function Level.__new()
   
   -- create game object holder
   self.game_objects = {}
-  --! FIXME player should only be created once per playthrough
-  table.insert(self.game_objects, Spaceman.new(10, 10))
+  
+  -- create the player character if one doesn't exist
+  if not Spaceman[1] then
+    Spaceman.new(10, 10)
+  end
+  table.insert(self.game_objects, Spaceman[1])
   
   -- create tile holder
-  self.tilegrid = TileGrid.new(20, 20)
+  self.tilegrid = TileGrid.new(20, 20) -- 20 by 20 tiles
 
   -- create a camera to point at interest
-  self.camera = Camera.new(Joe.pos.x, Joe.pos.y)
+  self.camera = Camera.new(Spaceman[1].pos.x, Spaceman[1].pos.y)
   
   -- export new instance
   return self

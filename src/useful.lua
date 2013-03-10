@@ -35,3 +35,12 @@ function useful.packArgs(a, ...)
     return {}
   end
 end
+
+-- trinary operator
+function useful.tri(cond, a, b)
+  if cond then 
+    return a
+  else
+    return b
+  end
+end

@@ -30,8 +30,8 @@ CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-Spaceman = {}
-Joe = Animal.new(10, 10) -- Joe is the one and only Spaceman
+Spaceman = { }
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -75,7 +75,9 @@ function Spaceman.new(x, y)
   self.view = DebugView --! FIXME
   self.controller = KeyboardController
   
-  Joe = self
+  -- store player
+  table.insert(Spaceman, self) -- there can only be one
+  
   return self
 end
 

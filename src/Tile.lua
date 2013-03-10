@@ -102,7 +102,8 @@ function Tile.new(row, col, wall)
   
   -- create attributes
   self.__grid_pos = vector(row, col)
-  self.__pos = self.__grid_pos:permul(Tile.SIZE) -- element-wise multiplication
+  self.__pos = self.__grid_pos:permul(Tile.SIZE) 
+                              - Tile.SIZE -- arrays start at 1!
   self.wall = wall
   
   -- return the instance
