@@ -7,42 +7,23 @@ and they're participating in 7-day Rogue Like [7drl.org][1].
 Design
 ======
 
-+ Multiplayer
-  ===========
-	+ Competitive?
-		+ No, doesn't feel like a rogue-like
 
-	+ Coop?
-		+ Yes, it's awesome!
-		+ It's fun to play with friends
-		+ Works well in Cyber-Dogs
++ Concept
+  =======
+	+ This game will be a rogue-like game with action-platformer elements.
+	+ The character is a space explorer stranded on a planet, infected by a mysterious fungi
+	+ He has to heal himself by using an antidote fungi that grows in the environment
+	+ As he presses on in the depths of the planet, he encounters the local fauna, also infected
+	+ If he survives long enough, perhaps he will glipse the dark secrets that this planet holds
 
-+ Tech
-  ====
-	+ HTML5/JS + Node.js
-		+ Pros:
-			+ Runs in a browser
-			+ 0h set up time if we host it
-			+ Easy to set up multiplayer
-		+ Cons:
-			+ Painful set up for noobs
-			+ Or we need to host it
++ Basic Gameplay
+  ==============
+	+ Your character is infected, go too long without healing yourself, and you may perish
+	+ Orange fungi grows in the caves, maybe they can heal you
+	+ There are other fungi, perhaps they have interesting effects
+	+ Your gun seems receptive to the strange crystals, use them to modify your combat abilities
+	+ Don't get too close to the strange monsters, you're good at range, but they have a nasty bite
 
-	+ HTML5/JS + PHP
-		+ Pros:
-			+ cf: Node.js
-			+ More available on webhosts
-		+ Cons:
-			+ PHP is the spawn of the devil
-			+ It's harder to set up than node.js
-			+ Or we need to host it
-
-	+ Löve2d + TCP
-		+ Pros:
-			+ Single player possible
-			+ Cute executable
-		+ Cons:
-			+ TCP is the spawn of the devil
 
 + Game design
   ===========
