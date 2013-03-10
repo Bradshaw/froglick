@@ -49,7 +49,7 @@ function prototype.update(self, dt)
           
       -- sort objects by layer
       function(object, object_index)
-        if(previous && previous.layer < object.layer) then
+        if previous and previous.layer < object.layer then
           self.game_objects[object_index] = previous
           self.game_objects[object_index - 1] = object
         end 
@@ -64,6 +64,7 @@ function prototype.draw(self)
   -- TODO
   
   -- draw the terrain
+  self.tilegrid:draw()
   
   -- draw game objects (characters, particles, etc)
   useful.map(self.game_objects, 
