@@ -29,7 +29,7 @@ end -- useful.map(objects, functions)
 function useful.unpackArgs(a, ...)
   if a then
     local ret = useful.unpackArgs(...)
-    table.insert(ret,a)
+    table.insert(ret,1,a)
     return ret
   else
     return {}
