@@ -21,18 +21,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local vector = require("vector")
-
-
---[[----------------------------------------------------------------------------
-PRIVATE SUBROUTINES
---]]----------------------------------------------------------------------------
-
-local next_id = 0
-local generate_id = function()
-  local result = next_id
-  next_id = next_id + 1
-  return result
-end
+require("Tile")
 
 
 --[[----------------------------------------------------------------------------
@@ -40,7 +29,7 @@ CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-GameObject = {}
+TileGrid = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -57,54 +46,40 @@ prototype.h = 0
 METHODS
 --]]----------------------------------------------------------------------------
 
-function prototype.__tostring(self)
-  return "GameObject(" .. self.id .. ")"
-end
-
-function prototype.update(self, dt)
-  --! override me
-end
-
-function prototype.control(self)
-  if self.controller then
-    self.controller:control(self)
+function prototype.map(self, ...)
+  local row, col
+  for row = 1, self.size.y do
+    for col = 1, self.size.x do
+      for fi, func in ipairs(arg) do
+        func(self.tiles[row][col], row, col)
+      end
+    end
   end
 end
-
 
 function prototype.draw(self)
-  if self.view then
-    self.view:draw(self)
-  end
+  self:map(function(tile) 
+    tile:draw() 
+  end)
 end
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
--- private subroutine
-local next_id = 0
-local generate_id = function()
-  local result = next_id
-  next_id = next_id + 1
-  return result
-end
-
-function GameObject.new(x, y)
+function TileGrid.new(size)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  self.id = generate_id()
-  self.pos = vector(x, y)
+  local row, col
+  self.tiles = {}
+  for row = 1, self.size.y do
+    self.tiles[row] = {}
+    for col = 1, self.size.x do
+      self.tiles[row][col] = 
+    end
+  end
   
-  return self
 end
-
-
---[[----------------------------------------------------------------------------
-EXPORT THE METATABLE
---]]----------------------------------------------------------------------------
-
-return prototype

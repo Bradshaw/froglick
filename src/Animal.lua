@@ -34,26 +34,26 @@ Animal = {}
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local Animal_mt = {}
-setmetatable(Animal_mt, { __index = GameObject_mt })
+local prototype = {}
+setmetatable(prototype, { __index = GameObject_mt })
 
 -- default attributes
-Animal_mt.hp = 100
-Animal_mt.speed = 1
+prototype.hp = 100
+prototype.speed = 1
 
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
 
-function Animal_mt.__tostring(self)
+function prototype.__tostring(self)
   return "Animal(" .. self.id .. ")"
 end
 
-function Animal_mt.tryMove(self, direction)
+function prototype.tryMove(self, direction)
   --! override me!
 end
 
-function Animal_mt.tryAttack(self, direction)
+function prototype.tryAttack(self, direction)
   --! override me!
 end
 
@@ -63,7 +63,7 @@ CLASS (STATIC) FUNCTIONS
 
 function Animal.new(x, y)
   local self = GameObject.new(x, y)
-  setmetatable(self, {__index = Animal_mt })
+  setmetatable(self, {__index = prototype })
   
   return self
 end
@@ -73,4 +73,4 @@ end
 EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------
 
-return Animal_mt
+return prototype

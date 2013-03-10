@@ -29,14 +29,14 @@ require("Spaceman")
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local Level_mt = {}
+local prototype = {}
 
 
 --[[----------------------------------------------------------------------------
 CLASS METHODS
 --]]----------------------------------------------------------------------------
 
-function Level_mt.update(self, dt)
+function prototype.update(self, dt)
   useful.map(self.game_objects, 
       function(object)
         object:update(dt)
@@ -44,7 +44,7 @@ function Level_mt.update(self, dt)
       end)
 end
   
-function Level_mt.draw(self)
+function prototype.draw(self)
   useful.map(self.game_objects, 
       function(object) 
         object:draw() 
@@ -67,7 +67,7 @@ CLASS (STATIC) FUNCTIONS
 function Level.__new()
   -- set up metatable
   local self = {}
-  setmetatable(self, {__index = Level_mt })
+  setmetatable(self, {__index = prototype })
   
   -- create game object holder
   self.game_objects = {}
@@ -93,4 +93,4 @@ end
 EXPORT THE CLASS
 --]]----------------------------------------------------------------------------
 
-return Level_mt
+return prototype

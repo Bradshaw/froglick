@@ -36,26 +36,26 @@ Spaceman = {}
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local Spaceman_mt = {}
-setmetatable(Spaceman_mt, { __index = Animal_mt })
+local prototype = {}
+setmetatable(prototype, { __index = Animal_mt })
 
 -- default attributes
-Spaceman_mt.w = 10
-Spaceman_mt.h = 20
+prototype.w = 10
+prototype.h = 20
 
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
 
-function Spaceman_mt.__tostring(self)
+function prototype.__tostring(self)
   return "Spaceman(" .. self.id .. ")"
 end
 
-function Spaceman_mt.update(self, direction)
+function prototype.update(self, direction)
   --! override me
 end
 
-function Spaceman_mt.tryMove(self, direction)
+function prototype.tryMove(self, direction)
   self.pos = self.pos + direction
 end
 
@@ -68,7 +68,7 @@ CLASS (STATIC) FUNCTIONS
 function Spaceman.new(x, y)
   -- metatable
   local self = Animal.new(x, y)
-  setmetatable(self, {__index = Spaceman_mt })
+  setmetatable(self, {__index = prototype })
   
   -- attributes
   self.view = DebugView --! FIXME
@@ -82,4 +82,4 @@ end
 EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------
 
-return Spaceman_mt
+return prototype

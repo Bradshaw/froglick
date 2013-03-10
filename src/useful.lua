@@ -11,10 +11,10 @@ function useful.map(objects, ...)
       table.remove(objects, oi)
     else
       -- for each function...
-      for fi, fun in ipairs(arg) do
+      for fi, func in ipairs(arg) do
         -- map function to object
-        fun(obj, oi, objects)
-      end -- fi, fun in ipairs(arg)
+        func(obj, oi, objects)
+      end -- for fi, func in ipairs(arg)
       -- next object
       oi = oi + 1
     end -- if obj.purge
