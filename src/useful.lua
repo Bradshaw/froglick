@@ -13,7 +13,9 @@ function useful.map(objects, ...)
       -- for each function...
       for fi, func in ipairs(arg) do
         -- map function to object
-        func(obj, oi, objects)
+        if type(func)=="function" then -- Make sure it's a function, because, the 1st arguement is an object
+          func(obj, oi, objects)
+        end
       end -- for fi, func in ipairs(arg)
       -- next object
       oi = oi + 1
