@@ -53,8 +53,9 @@ function prototype.__tostring(self)
 end
 
 function prototype.tryMove(self, direction)
-  direction:divequals(10)
-  direction.y = direction.y * 5
+  -- FIXME hacky tweak values
+  direction:divequals(8)
+  direction.y = direction.y * 4
   self.inertia:plusequals(direction)
 end
 
@@ -74,7 +75,9 @@ function Spaceman.new(x, y)
   self.controller = KeyboardController
   self.collides_walls = true
   self.gravity = 10
-  self.friction = 1
+  self.friction = 8
+  self.friction_airborne = 2
+  self.terminal_velocity = 15
   
   self.bink = false
   

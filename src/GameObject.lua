@@ -87,12 +87,25 @@ function prototype.update(self, dt)
   end
   
   -- apply friction
-  if self.friction then
-    self.inertia.x = useful.absminus(self.inertia.x, self.friction*dt)
-    self.inertia.y = useful.absminus(self.inertia.y, self.friction*dt)
+  if self.friction_airborne and self.airborne then
+    self.inertia:divequals(math.pow(self.friction_airborne, dt))
+  elseif self.friction then
+    self.inertia:divequals(math.pow(self.friction, dt))
   end
   
-  --print(self, self.inertia, self.pos)
+  -- clamp inertia to terminal velocity
+  if self.terminal_velocity then
+    if math.abs(self.inertia.x) > self.terminal_velocity then
+      self.inertia.x = self.terminal_velocity * useful.sign(self.inertia.x)
+    end
+    if math.abs(self.inertia.y) > self.terminal_velocity then 
+      self.inertia.y = self.terminal_velocity * useful.sign(self.inertia.y)
+    end
+  end
+  
+  -- clamp less than epsilon inertia to 0
+  if math.abs(self.inertia.x) < 0.01 then self.inertia.x = 0 end
+  if math.abs(self.inertia.y) < 0.01 then self.inertia.y = 0 end
   
   -- move the object
   if self.inertia.x ~= 0 or self.inertia.y ~= 0 then
