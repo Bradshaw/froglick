@@ -52,12 +52,10 @@ function prototype.__tostring(self)
   return "Spaceman(" .. self.id .. ")"
 end
 
-function prototype.update(self, direction)
-  --! override me
-end
-
 function prototype.tryMove(self, direction)
-  self.pos = self.pos + direction
+  direction:divequals(10)
+  direction.y = direction.y * 5
+  self.inertia:plusequals(direction)
 end
 
   
@@ -74,8 +72,9 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = DebugView --! FIXME
   self.controller = KeyboardController
-  
-  
+  self.collides_walls = true
+  self.gravity = 10
+  self.friction = 1
   
   self.bink = false
   

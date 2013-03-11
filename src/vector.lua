@@ -102,6 +102,51 @@ assert(isvector(a) and isvector(b), "perdiv: wrong argument types (<vector> expe
 return new(a.x/b.x, a.y/b.y)
 end
 
+function vector:plusequals(v)
+  if isvector(v) then
+    self.x, self.y = self.x + v.x, self.y + v.y
+  elseif y then
+    self.x, self.y = self.x + v, self.y + y
+  else
+    self.x, self.y = self.x + v, self.y + v
+  return self
+  end
+end
+
+function vector:minequals(v)
+  if isvector(v) then
+    self.x, self.y = self.x - v.x, self.y - v.y
+  elseif y then
+    self.x, self.y = self.x - v, self.y - y
+  else
+    self.x, self.y = self.x - v, self.y - v
+  return self
+  end
+end
+
+function vector:mulequals(v)
+  if isvector(v) then
+    self.x, self.y = self.x * v.x, self.y * v.y
+  elseif y then
+    self.x, self.y = self.x * v, self.y * y
+  else
+    self.x, self.y = self.x * v, self.y * v
+  end
+  return self
+end
+
+function vector:divequals(v, y)
+  if isvector(v) then
+    self.x, self.y = self.x / v.x, self.y / v.y
+  elseif y then
+    self.x, self.y = self.x / v, self.y / y
+  else
+    self.x, self.y = self.x / v, self.y / v
+  end
+  return self
+end
+
+
 function vector:len2()
 return self.x * self.x + self.y * self.y
 end
