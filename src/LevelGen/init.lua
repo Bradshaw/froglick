@@ -69,8 +69,8 @@ local dummy_tg = function()
 end
 
 function LevelGen.new(method)
-  local lev = dummy_tg()
-	--local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
+  --local lev = dummy_tg()
+	local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
   -- FIXME currently "LevelGen" returns a TileGrid, not a Level
 	return lev
 end

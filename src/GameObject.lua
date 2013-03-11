@@ -152,7 +152,7 @@ function prototype.update(self, dt)
       local new_y = self.pos.y + move
       self.pos_prev.y = self.pos.y
       -- is new y position free ?
-      if walls:collision(self, self.pos.y, new_y) then
+      if walls:collision(self, self.pos.x, new_y) then
         -- if not move as far as possible
         self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move))
         self.inertia.y = 0

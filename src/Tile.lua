@@ -69,12 +69,12 @@ function prototype.draw(self,x,y)
     elseif self.wall == Tile.FULL then
       love.graphics.draw(Tile.FULLIMAGE, x, y)
     elseif self.wall == Tile.UNDECIDED then
-      love.graphics.rectangle("fill",x,y,Tile.SIZE.x,Tile.SIZE.y)
+      love.graphics.rectangle("fill", x, y, Tile.SIZE.x, Tile.SIZE.y)
     end
     -- end switch
   end
-  if self.part>0 then
-    love.graphics.print(self.part,x+5,y+5)
+  if self.part > 0 then
+    love.graphics.print(self.part, x + 5, y + 5)
   end
 end
 
