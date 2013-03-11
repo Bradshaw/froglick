@@ -26,9 +26,33 @@ LevelGen.generator = {}
 
 LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 	local lev = TileGrid.new(100, 100)
-	LevelGen.dirty(lev,0.45,Tile.FULL,Tile.EMPTY)
-	for i=1,10 do
+	local blobbiness = 3
+	print(blobbiness)
+	local dug = 0
+	LevelGen.dirty(lev,0.35,Tile.FULL,Tile.EMPTY)
+	LevelGen.blobify(lev)
+	LevelGen.dirty(lev,0.3,Tile.FULL,Tile.EMPTY)
+	LevelGen.dirty(lev,1,Tile.EMPTY,Tile.UNDECIDED)
+	dug = LevelGen.maze(lev, 50, 50, 1)
+	print(dug)
+	--LevelGen.maze(lev, 50, 51, 1)
+	--LevelGen.maze(lev, 51, 50, 1)
+	if blobbiness<4 then
+		dug = LevelGen.maze(lev, 51, 51, 2)
+	end
+	print(dug)
+	LevelGen.dirty(lev,1,Tile.UNDECIDED,Tile.FULL)
+	for i=1,blobbiness do
 		LevelGen.blobify(lev)
+	end
+
+	for i,v in ipairs(lev.tiles) do
+		for j,u in ipairs(v) do
+			if u.part>0 then
+				u.wall = Tile.EMPTY
+				u.part = 0
+			end
+		end
 	end
 	
 	return lev
@@ -106,7 +130,8 @@ function LevelGen.blobify(lev)
 	for i,v in ipairs(lev.tiles) do
 		temp[i]={}
 		for j,u in ipairs(v) do
-			if (u.wall==Tile.FULL and LevelGen.count(lev,i,j)>=4) or (u.wall==Tile.EMPTY and LevelGen.count(lev,i,j)<3) then
+
+			if (u.wall==Tile.FULL and LevelGen.count(lev,i,j)>=4) or (u.wall==Tile.EMPTY and LevelGen.count(lev,i,j)<math.random(3,4)) then
 				temp[i][j] = Tile.FULL
 			else
 				temp[i][j] = Tile.EMPTY

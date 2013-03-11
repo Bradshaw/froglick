@@ -48,7 +48,6 @@ function prototype.update(self, dt)
         --! control FIRST always
         object:control()
         object:update(dt)
-        
       end,
           
       -- sort objects by layer
@@ -112,7 +111,7 @@ function Level.__new()
   -- create the player character if one doesn't exist
   if not Spaceman[1] then
     Spaceman.new(100, 100)
-    --Spaceman.new(1000, 1000)
+    --Spaceman.new(50*Tile.SIZE.x+10, 50*Tile.SIZE.y+10)
   end
   table.insert(self.game_objects, Spaceman[1])
   
