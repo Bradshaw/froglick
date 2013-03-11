@@ -80,10 +80,11 @@ end
 
 function prototype.snap_to_collision(self, dx, dy, max)
   local i, walls = 0, Level.get().tilegrid
-  while walls:collision(self, self.pos.x + dx, self.pos.y + dy) 
+  while not walls:collision(self, self.pos.x + dx, self.pos.y + dy) 
         and (not max or i < max)  do
     self.pos:plusequals(dx, dy)
     i = i + 1
+    
   end
 end
 
@@ -151,7 +152,7 @@ function prototype.update(self, dt)
       local new_y = self.pos.y + move
       self.pos_prev.y = self.pos.y
       -- is new y position free ?
-      if walls:collision(self, new_y, self.pos.y) then
+      if walls:collision(self, self.pos.y, new_y) then
         -- if not move as far as possible
         self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move))
         self.inertia.y = 0
