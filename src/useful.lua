@@ -99,3 +99,8 @@ function useful.sign(x)
     return 0
   end
 end
+
+function useful.randomSelect(...)
+  local t = useful.packArgs(...)
+  return t[math.random(1,#t)]
+end

@@ -72,6 +72,9 @@ function state:keypressed(key, uni)
 	if key=="escape" then
 		love.event.push("quit")
 	end
+	if key==" " then
+		LevelGen.blobify(Level.get().tilegrid)
+	end
 end
 
 

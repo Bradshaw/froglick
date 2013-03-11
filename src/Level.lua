@@ -109,12 +109,12 @@ function Level.__new()
   
   -- create the player character if one doesn't exist
   if not Spaceman[1] then
-    Spaceman.new(100, 100)
+    Spaceman.new(1000, 1000)
   end
   table.insert(self.game_objects, Spaceman[1])
   
   -- create tile holder
-  self.tilegrid = LevelGen.new(20,20)
+  self.tilegrid = LevelGen.new()
   --self.tilegrid = TileGrid.new(20, 20) -- 20 by 20 tiles
 
   -- create a camera to point at interest

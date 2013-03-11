@@ -145,7 +145,7 @@ function prototype.update(self, dt)
   -- move the object
   if self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos_prev:reset(self.pos)
-    self.pos:plusequals(self.inertia)
+    self.pos:plusequals(self.inertia*dt*60)
   end
 end
 

@@ -40,6 +40,7 @@ Tile.TOP_RIGHT = 2
 Tile.BOTTOM_LEFT = 3
 Tile.BOTTOM_RIGHT = 4
 Tile.FULL = 5
+Tile.UNDECIDED = 6
 
 -- TODO THIS; BETTER!
 Tile.FULLIMAGE = love.graphics.newImage("images/Tile_Stone1_filled.PNG")
@@ -67,8 +68,13 @@ function prototype.draw(self,x,y)
       love.graphics.draw(Tile.SLOPEIMAGE, x, y+Tile.SIZE.y, -math.pi/2)
     elseif self.wall == Tile.FULL then
       love.graphics.draw(Tile.FULLIMAGE, x, y)
+    elseif self.wall == Tile.UNDECIDED then
+      love.graphics.rectangle("fill",x,y,Tile.SIZE.x,Tile.SIZE.y)
     end
     -- end switch
+  end
+  if self.part>0 then
+    love.graphics.print(self.part,x+5,y+5)
   end
 end
 
@@ -89,6 +95,7 @@ function Tile.new(wall)
   
   -- initialise attributes
   self.wall = wall
+  self.part = 0
   
   -- return the instance
   return self

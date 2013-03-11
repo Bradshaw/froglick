@@ -60,12 +60,28 @@ function prototype.map(self, ...)
 end
 
 function prototype.draw(self)
+  --[[]]
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
       tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
     end,
     self
     )
+  --]]
+end
+
+function prototype.set(self, x, y, wall)
+  if self:validGridPos(x,y) then
+    self.tiles[x][y].wall=wall
+  end
+end
+
+function prototype.get(self, x, y)
+  if self:validGridPos(x,y) then
+    return self.tiles[x][y].wall
+  else
+    return Tile.DEFAULT
+  end
 end
 
 function prototype.validGridPos(self, x, y)
@@ -140,10 +156,13 @@ function TileGrid.new(xsize, ysize)
   -- create attributes
   self.size = vector(xsize, ysize)
   self.tiles = {}
+  local flal = 0
   for x = 1, self.size.x do
     self.tiles[x] = {}
+    flal=flal+1
+    if flal>5 then flal = 0 end
     for y = 1, self.size.y do
-      self.tiles[x][y] = Tile.new(Tile.EMPTY)
+      self.tiles[x][y] = Tile.new(Tile.FULL)
     end
   end
   
