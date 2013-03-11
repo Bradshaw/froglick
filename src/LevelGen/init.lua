@@ -33,6 +33,7 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 	LevelGen.blobify(lev)
 	LevelGen.dirty(lev,0.3,Tile.FULL,Tile.EMPTY)
 	LevelGen.dirty(lev,1,Tile.EMPTY,Tile.UNDECIDED)
+	LevelGen.rectangle(lev, 45,45,55,55, Tile.FULL)
 	dug = LevelGen.maze(lev, 50, 50, 1)
 	print(dug)
 	--LevelGen.maze(lev, 50, 51, 1)
@@ -69,10 +70,18 @@ local dummy_tg = function()
 end
 
 function LevelGen.new(method)
-  local lev = dummy_tg()
-	--local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
+  --local lev = dummy_tg()
+	local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
   -- FIXME currently "LevelGen" returns a TileGrid, not a Level
 	return lev
+end
+
+function LevelGen.rectangle(lev, x1, y1, x2, y2, wall)
+	for i=x1,x2 do
+		for j=y1,y2 do
+			lev:set(i,j,wall)
+		end
+	end
 end
 
 
