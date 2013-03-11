@@ -34,10 +34,20 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 	return lev
 end
 
-
+local dummy_tg = function()
+  local tg = TileGrid.new(10, 10)
+  for x = 1, tg.size.x do 
+    for y = 1, tg.size.y do
+      tg:gridToTile(x, y).wall = Tile.EMPTY;
+    end
+  end
+  return tg
+end
 
 function LevelGen.new(method)
-	local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
+  local lev = dummy_tg()
+	--local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
+  -- FIXME currently "LevelGen" returns a TileGrid, not a Level
 	return lev
 end
 

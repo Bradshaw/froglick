@@ -43,6 +43,11 @@ setmetatable(prototype, { __index = Animal_mt })
 -- default attributes
 prototype.w = 10
 prototype.h = 20
+prototype.collides_walls = true
+prototype.gravity = 200
+prototype.friction = 8
+prototype.friction_airborne = 2
+prototype.terminal_velocity = 360
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -54,9 +59,7 @@ end
 
 function prototype.tryMove(self, direction)
   -- FIXME hacky tweak values
-  direction:divequals(8)
-  direction.y = direction.y * 4
-  self.inertia:plusequals(direction)
+  self.inertia:plusequals(direction.x * 10, direction.y * 20)
 end
 
   
@@ -73,14 +76,7 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = DebugView --! FIXME
   self.controller = KeyboardController
-  self.collides_walls = true
-  self.gravity = 10
-  self.friction = 8
-  self.friction_airborne = 2
-  self.terminal_velocity = 15
-  
-  self.bink = false
-  
+
   -- store player
   table.insert(Spaceman, self) -- there can only be one
   

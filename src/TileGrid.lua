@@ -60,23 +60,23 @@ function prototype.map(self, ...)
 end
 
 function prototype.draw(self)
-  --[[]]
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
       tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
     end,
     self
     )
-  --]]
 end
 
 function prototype.set(self, x, y, wall)
+  --FIXME redundant: use tg:gridToTile(x, y).wall = value instead
   if self:validGridPos(x,y) then
     self.tiles[x][y].wall=wall
   end
 end
 
 function prototype.get(self, x, y)
+  --FIXME duplicate of gridToTile
   if self:validGridPos(x,y) then
     return self.tiles[x][y].wall
   else
