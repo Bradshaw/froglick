@@ -224,6 +224,7 @@ function vector:reset(v, y)
   else 
     self.x, self.y = 0, 0
   end
+  return self
 end
     
     
