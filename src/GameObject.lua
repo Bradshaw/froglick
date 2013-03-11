@@ -70,6 +70,14 @@ function prototype.__tostring(self)
   return "GameObject(" .. self.id .. ")"
 end
 
+function prototype.snap_from_collision(self, dx, dy, max)
+  local i = 0
+  while Level.get().tilegrid:collision(self) and (not max or i < max)  do
+    self.pos:minequals(dx, dy)
+    i = i + 1
+  end
+end
+
 function prototype.snap_to_collision(self, dx, dy, max)
   local i = 0
   while Level.get().tilegrid:collision(self, self.pos.x + dx, self.pos.y + dy) 
@@ -88,21 +96,16 @@ function prototype.update(self, dt)
   if self.collides_walls then
     --! VERTICAL COLLISIONS check if we're ALREADY in a wall
     if walls:collision(self) then
-      -- FIXME this code is repeated almost exactly...
-      self.pos:reset(self.pos_prev)
       local dir = self.inertia:normalized()
-      self:snap_to_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
-      self.inertia.y = 0
-    end
+      self:snap_from_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
+      self.inertia:reset(0, 0)
     
     --! HORIZONTAL COLLISIONS pre-emptive check
-    if walls:collision(self, self.pos.x + self.inertia.x*dt, 
+    elseif walls:collision(self, self.pos.x + self.inertia.x*dt, 
                         self.pos.y + self.inertia.y*dt) then
-       -- FIXME ... here! Should be factorised
-       self.pos:reset(self.pos_prev)
        local dir = self.inertia:normalized()
        self:snap_to_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
-       self.inertia.x = -useful.sign(self.inertia.x) * 3
+       self.inertia:reset(0, 0)
     end
     
     -- check if we're on the ground
