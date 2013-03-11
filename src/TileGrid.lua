@@ -88,32 +88,30 @@ function prototype.pixelToTile(self, x, y)
   return self:gridToTile(math.floor(x / Tile.SIZE.x),
                          math.floor(y / Tile.SIZE.y))
 end
-  
-
-local pixel_collision = {}
-pixel_collision[Tile.EMPTY] = function(off_x, off_y) return false end
-pixel_collision[Tile.TOP_LEFT] = function(off_x, off_y)
-  return (off_x + off_y < 1)
-end
-pixel_collision[Tile.TOP_RIGHT] = function(off_x, off_y)
-  return (off_x - off_y > 0)
-end
-pixel_collision[Tile.BOTTOM_LEFT] = function(off_x, off_y)
-  return (off_x - off_y < 0)
-end
-pixel_collision[Tile.BOTTOM_RIGHT] = function(off_x, off_y)
-  return (off_x + off_y > 1)
-end
-pixel_collision[Tile.FULL] = function(off_x, off_y) return true end
 
 function prototype.pixelCollision(self, x, y)
   local tile = self:pixelToTile(x, y)
   if not tile then
     return true
   else
-    local off_x, off_y 
-      = x - useful.floor(x, Tile.SIZE.x), y - useful.floor(y, Tile.SIZE.y)
-    return pixel_collision[tile.wall](off_x / Tile.SIZE.x, off_y / Tile.SIZE.y)
+    -- calculate relative (normalised) offset within Tile
+    local off_x = (x - useful.floor(x, Tile.SIZE.x)) / Tile.SIZE.x 
+    local off_y = (y - useful.floor(y, Tile.SIZE.y)) / Tile.SIZE.y 
+    -- switch over Tile wall types
+    if tile.wall == Tile.EMPTY then
+      return false
+    elseif tile.wall == Tile.TOP_LEFT then
+      return (off_x + off_y < 1)
+    elseif tile.wall == Tile.TOP_RIGHT then
+      return (off_x - off_y > 0)
+    elseif tile.wall == Tile.BOTTOM_LEFT then
+      return (off_x - off_y < 0)
+    elseif tile.wall == Tile.BOTTOM_RIGHT then
+      return (off_x + off_y > 1)
+    elseif tile.wall == Tile.FULL then
+      return true
+    end
+    -- end switch
   end
 end
 
@@ -122,7 +120,7 @@ function prototype.collision(go, x, y)
   x = x or go.pos.x
   y = y or go.pos.y
   
-  local left = self:pixelCollision, 
+  local left = self:pixelCollision(go), 
         right = , 
         top = ,
         bottom =

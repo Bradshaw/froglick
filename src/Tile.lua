@@ -41,34 +41,10 @@ Tile.BOTTOM_LEFT = 3
 Tile.BOTTOM_RIGHT = 4
 Tile.FULL = 5
 
--- DO THIS BETTER!
+-- TODO THIS; BETTER!
 Tile.FULLIMAGE = love.graphics.newImage("images/Tile_Stone1_filled.PNG")
 Tile.SLOPEIMAGE = love.graphics.newImage("images/Tile_Stone1_slope.PNG")
 
---[[----------------------------------------------------------------------------
-PRIVATE SUBROUTINES
---]]----------------------------------------------------------------------------
-
-local draw_wall = {}
-draw_wall[Tile.TOP_LEFT] = function(t,x,y)
-  love.graphics.draw(Tile.SLOPEIMAGE, x+Tile.SIZE.x, y, math.pi/2)
-end
-
-draw_wall[Tile.TOP_RIGHT] = function(t,x,y)
-  love.graphics.draw(Tile.SLOPEIMAGE, x+Tile.SIZE.x, y+Tile.SIZE.y, math.pi)
-end
-
-draw_wall[Tile.BOTTOM_LEFT] = function(t,x,y)
-  love.graphics.draw(Tile.SLOPEIMAGE, x, y)
-end
-
-draw_wall[Tile.BOTTOM_RIGHT] = function(t,x,y)
-  love.graphics.draw(Tile.SLOPEIMAGE, x, y+Tile.SIZE.y, -math.pi/2)
-end
-
-draw_wall[Tile.FULL] = function(t,x,y)
-  love.graphics.draw(Tile.FULLIMAGE, x, y)
-end
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -80,7 +56,19 @@ local prototype = {}
 -- methods
 function prototype.draw(self,x,y)
   if self.wall and self.wall > 0 then
-    draw_wall[self.wall](self,x,y)
+    -- switch over Tile wall types
+    if self.wall == Tile.TOP_LEFT then
+      love.graphics.draw(Tile.SLOPEIMAGE, x+Tile.SIZE.x, y, math.pi/2)
+    elseif self.wall == Tile.TOP_RIGHT then
+      love.graphics.draw(Tile.SLOPEIMAGE, x+Tile.SIZE.x, y+Tile.SIZE.y, math.pi)
+    elseif self.wall == Tile.BOTTOM_LEFT then
+      love.graphics.draw(Tile.SLOPEIMAGE, x, y)
+    elseif self.wall == Tile.BOTTOM_RIGHT then
+      love.graphics.draw(Tile.SLOPEIMAGE, x, y+Tile.SIZE.y, -math.pi/2)
+    elseif self.wall == Tile.FULL then
+      love.graphics.draw(Tile.FULLIMAGE, x, y)
+    end
+    -- end switch
   end
 end
 
