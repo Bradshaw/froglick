@@ -21,7 +21,8 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local Animal_mt = require("Animal")
-require("DebugView")
+--require("DebugView")
+require("SpacemanView")
 require("KeyboardController")
 
 
@@ -44,10 +45,10 @@ setmetatable(prototype, { __index = Animal_mt })
 prototype.w = 10
 prototype.h = 20
 prototype.collides_walls = true
-prototype.gravity = 200
-prototype.friction = 8
+prototype.gravity = 300
+prototype.friction = 50
 prototype.friction_airborne = 2
-prototype.terminal_velocity = 360
+prototype.terminal_velocity = 300
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -74,7 +75,7 @@ function Spaceman.new(x, y)
   setmetatable(self, {__index = prototype })
   
   -- attributes
-  self.view = DebugView --! FIXME
+  self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
 
   -- store player
