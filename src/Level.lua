@@ -45,8 +45,10 @@ function prototype.update(self, dt)
       
       -- update and control game objects
       function(object)
-        object:update(dt)
+        --! control FIRST always
         object:control()
+        object:update(dt)
+        
       end,
           
       -- sort objects by layer

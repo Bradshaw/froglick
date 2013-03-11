@@ -144,6 +144,10 @@ function prototype.collision(self, go, x, y)
   return left or right or top or bottom
 end
 
+function prototype.collision_next(self, go, dt)
+  return self:collision(go, go.pos.x + go.inertia.x*dt, go.pos.y + go.inertia.y*dt)
+end
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------

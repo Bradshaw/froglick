@@ -71,16 +71,16 @@ function prototype.__tostring(self)
 end
 
 function prototype.snap_from_collision(self, dx, dy, max)
-  local i = 0
-  while Level.get().tilegrid:collision(self) and (not max or i < max)  do
+  local i, walls = 0, Level.get().tilegrid
+  while walls:collision(self) and (not max or i < max)  do
     self.pos:minequals(dx, dy)
     i = i + 1
   end
 end
 
 function prototype.snap_to_collision(self, dx, dy, max)
-  local i = 0
-  while Level.get().tilegrid:collision(self, self.pos.x + dx, self.pos.y + dy) 
+  local i, walls = 0, Level.get().tilegrid
+  while walls:collision(self, self.pos.x + dx, self.pos.y + dy) 
         and (not max or i < max)  do
     self.pos:plusequals(dx, dy)
     i = i + 1
@@ -94,20 +94,6 @@ function prototype.update(self, dt)
   
   -- check for collision with walls
   if self.collides_walls then
-    --! VERTICAL COLLISIONS check if we're ALREADY in a wall
-    if walls:collision(self) then
-      local dir = self.inertia:normalized()
-      self:snap_from_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
-      self.inertia:reset(0, 0)
-    
-    --! HORIZONTAL COLLISIONS pre-emptive check
-    elseif walls:collision(self, self.pos.x + self.inertia.x*dt, 
-                        self.pos.y + self.inertia.y*dt) then
-       local dir = self.inertia:normalized()
-       self:snap_to_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
-       self.inertia:reset(0, 0)
-    end
-    
     -- check if we're on the ground
     self.airborne = 
       (not walls:pixelCollision(self.pos.x, self.pos.y+1))
@@ -142,10 +128,43 @@ function prototype.update(self, dt)
   if math.abs(self.inertia.x) < 0.01 then self.inertia.x = 0 end
   if math.abs(self.inertia.y) < 0.01 then self.inertia.y = 0 end
   
-  -- move the object
-  if self.inertia.x ~= 0 or self.inertia.y ~= 0 then
+  -- collider objects are tricky...
+  if self.collides_walls then
+    -- move the object HORIZONTALLY FIRST
+    if self.inertia.x ~= 0 then
+      local move = self.inertia.x*dt
+      local new_x = self.pos.x + move
+      self.pos_prev.x = self.pos.x
+      -- is new x position free ?
+      if walls:collision(self, new_x, self.pos.y) then
+        -- if not move as far as possible
+        self:snap_to_collision(useful.sign(self.inertia.x), 0, math.abs(move))
+        self.inertia.x = 0
+      else
+        -- if so move to new position
+        self.pos.x = new_x
+      end
+    end
+    -- move the object VERTICALLY SECOND
+    if self.inertia.y ~= 0 then
+      local move = self.inertia.y*dt
+      local new_y = self.pos.y + move
+      self.pos_prev.y = self.pos.y
+      -- is new y position free ?
+      if walls:collision(self, new_y, self.pos.y) then
+        -- if not move as far as possible
+        self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move))
+        self.inertia.y = 0
+      else
+        -- if so move to new position
+        self.pos.y = new_y
+      end
+    end
+    
+  -- ...it's far easier to move objects that ignore walls
+  elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos_prev:reset(self.pos)
-    self.pos:plusequals(self.inertia*dt)
+    self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
   end
 end
 
