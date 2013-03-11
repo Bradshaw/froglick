@@ -70,12 +70,44 @@ function prototype.__tostring(self)
   return "GameObject(" .. self.id .. ")"
 end
 
+function prototype.snap_to_collision(self, dx, dy, max)
+  local i = 0
+  while Level.get().tilegrid:collision(self, self.pos.x + dx, self.pos.y + dy) 
+        and (not max or i < max)  do
+    self.pos:plusequals(dx, dy)
+    i = i + 1
+  end
+end
+
 function prototype.update(self, dt)
   
-  -- check if we're on the ground
+  -- short-hand alias
+  local walls = Level.get().tilegrid
+  
+  -- check for collision with walls
   if self.collides_walls then
+    --! VERTICAL COLLISIONS check if we're ALREADY in a wall
+    if walls:collision(self) then
+      -- FIXME this code is repeated almost exactly...
+      self.pos:reset(self.pos_prev)
+      local dir = self.inertia:normalized()
+      self:snap_to_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
+      self.inertia.y = 0
+    end
+    
+    --! HORIZONTAL COLLISIONS pre-emptive check
+    if walls:collision(self, self.pos.x + self.inertia.x*dt, 
+                        self.pos.y + self.inertia.y*dt) then
+       -- FIXME ... here! Should be factorised
+       self.pos:reset(self.pos_prev)
+       local dir = self.inertia:normalized()
+       self:snap_to_collision(dir.x, dir.y, self.inertia.x + self.inertia.y)
+       self.inertia.x = -useful.sign(self.inertia.x) * 3
+    end
+    
+    -- check if we're on the ground
     self.airborne = 
-      (not Level.get().tilegrid:pixelCollision(self.pos.x, self.pos.y+1))
+      (not walls:pixelCollision(self.pos.x, self.pos.y+1))
     if not self.airborne and self.inertia.y > 0 then
       self.inertia.y = 0
     end 
@@ -109,10 +141,9 @@ function prototype.update(self, dt)
   
   -- move the object
   if self.inertia.x ~= 0 or self.inertia.y ~= 0 then
+    self.pos_prev:reset(self.pos)
     self.pos:plusequals(self.inertia)
   end
-  
-  --! extend me
 end
 
 function prototype.control(self)
@@ -148,6 +179,7 @@ function GameObject.new(x, y)
   -- create attributes
   self.id = generate_id()
   self.pos = vector(x, y)
+  self.pos_prev = vector(x, y)
   self.inertia = vector(0, 0)
   
   return self

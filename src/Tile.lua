@@ -87,10 +87,7 @@ function Tile.new(wall)
   local self = {}
   setmetatable(self, {__index = prototype })
   
-  -- create attributes
-  --self.__grid_pos = vector(row, col)
-  --self.__pos = self.__grid_pos:permul(Tile.SIZE) 
-  --                            - Tile.SIZE -- arrays start at 1!
+  -- initialise attributes
   self.wall = wall
   
   -- return the instance

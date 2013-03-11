@@ -115,18 +115,18 @@ function prototype.pixelCollision(self, x, y)
   end
 end
 
---[[
-function prototype.collision(go, x, y)
+function prototype.collision(self, go, x, y)
+  -- x & y are optional: leave them out to test the object where it actually is
   x = x or go.pos.x
   y = y or go.pos.y
   
-  local left = self:pixelCollision(go), 
-        right = , 
-        top = ,
-        bottom =
-  
+  -- here we're using a diamond-shaped collision-mask
+  local left = self:pixelCollision(x - go.w/2, y - go.h/2) 
+  local right = self:pixelCollision(x + go.w/2, y - go.h/2) 
+  local top = self:pixelCollision(x, y - go.h)
+  local bottom = self:pixelCollision(x, y)
+  return left or right or top or bottom
 end
---]]
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS

@@ -214,6 +214,19 @@ self.x, self.y = f(self.x), f(self.y)
 return self
 end
 
+function vector:reset(v, y)
+  if isvector(v) then
+    self.x, self.y = v.x, v.y
+  elseif y then
+    self.x, self.y = v, y
+  elseif v then
+    self.x, self.y = v, v
+  else 
+    self.x, self.y = 0, 0
+  end
+end
+    
+    
 -- the module
 return setmetatable({new = new, isvector = isvector},
 {__call = function(_, ...) return new(...) end})
