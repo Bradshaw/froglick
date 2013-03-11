@@ -15,77 +15,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
---[[----------------------------------------------------------------------------
-IMPORTS
---]]----------------------------------------------------------------------------
-
-local GameObject_mt = require("Level")
-
+require("AnAL")
 
 --[[----------------------------------------------------------------------------
-'GAME' GAMESTATE - state during which the game is played
+CLASS
 --]]----------------------------------------------------------------------------
 
-local state = gstate.new()
+-- global-scoped
+SpacemanView = {}
 
+--FIXME should be in love.load
+SpacemanView.IMAGE = love.graphics.newImage("images/spaceman.png")
+SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 0)
 
-function state:init()
-end
+--[[----------------------------------------------------------------------------
+CLASS (STATIC) FUNCTIONS
+--]]----------------------------------------------------------------------------
 
-
-function state:enter()
-
-end
-
-
-function state:focus()
-
-end
-
-
-function state:mousepressed(x, y, btn)
+function SpacemanView.draw(self, go) -- GameObject
+  
+  --TODO FIXME for obvious reasons
+  SpacemanView.ANIM_WALK:draw(go.pos.x - go.w/2, go.pos.y - 32)
 
 end
-
-
-function state:mousereleased(x, y, btn)
-	
-end
-
-
-function state:joystickpressed(joystick, button)
-	
-end
-
-
-function state:joystickreleased(joystick, button)
-	
-end
-
-
-function state:quit()
-	
-end
-
-
-function state:keypressed(key, uni)
-	if key=="escape" then
-		love.event.push("quit")
-	end
-end
-
-
-function state:keyreleased(key, uni)
-end
-
-
-function state:update(dt)
-  Level.get():update(dt)
-end
-
-
-function state:draw()
-  Level.get():draw()
-end
-
-return state

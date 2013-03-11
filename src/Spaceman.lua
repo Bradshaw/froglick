@@ -21,7 +21,8 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local Animal_mt = require("Animal")
-require("DebugView")
+--require("DebugView")
+require("SpacemanView")
 require("KeyboardController")
 
 
@@ -74,7 +75,7 @@ function Spaceman.new(x, y)
   setmetatable(self, {__index = prototype })
   
   -- attributes
-  self.view = DebugView --! FIXME
+  self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
 
   -- store player
