@@ -66,7 +66,7 @@ function prototype.tryMove(self, direction)
   if direction.x~=0 and not love.keyboard.isDown(" ") then
     self.moveIntent = direction.x
   end
-  self.inertia:plusequals(direction.x * 10, math.min(0,direction.y * 20))
+  self.inertia:plusequals(direction.x * 13, math.min(0,direction.y * 20))
 end
 
 function prototype.tryAttack(self, direction)
