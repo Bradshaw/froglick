@@ -46,8 +46,8 @@ function SpacemanView.draw(self, go) -- GameObject
   end
   if (go.attackTime<go.attackTimeout*5) then
   	if (go.attackTime<go.attackTimeout/2) then
-	  	SpacemanView.ANIM_MUZZLE:draw(go.pos.x, go.pos.y-20, 0, useful.tri(go.moveIntent>0,-1,1), useful.tri(self.muzflip,1,-1), 96+16+math.random(-1,1), 12+math.random(-1,1))
 	  	SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.moveIntent>0,-1,1), 1, 16+math.random(-1,1), math.random(-1,1))
+      SpacemanView.ANIM_MUZZLE:draw(go.pos.x, go.pos.y-19, 0, useful.tri(go.moveIntent>0,-1,1), useful.tri(self.muzflip,1,-1), 96+13+math.random(-1,1), 12)
 	else
 		SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.moveIntent>0,-1,1), 1, 16, 0)
 	end

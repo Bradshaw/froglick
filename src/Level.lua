@@ -26,6 +26,7 @@ require("TileGrid")
 LevelGen = require("LevelGen")
 Camera = require("Camera")
 Projectile = require("Projectile")
+Splosion = require("Splosion")
 
 
 --[[----------------------------------------------------------------------------
@@ -85,7 +86,7 @@ function prototype.draw(self)
           object:draw() 
         end)
 
-
+    Splosion.draw()
     --unindent to show graphics stack level
   love.graphics.pop()
 end

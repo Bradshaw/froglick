@@ -108,9 +108,11 @@ function state:draw()
  	love.graphics.pop()
  	
  	love.graphics.setCanvas()
+ 	love.graphics.push()
  	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
  	love.graphics.scale(2,2)
  	love.graphics.draw(vib)
+ 	love.graphics.pop()
 end
 
 return state

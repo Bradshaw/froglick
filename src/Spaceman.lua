@@ -25,6 +25,7 @@ local Animal_mt = require("Animal")
 
 require("SpacemanView")
 require("KeyboardController")
+Splosion = require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
 
@@ -78,7 +79,7 @@ function prototype.tryAttack(self, direction)
       self.view.muzflip = not self.view.muzflip
     end
     self.inertia:plusequals(-direction.x * 10, -math.min(0,direction.y * 20)) 
-    Projectile.new(self.pos.x,self.pos.y-20+math.random(-3,1),direction.x, direction.y)
+    Projectile.new(self.pos.x,self.pos.y-20+math.random(0,1),direction.x, direction.y)
   end
 end
 
@@ -103,7 +104,7 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
-  self.attackTimeout = 0.15
+  self.attackTimeout = 0.12
   self.attackTime = 0
   self.moveIntent = -1
 
