@@ -3,52 +3,57 @@ local Splosion = {}
 
 Splosion.all = {}
 
-function Splosion.new(x,y,mindiam,maxdiam,pow)
-	toggleDrunk = toggleDrunk+pow/100
+function Splosion.new(x,y,diam,pow)
 	local self = setmetatable({},{__index=Splosion_mt})
 	self.x = x
 	self.y = y
-	self.diam = mindiam + math.random()*(maxdiam-mindiam)
+	self.diam = diam
 	self.pow = pow
 	table.insert(Splosion.all, self)
+	if pow>1 then
+		local div = math.random(1,pow-1)
+		local nextup = {}
+		for i=1,div-1 do
+			local a = math.random()*math.pi*2
+			local d = math.random()*diam
+
+			nextup[i]={pow = math.floor(pow/div),
+			x = math.cos(a)*d,
+			y = math.sin(a)*d}
+		end
+		local a = math.random()*math.pi*2
+		local d = math.random()*diam
+		nextup[div] = {pow = pow%div,
+		x = math.cos(a)*d,
+		y = math.sin(a)*d}
+		for i,v in ipairs(nextup) do
+			--print("recur")
+			Splosion.new(self.x+v.x,self.y+v.y,diam*0.8,v.pow)
+		end
+	end
 	return self
 end
 
-function Splosion.draw()
-	love.graphics.setColor(255,125,0)
+function Splosion.update(dt)
 	useful.map(Splosion.all,
 		function(s)
-			love.graphics.circle("fill",s.x,s.y,s.diam+1)
+			s.diam = s.diam-dt*250
+		end)
+end
+
+function Splosion.draw()
+	love.graphics.setColor(255,180,0)
+	useful.map(Splosion.all,
+		function(s)
+			love.graphics.circle("fill",s.x,s.y,(s.diam)+2)
 			--s.purge = true
 		end)
 	love.graphics.setColor(255,255,255)
 	useful.map(Splosion.all,
 		function(s)
 			love.graphics.circle("fill",s.x,s.y,s.diam)
-			if s.rec then
+			if s.diam<2 then
 				s.purge = true
-				if s.pow>1 then
-					local div = math.random(1,s.pow-1)
-					local nextup = {}
-					for i=1,div-1 do
-						local a = math.random()*math.pi*2
-						local d = math.random()*s.diam*2
-
-						nextup[i]={pow = math.floor(s.pow/div),
-						x = math.cos(a)*d,
-						y = math.sin(a)*d}
-					end
-					local a = math.random()*math.pi*2
-						local d = math.random()*s.diam*2
-					nextup[div] = {pow = s.pow%div,
-					x = math.cos(a)*d,
-					y = math.sin(a)*d}
-					for i,v in ipairs(nextup) do
-						Splosion.new(s.x+v.x,s.y+v.y,s.diam*0.8,s.diam,v.pow)
-					end
-				end
-			else
-				s.rec = true
 			end
 		end)
 end

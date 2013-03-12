@@ -11,7 +11,7 @@ function Projectile.new( x, y, ndx, ndy, onimpact)
 	self.dx = ndx*3000
 	self.dy = ndy*3000
 	self.onimpact = onimpact or function(self,sx,sy)
-		Splosion.new(sx,sy,15,15,10)
+		Splosion.new(sx,sy,15,10)
 	end
 
 	table.insert(Projectile.all,self)

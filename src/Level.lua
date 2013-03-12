@@ -42,6 +42,7 @@ CLASS METHODS
 
 function prototype.update(self, dt)
   Projectile.update(dt)
+  Splosion.update(dt)
   local previous = nil
   useful.map(self.game_objects, 
       
