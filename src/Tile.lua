@@ -105,6 +105,7 @@ function Tile.new(wall)
   -- initialise attributes
   self.wall = wall
   self.part = 0
+  self.variation = math.random(10000)
   
   -- return the instance
   return self
