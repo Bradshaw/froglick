@@ -30,6 +30,10 @@ local state = gstate.new()
 
 
 function state:init()
+	vib = love.graphics.newCanvas(1024,1024)
+	vib:setFilter("nearest","nearest")
+	cnv = love.graphics.newCanvas(1024,1024)
+	cnv:setFilter("nearest","nearest")
 end
 
 
@@ -72,6 +76,9 @@ function state:keypressed(key, uni)
 	if key=="escape" then
 		love.event.push("quit")
 	end
+	if key==" " then
+		toggleDrunk = not toggleDrunk
+	end
 end
 
 
@@ -81,11 +88,29 @@ end
 
 function state:update(dt)
   Level.get():update(dt)
+  time = (time or 0) + dt
 end
 
 
 function state:draw()
-  Level.get():draw()
+	love.graphics.setCanvas(cnv)
+	love.graphics.clear()
+ 	Level.get():draw()
+
+ 	love.graphics.setCanvas(vib)
+ 	love.graphics.push()
+ 	if toggleDrunk then
+ 		love.graphics.translate(400+math.sin(time)*15,200+math.sin(time/3)*15)
+ 		love.graphics.rotate(math.cos(time/3)/10)
+ 		love.graphics.translate(-400,-200)
+ 	end
+ 	love.graphics.draw(cnv)
+ 	love.graphics.pop()
+ 	
+ 	love.graphics.setCanvas()
+ 	love.graphics.translate(-400,-200)
+ 	love.graphics.scale(2,2)
+ 	love.graphics.draw(vib)
 end
 
 return state

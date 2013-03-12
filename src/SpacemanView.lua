@@ -35,6 +35,6 @@ CLASS (STATIC) FUNCTIONS
 function SpacemanView.draw(self, go) -- GameObject
   
   --TODO FIXME for obvious reasons
-  SpacemanView.ANIM_WALK:draw(go.pos.x - go.w/2, go.pos.y - 32)
+  SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
 
 end
