@@ -77,6 +77,7 @@ function prototype.draw(self)
     
     -- draw the terrain
     self.tilegrid:draw()
+    Projectile.draw()
     
     -- draw game objects (characters, particles, etc)
     useful.map(self.game_objects, 
@@ -84,7 +85,6 @@ function prototype.draw(self)
           object:draw() 
         end)
 
-    Projectile.draw()
 
     --unindent to show graphics stack level
   love.graphics.pop()

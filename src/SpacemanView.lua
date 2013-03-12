@@ -27,6 +27,8 @@ SpacemanView = {}
 --FIXME should be in love.load
 SpacemanView.IMAGE = love.graphics.newImage("images/charactersheet1.PNG")
 SpacemanView.ANIM_UPPER_BODY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 0, 0)
+SpacemanView.ANIM_MUZZLE = newAnimation(SpacemanView.IMAGE, 96, 32, 0.1, 1, 0, 4)
+SpacemanView.ANIM_UPPER_BODY_SHOOTY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 2, 0)
 SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 0, 1)
 SpacemanView.ANIM_STOP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 4, 0)
 
@@ -42,7 +44,16 @@ function SpacemanView.draw(self, go) -- GameObject
   else
   	SpacemanView.ANIM_STOP:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
   end
-  SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+  if (go.attackTime<go.attackTimeout*2) then
+  	if (go.attackTime<go.attackTimeout/2) then
+	  	SpacemanView.ANIM_MUZZLE:draw(go.pos.x, go.pos.y-20, 0, useful.tri(go.inertia.x>0,-1,1), useful.tri(self.muzflip,1,-1), 96+16, 12)
+	  	SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 15, 0)
+	else
+		SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+	end
+  else
+  	SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+  end
 
 end
 

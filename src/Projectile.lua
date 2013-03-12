@@ -6,8 +6,10 @@ function Projectile.new( x, y, ndx, ndy, onimpact)
 	local self = setmetatable({},{__index=Projectile_mt})
 	self.x = x
 	self.y = y
-	self.dx = ndx*500
-	self.dy = ndy*500
+	self.oldx = x
+	self.oldy = y
+	self.dx = ndx*3000
+	self.dy = ndy*3000
 	self.onimpact = onimpact or function() end
 
 	table.insert(Projectile.all,self)
@@ -31,6 +33,8 @@ end
 
 
 function Projectile_mt.update(self, dt)
+	self.oldx = self.x
+	self.oldy = self.y
 	self.x = self.x+self.dx * dt
 	self.y = self.y+self.dy * dt
 
@@ -42,7 +46,7 @@ function Projectile_mt.update(self, dt)
 end
 
 function Projectile_mt.draw(self)
-	love.graphics.point(self.x,self.y)
+	love.graphics.line(self.x,self.y,self.oldx,self.oldy)
 end
 
 

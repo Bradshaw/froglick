@@ -67,7 +67,10 @@ end
 function prototype.tryAttack(self, direction)
   if self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
     self.attackTime = 0
-    Projectile.new(self.pos.x,self.pos.y-16,direction.x, direction.y)
+    if math.random()>0.5 then
+      self.view.muzflip = not self.view.muzflip
+    end
+    Projectile.new(self.pos.x,self.pos.y-20+math.random(-3,1),direction.x, direction.y)
   end
 end
 

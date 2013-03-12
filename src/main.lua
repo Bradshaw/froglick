@@ -1,5 +1,6 @@
 function love.load(arg)
 	love.graphics.setDefaultImageFilter("nearest","nearest")
+	love.graphics.setLineStyle("rough",1)
 	gstate = require "gamestate"
 	game = require("game")
 	gstate.switch(game)
