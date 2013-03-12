@@ -54,6 +54,8 @@ function SpacemanView.draw(self, go) -- GameObject
   else
   	SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.moveIntent>0,-1,1), 1, 16, 0)
   end
+  love.graphics.setColor(64,127,255)
+  love.graphics.rectangle("fill",go.pos.x-8,go.pos.y-34,go.energy/100*16,2)
 
 end
 

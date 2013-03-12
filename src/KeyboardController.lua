@@ -58,8 +58,13 @@ function KeyboardController.control(self, animal) -- Animal
   --direction.x = 0 direction.y = 0
   if love.keyboard.isDown(" ") then -- QWERTY and AZERTY compatible
     --local attack = vector(direction.x, direction.y)
-    direction = vector(useful.tri(animal.moveIntent>0,1,-1),0)
-    animal:tryAttack(direction:normalize_inplace())
+    if love.keyboard.isDown("down") then
+      direction = vector(0,1)
+      animal:tryAttack(direction:normalize_inplace())
+    else
+      direction = vector(useful.tri(animal.moveIntent>0,1,-1),0)
+      animal:tryAttack(direction:normalize_inplace())
+    end
   else
     direction.x = 0 direction.y = 0
     animal:tryAttack(direction:normalize_inplace())

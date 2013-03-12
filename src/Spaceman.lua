@@ -66,19 +66,34 @@ function prototype.tryMove(self, direction)
   if direction.x~=0 and not love.keyboard.isDown(" ") then
     self.moveIntent = direction.x
   end
-  self.inertia:plusequals(direction.x * 13, math.min(0,direction.y * 20))
+  if direction.y<0 and math.floor(self.energy)>10 then
+    if not self.airborne then
+      self.inertia.y = -100
+      --self.energy = 0
+    else
+      self.boosting = true
+      self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 30))
+    end
+  else
+    if direction.y<0 then
+      self.energy=0
+    end
+    self.boosting = false
+    self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 6))
+  end
 end
 
 function prototype.tryAttack(self, direction)
-  if self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
+  if self.energy>30 and self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
     gunsound:rewind()
     gunsound:play()
     self.attackTime = 0
     toggleDrunk = 1
+    self.energy = math.max(0,self.energy-30)
     if math.random()>0.5 then
       self.view.muzflip = not self.view.muzflip
     end
-    self.inertia:plusequals(-direction.x * 10, -math.min(0,direction.y * 20)) 
+    --self.inertia:plusequals(-direction.x * 10, -math.max(0,direction.y * 30)) 
     Projectile.new(self.pos.x,self.pos.y-20+math.random(0,1),direction.x, direction.y)
   end
 end
@@ -87,7 +102,10 @@ function prototype.update(self, dt)
   local super = getmetatable(prototype)
   super.__index.update(self, dt)
   self.attackTime = self.attackTime+dt
-  
+  self.energy = math.min(self.energy+dt*100,100)
+  if self.boosting then
+    self.energy = math.min(self.energy-dt*400,100)
+  end  
 end
 
   
@@ -107,6 +125,7 @@ function Spaceman.new(x, y)
   self.attackTimeout = 0.12
   self.attackTime = 0
   self.moveIntent = -1
+  self.energy = 100
 
   -- store player
   table.insert(Spaceman, self) -- there can only be one
