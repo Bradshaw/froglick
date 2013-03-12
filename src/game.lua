@@ -76,9 +76,9 @@ function state:keypressed(key, uni)
 	if key=="escape" then
 		love.event.push("quit")
 	end
-	if key==" " then
-		toggleDrunk = not toggleDrunk
-	end
+	--if key==" " then
+	--	toggleDrunk = not toggleDrunk
+	--end
 end
 
 

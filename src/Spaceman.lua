@@ -22,6 +22,7 @@ IMPORTS
 
 local Animal_mt = require("Animal")
 --require("DebugView")
+
 require("SpacemanView")
 require("KeyboardController")
 
@@ -60,7 +61,21 @@ end
 
 function prototype.tryMove(self, direction)
   -- FIXME hacky tweak values
-  self.inertia:plusequals(direction.x * 10, direction.y * 20)
+  self.inertia:plusequals(direction.x * 10, math.min(0,direction.y * 20))
+end
+
+function prototype.tryAttack(self, direction)
+  if self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
+    self.attackTime = 0
+    Projectile.new(self.pos.x,self.pos.y-16,direction.x, direction.y)
+  end
+end
+
+function prototype.update(self, dt)
+  local super = getmetatable(prototype)
+  super.__index.update(self, dt)
+  self.attackTime = self.attackTime+dt
+  
 end
 
   
@@ -77,6 +92,8 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
+  self.attackTimeout = 0.1
+  self.attackTime = 0
 
   -- store player
   table.insert(Spaceman, self) -- there can only be one

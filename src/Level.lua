@@ -25,7 +25,7 @@ require("Spaceman")
 require("TileGrid")
 LevelGen = require("LevelGen")
 Camera = require("Camera")
-
+Projectile = require("Projectile")
 
 
 --[[----------------------------------------------------------------------------
@@ -40,6 +40,7 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.update(self, dt)
+  Projectile.update(dt)
   local previous = nil
   useful.map(self.game_objects, 
       
@@ -82,6 +83,8 @@ function prototype.draw(self)
         function(object) 
           object:draw() 
         end)
+
+    Projectile.draw()
 
     --unindent to show graphics stack level
   love.graphics.pop()

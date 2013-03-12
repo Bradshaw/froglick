@@ -25,8 +25,10 @@ CLASS
 SpacemanView = {}
 
 --FIXME should be in love.load
-SpacemanView.IMAGE = love.graphics.newImage("images/spaceman.png")
-SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 0)
+SpacemanView.IMAGE = love.graphics.newImage("images/charactersheet1.PNG")
+SpacemanView.ANIM_UPPER_BODY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 0, 0)
+SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 0, 1)
+SpacemanView.ANIM_STOP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 4, 0)
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
@@ -35,6 +37,15 @@ CLASS (STATIC) FUNCTIONS
 function SpacemanView.draw(self, go) -- GameObject
   
   --TODO FIXME for obvious reasons
-  SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+  if math.abs(go.inertia.x)>100 then
+  	SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+  else
+  	SpacemanView.ANIM_STOP:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
+  end
+  SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.inertia.x>0,-1,1), 1, 16, 0)
 
+end
+
+function SpacemanView.update(self, dt, go)
+	SpacemanView.ANIM_WALK:update(dt)
 end

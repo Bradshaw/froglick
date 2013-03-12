@@ -34,8 +34,12 @@ animation.__index = animation
 -- @param delay The delay between two frames
 -- @param frames The number of frames, 0 for autodetect
 -- @return The created animation
-function newAnimation(image, fw, fh, delay, frames)
+function newAnimation(image, fw, fh, delay, frames, x, y)
   local a = {}
+
+  x = x or 0
+  y = y or 0
+
   a.img = image
   a.frames = {}
   a.delays = {}
@@ -56,7 +60,7 @@ function newAnimation(image, fw, fh, delay, frames)
   for i = 1, frames do
     local row = math.floor((i-1)/rowsize)
     local column = (i-1)%rowsize
-    local frame = love.graphics.newQuad(column*fw, row*fh, fw, fh, imgw, imgh)
+    local frame = love.graphics.newQuad(column*fw+x*fw, row*fh+y*fh, fw, fh, imgw, imgh)
     table.insert(a.frames, frame)
     table.insert(a.delays, delay)
   end
