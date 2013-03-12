@@ -62,7 +62,7 @@ function prototype.update(self, dt)
           )
   
   -- camera follows player 1      
-  self.camera:pointAt(Spaceman[1])
+  self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
 end
   
 function prototype.draw(self)

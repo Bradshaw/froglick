@@ -39,8 +39,8 @@ function Camera_mt.pointAt(self,x,y)
 		self.x = x.pos.x
 		self.y = x.pos.y
 	else
-		self.x = math.floor(x)
-		self.y = math.floor(y)
+		self.x = x
+		self.y = y
 	end
 end
 

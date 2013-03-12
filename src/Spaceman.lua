@@ -26,6 +26,7 @@ local Animal_mt = require("Animal")
 require("SpacemanView")
 require("KeyboardController")
 
+gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -69,6 +70,8 @@ end
 
 function prototype.tryAttack(self, direction)
   if self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
+    gunsound:rewind()
+    gunsound:play()
     self.attackTime = 0
     toggleDrunk = 1
     if math.random()>0.5 then

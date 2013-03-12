@@ -39,7 +39,7 @@ CLASS (STATIC) FUNCTIONS
 function SpacemanView.draw(self, go) -- GameObject
   
   --TODO FIXME for obvious reasons
-  if math.abs(go.moveIntent)>100 then
+  if math.abs(go.inertia.x)>100 then
   	SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.moveIntent>0,-1,1), 1, 16, 0)
   else
   	SpacemanView.ANIM_STOP:draw(go.pos.x, go.pos.y - 32, 0, useful.tri(go.moveIntent>0,-1,1), 1, 16, 0)
