@@ -34,6 +34,7 @@ function state:init()
 	vib:setFilter("nearest","nearest")
 	cnv = love.graphics.newCanvas(1024,1024)
 	cnv:setFilter("nearest","nearest")
+	toggleDrunk = 0
 end
 
 
@@ -88,7 +89,8 @@ end
 
 function state:update(dt)
   Level.get():update(dt)
-  time = (time or 0) + dt
+  toggleDrunk = math.max(0,toggleDrunk-dt*10)
+  time = (time or 0) + dt*100
 end
 
 
@@ -99,11 +101,9 @@ function state:draw()
 
  	love.graphics.setCanvas(vib)
  	love.graphics.push()
- 	if toggleDrunk then
- 		love.graphics.translate(400+math.sin(time)*15,200+math.sin(time/3)*15)
- 		love.graphics.rotate(math.cos(time/3)/10)
- 		love.graphics.translate(-400,-200)
- 	end
+ 	love.graphics.translate(400+math.sin(time)*2*toggleDrunk,200+math.sin(time/3)*2*toggleDrunk)
+ 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
+ 	love.graphics.translate(-400,-200)
  	love.graphics.draw(cnv)
  	love.graphics.pop()
  	

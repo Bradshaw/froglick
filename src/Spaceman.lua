@@ -61,15 +61,20 @@ end
 
 function prototype.tryMove(self, direction)
   -- FIXME hacky tweak values
+  if direction.x~=0 and not love.keyboard.isDown(" ") then
+    self.moveIntent = direction.x
+  end
   self.inertia:plusequals(direction.x * 10, math.min(0,direction.y * 20))
 end
 
 function prototype.tryAttack(self, direction)
   if self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
     self.attackTime = 0
+    toggleDrunk = 1
     if math.random()>0.5 then
       self.view.muzflip = not self.view.muzflip
     end
+    self.inertia:plusequals(-direction.x * 10, -math.min(0,direction.y * 20)) 
     Projectile.new(self.pos.x,self.pos.y-20+math.random(-3,1),direction.x, direction.y)
   end
 end
@@ -95,8 +100,9 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
-  self.attackTimeout = 0.1
+  self.attackTimeout = 0.15
   self.attackTime = 0
+  self.moveIntent = -1
 
   -- store player
   table.insert(Spaceman, self) -- there can only be one
