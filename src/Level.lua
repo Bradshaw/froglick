@@ -108,6 +108,8 @@ function Level.__new()
   local self = {}
   setmetatable(self, {__index = prototype })
   
+
+
   -- create game object holder
   self.game_objects = {}
   

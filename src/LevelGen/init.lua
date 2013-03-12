@@ -73,6 +73,7 @@ function LevelGen.new(method)
   --local lev = dummy_tg()
 	local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
   -- FIXME currently "LevelGen" returns a TileGrid, not a Level
+  lev:batchTiles()
 	return lev
 end
 

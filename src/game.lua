@@ -101,14 +101,14 @@ function state:draw()
 
  	love.graphics.setCanvas(vib)
  	love.graphics.push()
- 	love.graphics.translate(400+math.sin(time)*2*toggleDrunk,200+math.sin(time/3)*2*toggleDrunk)
+ 	love.graphics.translate(love.graphics.getWidth()/2+math.sin(time)*2*toggleDrunk,love.graphics.getHeight()/2+math.sin(time/3)*2*toggleDrunk)
  	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
- 	love.graphics.translate(-400,-200)
+ 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
  	love.graphics.draw(cnv)
  	love.graphics.pop()
  	
  	love.graphics.setCanvas()
- 	love.graphics.translate(-400,-200)
+ 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
  	love.graphics.scale(2,2)
  	love.graphics.draw(vib)
 end

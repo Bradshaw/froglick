@@ -60,12 +60,19 @@ function prototype.map(self, ...)
 end
 
 function prototype.draw(self)
+  --[[]]
+  self.spritebatch:clear()
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
-      tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
+      if tilegrid:gridToTile(x, y).wall == Tile.FULL then
+        tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
+      end
+      --tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
     end,
     self
     )
+  --]]
+  love.graphics.draw(self.spritebatch)
 end
 
 function prototype.set(self, x, y, wall)
@@ -148,6 +155,23 @@ function prototype.collision_next(self, go, dt)
   return self:collision(go, go.pos.x + go.inertia.x*dt, go.pos.y + go.inertia.y*dt)
 end
 
+function prototype.batchTiles(self)
+  self.spritebatch:bind()
+  --self.spritebatch:clear()
+  local i = 0
+  for i,v in ipairs(self.tiles) do
+    for j,u in ipairs(v) do
+      if u.wall==Tile.FULL then
+        --print(i*Tile.SIZE.x,j*Tile.SIZE.y)
+        i = i+1
+        self.spritebatch:add(i*Tile.SIZE.x,j*Tile.SIZE.y)
+      end
+    end
+  end
+  print(i)
+  self.spritebatch:unbind()
+end
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
@@ -156,6 +180,9 @@ function TileGrid.new(xsize, ysize)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
+
+
+  self.spritebatch = love.graphics.newSpriteBatch( Tile.FULLIMAGE )
   
   -- create attributes
   self.size = vector(xsize, ysize)
