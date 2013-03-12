@@ -196,7 +196,6 @@ function TileGrid.new(xsize, ysize)
     if flal>5 then flal = 0 end
     for y = 1, self.size.y do
       self.tiles[x][y] = Tile.new(Tile.FULL)
-      self.tiles[x][y].variation = math.random(10000)
     end
   end
   

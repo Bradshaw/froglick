@@ -118,8 +118,8 @@ function LevelGen.unspikeify(lev)
 		for j,u in ipairs(v) do
 			if u.wall == Tile.BOTTOM_RIGHT and lev.tiles[i+1][j].wall==Tile.BOTTOM_LEFT then
 				if j<#v then
-					u.wall = Tile.EMPTY
-					lev.tiles[i+1][j].wall=Tile.EMPTY
+					u.wall = Tile.FULL
+					lev.tiles[i+1][j].wall=Tile.FULL
 				end
 			end
 		end
