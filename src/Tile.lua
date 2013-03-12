@@ -44,6 +44,15 @@ Tile.UNDECIDED = 6
 
 -- TODO THIS; BETTER!
 Tile.FULLIMAGE = love.graphics.newImage("images/Tile_Stone1_filled.PNG")
+Tile.FULLQUADS = {}
+table.insert(Tile.FULLQUADS,
+  love.graphics.newQuad(0,0,32,32,64,64))
+table.insert(Tile.FULLQUADS,
+  love.graphics.newQuad(0,32,32,32,64,64))
+table.insert(Tile.FULLQUADS,
+  love.graphics.newQuad(32,0,32,32,64,64))
+table.insert(Tile.FULLQUADS,
+  love.graphics.newQuad(32,32,32,32,64,64))
 Tile.SLOPEIMAGE = love.graphics.newImage("images/Tile_Stone1_slope.PNG")
 
 

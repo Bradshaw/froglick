@@ -65,9 +65,11 @@ function prototype.draw(self)
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
       if tilegrid:gridToTile(x, y).wall == Tile.FULL then
-        tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
+        --tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
+        tilegrid.spritebatch:addq(Tile.FULLQUADS[tilegrid:gridToTile(x, y).variation%4+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+      else
+        tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
       end
-      --tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
     end,
     self
     )
@@ -194,6 +196,7 @@ function TileGrid.new(xsize, ysize)
     if flal>5 then flal = 0 end
     for y = 1, self.size.y do
       self.tiles[x][y] = Tile.new(Tile.FULL)
+      self.tiles[x][y].variation = math.random(10000)
     end
   end
   

@@ -55,7 +55,8 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 			end
 		end
 	end
-	
+	LevelGen.slopify(lev)
+	LevelGen.unspikeify(lev)
 	return lev
 end
 
@@ -85,6 +86,45 @@ function LevelGen.rectangle(lev, x1, y1, x2, y2, wall)
 	end
 end
 
+function LevelGen.slopify(lev)
+	local temp = {}
+	for i,v in ipairs(lev.tiles) do
+		temp[i]={}
+		for j,u in ipairs(v) do
+			temp[i][j]=u.wall==Tile.FULL
+		end
+	end
+	for i = 2,#temp-1 do
+		local v = lev.tiles[i]
+		for j=2,#temp[i]-1 do
+			local u=v[j]
+			if temp[i][j] then
+				if (temp[i-1][j]) and (temp[i][j-1]) and (not temp[i+1][j]) and (not temp[i][j+1]) then
+					u.wall = Tile.TOP_LEFT
+				elseif (not temp[i-1][j]) and (temp[i][j-1]) and (temp[i+1][j]) and (not temp[i][j+1]) then
+					u.wall = Tile.TOP_RIGHT
+				elseif (not temp[i-1][j]) and (not temp[i][j-1]) and (temp[i+1][j]) and (temp[i][j+1]) then
+					u.wall = Tile.BOTTOM_RIGHT
+				elseif (temp[i-1][j]) and (not temp[i][j-1]) and (not temp[i+1][j]) and (temp[i][j+1]) then
+					u.wall = Tile.BOTTOM_LEFT
+				end
+			end
+		end
+	end
+end
+
+function LevelGen.unspikeify(lev)
+	for i,v in ipairs(lev.tiles) do
+		for j,u in ipairs(v) do
+			if u.wall == Tile.BOTTOM_RIGHT and lev.tiles[i+1][j].wall==Tile.BOTTOM_LEFT then
+				if j<#v then
+					u.wall = Tile.EMPTY
+					lev.tiles[i+1][j].wall=Tile.EMPTY
+				end
+			end
+		end
+	end
+end
 
 function LevelGen.maze(lev, x, y,part)
 	local dug = 0
