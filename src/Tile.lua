@@ -51,6 +51,24 @@ Tile.CORNERQUADS[Tile.TOP_RIGHT] = love.graphics.newQuad(96,32,32,32,128,128)
 Tile.CORNERQUADS[Tile.BOTTOM_LEFT] = love.graphics.newQuad(64,0,32,32,128,128)
 Tile.CORNERQUADS[Tile.BOTTOM_RIGHT] = love.graphics.newQuad(96,0,32,32,128,128)
 
+Tile.EDGEQUADS = {}
+Tile.EDGEQUADS.LEFT = {
+  love.graphics.newQuad(64,64,32,32,128,128),
+  love.graphics.newQuad(64,96,32,32,128,128)
+}
+Tile.EDGEQUADS.RIGHT = {
+  love.graphics.newQuad(96,64,32,32,128,128),
+  love.graphics.newQuad(96,96,32,32,128,128)
+}
+Tile.EDGEQUADS.TOP = {
+  love.graphics.newQuad(0,64,32,32,128,128),
+  love.graphics.newQuad(32,64,32,32,128,128)
+}
+Tile.EDGEQUADS.BOTTOM = {
+  love.graphics.newQuad(0,96,32,32,128,128),
+  love.graphics.newQuad(32,96,32,32,128,128)
+}
+
 
 table.insert(Tile.FULLQUADS,
   love.graphics.newQuad(0,0,32,32,128,128))

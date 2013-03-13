@@ -72,6 +72,20 @@ function prototype.draw(self)
           Tile.CORNERQUADS[tilegrid:gridToTile(x, y).wall],
           x*Tile.SIZE.x,
           y*Tile.SIZE.y)
+      elseif tilegrid:gridToTile(x, y).wall == Tile.EMPTY then
+        if tilegrid:gridToTile(x+1, y).wall == Tile.FULL then
+          tilegrid.spritebatch:addq(Tile.EDGEQUADS.RIGHT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        end
+        if tilegrid:gridToTile(x-1, y).wall == Tile.FULL then
+          tilegrid.spritebatch:addq(Tile.EDGEQUADS.LEFT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        end
+        if tilegrid:gridToTile(x, y+1).wall == Tile.FULL then
+          tilegrid.spritebatch:addq(Tile.EDGEQUADS.BOTTOM[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        end
+        if tilegrid:gridToTile(x, y-1).wall == Tile.FULL then
+          tilegrid.spritebatch:addq(Tile.EDGEQUADS.TOP[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        end
+
       else
         tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
       end
