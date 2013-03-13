@@ -67,6 +67,11 @@ function prototype.draw(self)
       if tilegrid:gridToTile(x, y).wall == Tile.FULL then
         --tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
         tilegrid.spritebatch:addq(Tile.FULLQUADS[tilegrid:gridToTile(x, y).variation%4+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+      elseif tilegrid:gridToTile(x, y).wall>=1 and tilegrid:gridToTile(x, y).wall<=4 then
+        tilegrid.spritebatch:addq(
+          Tile.CORNERQUADS[tilegrid:gridToTile(x, y).wall],
+          x*Tile.SIZE.x,
+          y*Tile.SIZE.y)
       else
         tilegrid : gridToTile(x, y) : draw(x*Tile.SIZE.x, y*Tile.SIZE.y)
       end
