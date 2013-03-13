@@ -125,11 +125,11 @@ function prototype.requestAttack(self, direction)
   self.requested_attack = true
   
   -- default to current legs_side if no direction is specified
-  if (direction.x == 0) and (direction.y == 0) then
+  if (not self:weaponRaised()) and (direction.x == 0) and (direction.y == 0) then
     direction.x = self.legs_side
   end
  
-  -- reset legs side only if a move is not requested
+  -- reset legs side only if a move is not requested and not already firing
   if (direction.x ~= 0) and (not self.requested_move) then
     self.legs_side = useful.sign(direction.x)
   end
@@ -171,6 +171,10 @@ end
 
 function prototype:isAttacking()
   return (self.attackTime < self.attackTimeout/2)
+end
+
+function prototype:weaponRaised()
+  return (self.attackTime < self.attackTimeout*5)
 end
 
 
