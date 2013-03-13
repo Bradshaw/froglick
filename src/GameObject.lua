@@ -54,10 +54,10 @@ prototype.w = 0
 prototype.h = 0
 
 -- default physical properties
-prototype.collides_walls = false
+prototype.COLLIDES_WALLS = false
 prototype.airborne = false
-prototype.gravity = 0
-prototype.friction = 0
+prototype.GRAVITY = 0
+prototype.FRICTION = 0
 
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
@@ -92,9 +92,10 @@ function prototype.update(self, dt)
   
   -- short-hand alias
   local walls = Level.get().tilegrid
+  local fisix = self.fisix or self
   
   -- check for collision with walls
-  if self.collides_walls then
+  if fisix.COLLIDES_WALLS then
     -- check if we're on the ground
     self.airborne = 
       (not walls:pixelCollision(self.pos.x, self.pos.y+1))
@@ -104,24 +105,22 @@ function prototype.update(self, dt)
   end
   
   -- apply gravity
-  if self.airborne or not self.collides_walls then
-    self.inertia.y = self.inertia.y + self.gravity*dt
+  if self.airborne or not fisix.COLLIDES_WALLS then
+    self.inertia.y = self.inertia.y + fisix.GRAVITY*dt
   end
   
   -- apply friction
-  if self.friction_airborne and self.airborne then
-    self.inertia:divequals(math.pow(self.friction_airborne, dt))
-  elseif self.friction then
-    self.inertia:divequals(math.pow(self.friction, dt))
+  if fisix.FRICTION then
+    self.inertia:divequals(math.pow(fisix.FRICTION, dt))
   end
   
   -- clamp inertia to terminal velocity
-  if self.terminal_velocity then
-    if math.abs(self.inertia.x) > self.terminal_velocity then
-      self.inertia.x = self.terminal_velocity * useful.sign(self.inertia.x)
+  if fisix.TERMINAL_VELOCITY then
+    if math.abs(self.inertia.x) > fisix.TERMINAL_VELOCITY then
+      self.inertia.x = self.TERMINAL_VELOCITY * useful.sign(self.inertia.x)
     end
-    if math.abs(self.inertia.y) > self.terminal_velocity then 
-      self.inertia.y = self.terminal_velocity * useful.sign(self.inertia.y)
+    if math.abs(self.inertia.y) > fisix.TERMINAL_VELOCITY then 
+      self.inertia.y = fisix.TERMINAL_VELOCITY * useful.sign(self.inertia.y)
     end
   end
   
@@ -130,7 +129,7 @@ function prototype.update(self, dt)
   if math.abs(self.inertia.y) < 0.01 then self.inertia.y = 0 end
   
   -- collider objects are tricky...
-  if self.collides_walls then
+  if fisix.COLLIDES_WALLS then
     -- move the object HORIZONTALLY FIRST
     if self.inertia.x ~= 0 then
       local move = self.inertia.x*dt

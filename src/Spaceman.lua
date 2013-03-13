@@ -47,10 +47,9 @@ setmetatable(prototype, { __index = Animal_mt })
 -- default attributes
 prototype.w = 10
 prototype.h = 20
-prototype.collides_walls = true
-prototype.gravity = 300
-prototype.friction = 50
-prototype.friction_airborne = 2
+prototype.COLLIDES_WALLS = true
+prototype.GRAVITY = 300
+prototype.FRICTION = 50 -- 2
 prototype.attackTimeout = 0.12
 
 --[[----------------------------------------------------------------------------
