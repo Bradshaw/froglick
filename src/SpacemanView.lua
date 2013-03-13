@@ -62,6 +62,8 @@ function SpacemanView.draw(self, go) -- GameObject
   end
   love.graphics.setColor(64,127,255)
   love.graphics.rectangle("fill",go.pos.x-8,go.pos.y-34,go.energy/100*16,2)
+  
+  love.graphics.print(useful.tri(go.airborne,"X","O"), go.pos.x, go.pos.y)
 
 end
 
