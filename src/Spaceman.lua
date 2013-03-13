@@ -63,6 +63,7 @@ prototype.w = 10
 prototype.h = 20
 prototype.attackTimeout = 0.12
 prototype.attackCost = 30
+prototype.attackRecoil = 10
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -72,45 +73,74 @@ function prototype.__tostring(self)
   return "Spaceman(" .. self.id .. ")"
 end
 
-function prototype.tryMove(self, direction)
+
+--[[----------------------------------------------------------------------------
+Moving
+--]]
+
+function prototype.requestMove(self, direction)
   
-  if direction.x ~= 0 and not self:isAttacking() then
+  -- is the character attempting to move or to stop?
+  self.requested_move = (direction.x ~= 0 or direction.y ~= 0)
+  
+  -- request movement
+  if self.requested_move then
+    if direction.x ~= 0 and not self.requested_attack then
+      self.legs_side = useful.sign(direction.x)
+    end
+    
+    if direction.y < 0 and math.floor(self.energy) > 10 then
+      if not self.airborne then
+        self.inertia.y = -100
+        --self.energy = 0
+      else
+        self.boosting = true
+        -- FIXME hacky tweak values
+        self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 30))
+      end
+    else
+      if direction.y < 0 then
+        self.energy = 0
+      end
+      self.boosting = false
+      self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 6))
+    end
+  
+  -- request stop
+  else
+    --! TODO slow down movement
+  end
+  
+end
+
+
+
+--[[----------------------------------------------------------------------------
+Attacking
+--]]
+
+
+function prototype.requestAttack(self, direction)
+  -- save the attack request, execute it in the update
+  self.requested_attack = true
+  
+  -- default to current legs_side if no direction is specified
+  if (direction.x == 0) and (direction.y == 0) then
+    direction.x = self.legs_side
+  end
+ 
+  -- reset legs side only if a move is not requested
+  if (direction.x ~= 0) and (not self.requested_move) then
     self.legs_side = useful.sign(direction.x)
   end
   
-  if direction.y < 0 and math.floor(self.energy) > 10 then
-    if not self.airborne then
-      self.inertia.y = -100
-      --self.energy = 0
-    else
-      self.boosting = true
-      -- FIXME hacky tweak values
-      self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 30))
-    end
-  else
-    if direction.y < 0 then
-      self.energy = 0
-    end
-    self.boosting = false
-    self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 6))
-  end
+  -- reset torso facing to attack direction
+  self.torso_facing:reset(direction)
 end
 
-function prototype.tryAttack(self, direction)
- 
+function prototype.tryAttack(self)
   -- able to fire?
-  if self.energy > self.attackCost and self:isReloaded() and
-      (direction.x == 0 or direction.y == 0) then
-    -- default to current legs_side if no direction is specified
-    if direction.x == 0 and direction.y == 0 then
-      direction.x = self.legs_side
-    end
-    
-    -- turn in direction of attack
-    --! FIXME we need a legs_side for legs (X-axis) and for body (X and Y)
-    if direction.x ~= 0 then
-      self.legs_side = useful.sine(direction.x)
-    end
+  if (self.energy > self.attackCost) and self:isReloaded() then
     
     -- play gun sound and wobble camera
     gunsound:rewind()
@@ -127,12 +157,26 @@ function prototype.tryAttack(self, direction)
     end
     
     -- apply recoil
-    self.inertia:plusequals(-direction.x * 10, -math.max(0, direction.y * 30)) 
+    self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
-    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0,1), direction.x, direction.y)
+    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
+                    self.torso_facing.x, self.torso_facing.y)
   end
 end
+
+function prototype:isReloaded()
+  return (self.attackTime > self.attackTimeout)
+end
+
+function prototype:isAttacking()
+  return (self.attackTime < self.attackTimeout/2)
+end
+
+
+--[[----------------------------------------------------------------------------
+Update
+--]]
 
 function prototype.update(self, dt)
   -- super-class update
@@ -153,14 +197,12 @@ function prototype.update(self, dt)
   if self.boosting then
     self.energy = math.min(self.energy - dt*400, 100)
   end  
-end
-
-function prototype:isReloaded()
-  return (self.attackTime > self.attackTimeout)
-end
-
-function prototype:isAttacking()
-  return (self.attackTime < self.attackTimeout/2)
+  
+  -- attack if attack is requested
+  if self.requested_attack then
+    self:tryAttack()
+    self.requested_attack = false
+  end
 end
 
 --[[----------------------------------------------------------------------------
@@ -172,14 +214,23 @@ function Spaceman.new(x, y)
   local self = Animal.new(x, y)
   setmetatable(self, {__index = prototype })
   
-  -- attributes
+  -- MVC
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
+  
+  -- combat
   self.attackTime = math.huge -- infinite time has passed since last attack
-  self.legs_side = -1
   self.energy = 100
-  self.fisix = Spaceman.GROUND_FISIX;
-
+  
+  -- movement
+  self.fisix = Spaceman.GROUND_FISIX
+  self.legs_side = -1
+  self.torso_facing = vector(-1, 0)
+  
+  -- input state
+  self.requested_move = false
+  self.requested_attack = false
+  
   -- store player
   table.insert(Spaceman, self) -- there can only be one
   

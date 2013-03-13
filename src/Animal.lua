@@ -19,7 +19,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local GameObject_mt = require("GameObject")
+local super = require("GameObject")
 
  
 --[[----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local prototype = {}
-setmetatable(prototype, { __index = GameObject_mt })
+setmetatable(prototype, { __index = super })
 
 -- default attributes
 prototype.hp = 100
@@ -49,11 +49,11 @@ function prototype.__tostring(self)
   return "Animal(" .. self.id .. ")"
 end
 
-function prototype.tryMove(self, direction)
+function prototype.requestMove(self, direction)
   --! override me!
 end
 
-function prototype.tryAttack(self, direction)
+function prototype.requestAttack(self, direction)
   --! override me!
 end
 
