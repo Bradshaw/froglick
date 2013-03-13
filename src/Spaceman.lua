@@ -36,6 +36,20 @@ CLASS
 -- global-scoped
 Spaceman = { }
 
+Spaceman.GROUND_FISIX = 
+{
+  COLLIDES_WALLS = true,
+  GRAVITY = 0,
+  FRICTION = 50
+}
+
+Spaceman.AIR_FISIX = 
+{
+  COLLIDES_WALLS = true,
+  GRAVITY = 300,
+  FRICTION = 2
+}
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -47,9 +61,6 @@ setmetatable(prototype, { __index = Animal_mt })
 -- default attributes
 prototype.w = 10
 prototype.h = 20
-prototype.COLLIDES_WALLS = true
-prototype.GRAVITY = 300
-prototype.FRICTION = 50 -- 2
 prototype.attackTimeout = 0.12
 
 --[[----------------------------------------------------------------------------
@@ -65,7 +76,7 @@ function prototype.tryMove(self, direction)
   if direction.x~=0 and not self:isAttacking() then
     self.moveIntent = direction.x
   end
-  if direction.y<0 and math.floor(self.energy)>10 then
+  if direction.y < 0 and math.floor(self.energy) > 10 then
     if not self.airborne then
       self.inertia.y = -100
       --self.energy = 0
@@ -84,25 +95,36 @@ function prototype.tryMove(self, direction)
 end
 
 function prototype.tryAttack(self, direction)
-  if self.energy>30 and self:isReloaded() and (direction.x~=0 or direction.y~=0) then
+  if self.energy > 30 and self:isReloaded() and (direction.x~=0 or direction.y~=0) then
     gunsound:rewind()
     gunsound:play()
     self.attackTime = 0
     toggleDrunk = 1
-    self.energy = math.max(0,self.energy-30)
-    if math.random()>0.5 then
+    self.energy = math.max(0, self.energy - 30)
+    if math.random() > 0.5 then
       self.view.muzflip = not self.view.muzflip
     end
     --self.inertia:plusequals(-direction.x * 10, -math.max(0,direction.y * 30)) 
-    Projectile.new(self.pos.x,self.pos.y-20+math.random(0,1),direction.x, direction.y)
+    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0,1), direction.x, direction.y)
   end
 end
 
 function prototype.update(self, dt)
+  -- super-class update
   local super = getmetatable(prototype)
   super.__index.update(self, dt)
-  self.attackTime = self.attackTime+dt
+  
+  -- change fisix
+  self.fisix 
+    = useful.tri(self.airborne, Spaceman.AIR_FISIX, Spaceman.GROUND_FISIX);
+  
+  -- finish attack
+  self.attackTime = self.attackTime + dt
+  
+  -- recharge energy
   self.energy = math.min(self.energy + dt*100, 100)
+  
+  -- boost consumes energy
   if self.boosting then
     self.energy = math.min(self.energy - dt*400, 100)
   end  
@@ -131,6 +153,7 @@ function Spaceman.new(x, y)
   self.attackTime = math.huge -- infinite time has passed since last attack
   self.moveIntent = -1
   self.energy = 100
+  self.fisix = Spaceman.GROUND_FISIX;
 
   -- store player
   table.insert(Spaceman, self) -- there can only be one
