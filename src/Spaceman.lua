@@ -51,7 +51,7 @@ prototype.collides_walls = true
 prototype.gravity = 300
 prototype.friction = 50
 prototype.friction_airborne = 2
-prototype.terminal_velocity = 300
+prototype.attackTimeout = 0.12
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -62,8 +62,8 @@ function prototype.__tostring(self)
 end
 
 function prototype.tryMove(self, direction)
-  -- FIXME hacky tweak values
-  if direction.x~=0 and not love.keyboard.isDown(" ") then
+  
+  if direction.x~=0 and not self:isAttacking() then
     self.moveIntent = direction.x
   end
   if direction.y<0 and math.floor(self.energy)>10 then
@@ -72,6 +72,7 @@ function prototype.tryMove(self, direction)
       --self.energy = 0
     else
       self.boosting = true
+      -- FIXME hacky tweak values
       self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 30))
     end
   else
@@ -84,7 +85,7 @@ function prototype.tryMove(self, direction)
 end
 
 function prototype.tryAttack(self, direction)
-  if self.energy>30 and self.attackTime>self.attackTimeout and (direction.x~=0 or direction.y~=0) then
+  if self.energy>30 and self:isReloaded() and (direction.x~=0 or direction.y~=0) then
     gunsound:rewind()
     gunsound:play()
     self.attackTime = 0
@@ -102,13 +103,19 @@ function prototype.update(self, dt)
   local super = getmetatable(prototype)
   super.__index.update(self, dt)
   self.attackTime = self.attackTime+dt
-  self.energy = math.min(self.energy+dt*100,100)
+  self.energy = math.min(self.energy + dt*100, 100)
   if self.boosting then
-    self.energy = math.min(self.energy-dt*400,100)
+    self.energy = math.min(self.energy - dt*400, 100)
   end  
 end
 
-  
+function prototype:isReloaded()
+  return (self.attackTime > self.attackTimeout)
+end
+
+function prototype:isAttacking()
+  return (self.attackTime < self.attackTimeout/2)
+end
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
@@ -122,8 +129,7 @@ function Spaceman.new(x, y)
   -- attributes
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
-  self.attackTimeout = 0.12
-  self.attackTime = 0
+  self.attackTime = math.huge -- infinite time has passed since last attack
   self.moveIntent = -1
   self.energy = 100
 

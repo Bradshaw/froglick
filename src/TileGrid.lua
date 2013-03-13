@@ -144,14 +144,14 @@ function prototype.pixelCollision(self, x, y)
     -- switch over Tile wall types
     if tile.wall == Tile.EMPTY then
       return false
-    --[[elseif tile.wall == Tile.TOP_LEFT then
+    elseif tile.wall == Tile.TOP_LEFT then
       return (off_x + off_y < 1)
     elseif tile.wall == Tile.TOP_RIGHT then
       return (off_x - off_y > 0)
     elseif tile.wall == Tile.BOTTOM_LEFT then
       return (off_x - off_y < 0)
     elseif tile.wall == Tile.BOTTOM_RIGHT then
-      return (off_x + off_y > 1) --]]
+      return (off_x + off_y > 1)
     elseif tile.wall == Tile.FULL then
       return true
     end
