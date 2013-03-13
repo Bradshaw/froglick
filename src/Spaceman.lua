@@ -75,7 +75,7 @@ end
 function prototype.tryMove(self, direction)
   
   if direction.x ~= 0 and not self:isAttacking() then
-    self.facing = useful.sign(direction.x)
+    self.legs_side = useful.sign(direction.x)
   end
   
   if direction.y < 0 and math.floor(self.energy) > 10 then
@@ -99,16 +99,17 @@ end
 function prototype.tryAttack(self, direction)
  
   -- able to fire?
-  if self.energy > self.attackCost and self:isReloaded() then
-    -- default to current facing if no direction is specified
+  if self.energy > self.attackCost and self:isReloaded() and
+      (direction.x == 0 or direction.y == 0) then
+    -- default to current legs_side if no direction is specified
     if direction.x == 0 and direction.y == 0 then
-      direction.x = self.facing
+      direction.x = self.legs_side
     end
     
     -- turn in direction of attack
-    --! FIXME we need a facing for legs (X-axis) and for body (X and Y)
+    --! FIXME we need a legs_side for legs (X-axis) and for body (X and Y)
     if direction.x ~= 0 then
-      self.facing = direction.x
+      self.legs_side = useful.sine(direction.x)
     end
     
     -- play gun sound and wobble camera
@@ -175,7 +176,7 @@ function Spaceman.new(x, y)
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
   self.attackTime = math.huge -- infinite time has passed since last attack
-  self.facing = -1
+  self.legs_side = -1
   self.energy = 100
   self.fisix = Spaceman.GROUND_FISIX;
 

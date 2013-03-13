@@ -40,21 +40,21 @@ function SpacemanView.draw(self, go) -- GameObject
   
   --TODO FIXME for obvious reasons
   if math.abs(go.inertia.x)>50 and not go.airborne  then
-  	SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, -go.facing, 1, 16, 0)
+  	SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, -go.legs_side, 1, 16, 0)
   else
-  	SpacemanView.ANIM_STOP:draw(go.pos.x, go.pos.y - 32, 0, -go.facing, 1, 16, 0)
+  	SpacemanView.ANIM_STOP:draw(go.pos.x, go.pos.y - 32, 0, -go.legs_side, 1, 16, 0)
   end
   if (go.attackTime<go.attackTimeout*5) then
   	if go:isAttacking() then
 	  	SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, 
-          -go.facing, 1, 16+math.random(-1,1), math.random(-1,1))
-      SpacemanView.ANIM_MUZZLE:draw(go.pos.x, go.pos.y-19, 0, -go.facing, 
+          -go.legs_side, 1, 16+math.random(-1,1), math.random(-1,1))
+      SpacemanView.ANIM_MUZZLE:draw(go.pos.x, go.pos.y-19, 0, -go.legs_side, 
           useful.tri(self.muzflip,1,-1), 96+13+math.random(-1,1), 12)
 	else
-		SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, -go.facing, 1, 16, 0)
+		SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(go.pos.x, go.pos.y - 32, 0, -go.legs_side, 1, 16, 0)
 	end
   else
-  	SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, -go.facing, 1, 16, 0)
+  	SpacemanView.ANIM_UPPER_BODY:draw(go.pos.x, go.pos.y - 32, 0, -go.legs_side, 1, 16, 0)
   end
   love.graphics.setColor(64,127,255)
   love.graphics.rectangle("fill",go.pos.x-8,go.pos.y-34,go.energy/100*16,2)
