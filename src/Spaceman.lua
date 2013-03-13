@@ -75,7 +75,7 @@ end
 function prototype.tryMove(self, direction)
   
   if direction.x ~= 0 and not self:isAttacking() then
-    self.facing = direction.x
+    self.facing = useful.sign(direction.x)
   end
   
   if direction.y < 0 and math.floor(self.energy) > 10 then
