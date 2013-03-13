@@ -199,7 +199,7 @@ function prototype.update(self, dt)
   
   -- boost consumes energy
   if self.boosting then
-    self.energy = math.min(self.energy - dt*400, 100)
+    self.energy = math.max(self.energy - dt*400, 0)
   end  
   
   -- attack if attack is requested
