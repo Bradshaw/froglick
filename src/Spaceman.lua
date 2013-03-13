@@ -97,16 +97,38 @@ function prototype.tryMove(self, direction)
 end
 
 function prototype.tryAttack(self, direction)
-  if self.energy > 30 and self:isReloaded() and (direction.x~=0 or direction.y~=0) then
+ 
+  -- able to fire?
+  if self.energy > self.attackCost and self:isReloaded() then
+    -- default to current facing if no direction is specified
+    if direction.x == 0 and direction.y == 0 then
+      direction.x = self.facing
+    end
+    
+    -- turn in direction of attack
+    --! FIXME we need a facing for legs (X-axis) and for body (X and Y)
+    if direction.x ~= 0 then
+      self.facing = direction.x
+    end
+    
+    -- play gun sound and wobble camera
     gunsound:rewind()
     gunsound:play()
-    self.attackTime = 0
     toggleDrunk = 1
-    self.energy = math.max(0, self.energy - 30)
+    
+    -- reset time since last attack
+    self.attackTime = 0
+    self.energy = math.max(0, self.energy - self.attackCost)
+    
+    -- randomise shoot animation
     if math.random() > 0.5 then
       self.view.muzflip = not self.view.muzflip
     end
-    --self.inertia:plusequals(-direction.x * 10, -math.max(0,direction.y * 30)) 
+    
+    -- apply recoil
+    self.inertia:plusequals(-direction.x * 10, -math.max(0, direction.y * 30)) 
+    
+    -- create projectile
     Projectile.new(self.pos.x, self.pos.y -20 + math.random(0,1), direction.x, direction.y)
   end
 end

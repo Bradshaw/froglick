@@ -57,8 +57,11 @@ function KeyboardController.control(self, animal) -- Animal
   --! combat
   direction.x = 0 direction.y = 0
   
-  -- attack in the current direction (SPACE) or specify direction (WASD)? 
-  if not love.keyboard.isDown(" ") then
+  -- attack in the current direction ?
+  if love.keyboard.isDown(" ") then
+    animal:tryAttack(direction)
+  -- attack in the specified direction ?
+  else
     if love.keyboard.isDown("z") or love.keyboard.isDown("w") then
       direction.y = direction.y - 1
     end
@@ -71,8 +74,12 @@ function KeyboardController.control(self, animal) -- Animal
     if love.keyboard.isDown("d") then
       direction.x = direction.x + 1
     end
+    -- only attack if some direction is specified
+    if direction.x ~= 0 or direction.y ~= 0 then
+      animal:tryAttack(direction:normalize_inplace())
+    end
   end
-  animal:tryAttack(direction:normalize_inplace())
+  
   
   
 end
