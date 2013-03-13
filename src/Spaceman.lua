@@ -62,6 +62,7 @@ setmetatable(prototype, { __index = Animal_mt })
 prototype.w = 10
 prototype.h = 20
 prototype.attackTimeout = 0.12
+prototype.attackCost = 30
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -73,9 +74,10 @@ end
 
 function prototype.tryMove(self, direction)
   
-  if direction.x~=0 and not self:isAttacking() then
-    self.moveIntent = direction.x
+  if direction.x ~= 0 and not self:isAttacking() then
+    self.facing = direction.x
   end
+  
   if direction.y < 0 and math.floor(self.energy) > 10 then
     if not self.airborne then
       self.inertia.y = -100
@@ -86,8 +88,8 @@ function prototype.tryMove(self, direction)
       self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 30))
     end
   else
-    if direction.y<0 then
-      self.energy=0
+    if direction.y < 0 then
+      self.energy = 0
     end
     self.boosting = false
     self.inertia:plusequals(direction.x * 30, math.min(0,direction.y * 6))
@@ -151,7 +153,7 @@ function Spaceman.new(x, y)
   self.view = SpacemanView --! FIXME
   self.controller = KeyboardController
   self.attackTime = math.huge -- infinite time has passed since last attack
-  self.moveIntent = -1
+  self.facing = -1
   self.energy = 100
   self.fisix = Spaceman.GROUND_FISIX;
 

@@ -55,20 +55,24 @@ function KeyboardController.control(self, animal) -- Animal
   animal:tryMove(direction:normalize_inplace())
   
   --! combat
-  --direction.x = 0 direction.y = 0
-  if love.keyboard.isDown(" ") then -- QWERTY and AZERTY compatible
-    --local attack = vector(direction.x, direction.y)
-    if love.keyboard.isDown("down") then
-      direction = vector(0,1)
-      animal:tryAttack(direction:normalize_inplace())
-    else
-      direction = vector(useful.tri(animal.moveIntent>0,1,-1),0)
-      animal:tryAttack(direction:normalize_inplace())
+  direction.x = 0 direction.y = 0
+  
+  -- attack in the current direction (SPACE) or specify direction (WASD)? 
+  if not love.keyboard.isDown(" ") then
+    if love.keyboard.isDown("z") or love.keyboard.isDown("w") then
+      direction.y = direction.y - 1
     end
-  else
-    direction.x = 0 direction.y = 0
-    animal:tryAttack(direction:normalize_inplace())
+    if love.keyboard.isDown("s") then
+      direction.y = direction.y + 1
+    end
+    if love.keyboard.isDown("q") or love.keyboard.isDown("a") then
+      direction.x = direction.x - 1
+    end
+    if love.keyboard.isDown("d") then
+      direction.x = direction.x + 1
+    end
   end
+  animal:tryAttack(direction:normalize_inplace())
   
   
 end
