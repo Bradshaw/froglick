@@ -45,6 +45,7 @@ Spaceman.GROUND_FISIX =
   BOOST_MAX_DY = 300,
   MOVE = 20,
   BOOST = 70
+  BOOST_LOW_ENERGY = 30
 }
 
 Spaceman.AIR_FISIX = 
