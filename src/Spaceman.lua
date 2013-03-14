@@ -96,10 +96,13 @@ function prototype.requestMove(self, direction)
   self.requested_boost = (direction.y < 0)
   
   -- turn in direction of movement
-  if self.requested_move and (direction.x ~= 0) 
-  and (not self.requested_attack) then
+  if self.requested_move then
     self.legs_side = useful.sign(direction.x)
+    if not self:weaponRaised() then
+      self.torso_facing.x = direction.x
+    end
   end
+  
 end
 
 function prototype.tryBoost(self, dt)
@@ -134,17 +137,15 @@ function prototype.requestAttack(self, direction)
   self.requested_attack = true
   
   -- default to current legs_side if no direction is specified
-  if (not self:weaponRaised()) and (direction.x == 0) and (direction.y == 0) then
-    direction.x = self.legs_side
+  if (direction.x ~= 0) or (direction.y ~= 0) then
+    -- if a direction is specified use it!
+    self.torso_facing:reset(direction)
   end
  
   -- reset legs side only if a move is not requested and not already firing
   if (direction.x ~= 0) and (not self.requested_move) then
     self.legs_side = useful.sign(direction.x)
   end
-  
-  -- reset torso facing to attack direction
-  self.torso_facing:reset(direction)
 end
 
 function prototype.tryAttack(self, dt)
@@ -202,6 +203,10 @@ function prototype.update(self, dt)
   
   -- finish attack
   self.attackTime = self.attackTime + dt
+  -- turn torso to legs after lowering weapon
+  if (not self:weaponRaised()) then
+    self.torso_facing:reset(self.legs_side, 0)
+  end
   
   -- recharge energy
   self.energy = math.min(self.energy + dt*100, 100)
