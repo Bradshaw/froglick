@@ -114,14 +114,22 @@ function prototype.update(self, dt)
     self.inertia:divequals(math.pow(fisix.FRICTION, dt))
   end
   
-  -- clamp inertia to terminal velocity
+  -- clamp inertia to terminal velocity...
+  -- ... absolute speed
   if fisix.TERMINAL_VELOCITY then
-    if math.abs(self.inertia.x) > fisix.TERMINAL_VELOCITY then
-      self.inertia.x = self.TERMINAL_VELOCITY * useful.sign(self.inertia.x)
+    local norm_inertia = self.inertia:len()
+    if norm_inertia > fisix.TERMINAL_VELOCITY then
+      -- reset norm of inertia vector
+      self.inertia:normalize_inplace()
+      self.inertia:mulequals(fisix.TERMINAL_VELOCITY)
     end
-    if math.abs(self.inertia.y) > fisix.TERMINAL_VELOCITY then 
-      self.inertia.y = fisix.TERMINAL_VELOCITY * useful.sign(self.inertia.y)
-    end
+  end
+  local abs_dx, abs_dy = math.abs(self.inertia.x), math.abs(self.inertia.y)
+  if fisix.MAX_DX and (abs_dx > fisix.MAX_DX) then
+    self.inertia.x = fisix.MAX_DX*useful.sign(self.inertia.x)
+  end
+  if fisix.MAX_DY and (abs_dy > fisix.MAX_DY) then
+    self.inertia.y = fisix.MAX_DY*useful.sign(self.inertia.y)
   end
   
   -- clamp less than epsilon inertia to 0
@@ -137,6 +145,10 @@ function prototype.update(self, dt)
       self.pos_prev.x = self.pos.x
       -- is new x position free ?
       if walls:collision(self, new_x, self.pos.y) then
+        
+        -- is collision with a slope ?
+        -- TODO
+        
         -- if not move as far as possible
         self:snap_to_collision(useful.sign(self.inertia.x), 0, math.abs(move))
         self.inertia.x = 0

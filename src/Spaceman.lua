@@ -41,6 +41,7 @@ Spaceman.GROUND_FISIX =
   COLLIDES_WALLS = true,
   GRAVITY = 0,
   FRICTION = 150,
+  MAX_DX = 100,
   MOVE = 20,
   BOOST = 50
 }
@@ -50,6 +51,8 @@ Spaceman.AIR_FISIX =
   COLLIDES_WALLS = true,
   GRAVITY = 500,
   FRICTION = 2,
+  MAX_DX = 50,
+  MAX_DY = 350,
   MOVE = 5,
   BOOST = 27,
   BOOST_LOW_ENERGY = 11
