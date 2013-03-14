@@ -42,8 +42,9 @@ Spaceman.GROUND_FISIX =
   GRAVITY = 0,
   FRICTION = 150,
   MAX_DX = 100,
+  BOOST_MAX_DY = 300,
   MOVE = 20,
-  BOOST = 50
+  BOOST = 70
 }
 
 Spaceman.AIR_FISIX = 
@@ -55,7 +56,8 @@ Spaceman.AIR_FISIX =
   MAX_DY = 350,
   MOVE = 5,
   BOOST = 27,
-  BOOST_LOW_ENERGY = 11
+  BOOST_MAX_DY = 150,
+  BOOST_LOW_ENERGY = 10
 }
 
 
@@ -104,13 +106,12 @@ function prototype.tryBoost(self, dt)
   -- boost consumes energy
   self.energy = math.max(self.energy - dt*self.boostCost, 0)
   
-  -- high-energy boost
-  if self.energy > 10 then
-    self.inertia.y = self.inertia.y -self.fisix.BOOST
-  -- low-energy boost
-  elseif self.airborne then
-    self.inertia.y = self.inertia.y -self.fisix.BOOST_LOW_ENERGY
-  end
+  -- boost thrust depends on remaining energy
+  local thrust = useful.tri(self.energy > 10, 
+      self.fisix.BOOST, self.fisix.BOOST_LOW_ENERGY)
+  
+  -- cap maximum upward speed of boost (math.max 'coz up is negative) 
+  self.inertia.y = math.max(-self.fisix.BOOST_MAX_DY, self.inertia.y - thrust)
 end
 
 function prototype.tryMove(self, dt)
