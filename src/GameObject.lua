@@ -147,6 +147,7 @@ function prototype.update(self, dt)
       if walls:collision(self, new_x, self.pos.y) then
         -- is collision with an UPWARD slope ?
         if (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
+          -- teleport up slope
           self.pos.y = self.pos.y - math.abs(move_x)
         else
           self.inertia.x = 0 
@@ -156,6 +157,12 @@ function prototype.update(self, dt)
       else
         -- if so move to new position
         self.pos.x = new_x
+        -- coming off a DOWNWARD slope ?
+        if (not airborne) and (self.inertia.y == 0)
+        and (not walls:collision(self, new_x, self.pos.y + 1)) then
+          -- snap to slope
+          self:snap_to_collision(0, 1, math.abs(move_x))
+        end
       end
     end
     -- move the object VERTICALLY SECOND
