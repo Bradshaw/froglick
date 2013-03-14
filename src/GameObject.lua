@@ -143,17 +143,16 @@ function prototype.update(self, dt)
       local move_x = self.inertia.x*dt
       local new_x = self.pos.x + move_x
       self.pos_prev.x = self.pos.x
-      -- is new x position free ?
+      -- is new x in collision ?
       if walls:collision(self, new_x, self.pos.y) then
-        
         -- is collision with an UPWARD slope ?
         if (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
           self.pos.y = self.pos.y - math.abs(move_x)
+        else
+          self.inertia.x = 0 
         end
-          
-        -- if not move as far as possible
+        -- move as far as possible towards new position
         self:snap_to_collision(useful.sign(self.inertia.x), 0, math.abs(move_x))
-        self.inertia.x = 0
       else
         -- if so move to new position
         self.pos.x = new_x

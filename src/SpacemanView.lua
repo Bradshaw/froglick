@@ -38,6 +38,10 @@ CLASS (STATIC) FUNCTIONS
 
 function SpacemanView.draw(self, go) -- GameObject
   
+  if go.airborne then
+    love.graphics.setColor(255, 0, 0)
+  end
+  
   --TODO FIXME for obvious reasons
   if math.abs(go.inertia.x)>50 and not go.airborne  then
   	SpacemanView.ANIM_WALK:draw(go.pos.x, go.pos.y - 32, 0, -go.legs_side, 1, 16, 0)
