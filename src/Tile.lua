@@ -82,6 +82,10 @@ Tile.SLOPEIMAGE = love.graphics.newImage("images/Tile_Stone1_slope.PNG")
 
 Tile.DECORATIONIMAGE = love.graphics.newImage("images/enviroment.PNG")
 Tile.DECOQUADS = {}
+Tile.DECOQUADS.HIGHLIGHTS = {
+  love.graphics.newQuad(0,0,64,64,256,256),
+  love.graphics.newQuad(64,0,64,64,256,256)
+}
 Tile.DECOQUADS.GRASS = {
   love.graphics.newQuad(0,96,32,32,256,256),
   love.graphics.newQuad(32,96,32,32,256,256),
