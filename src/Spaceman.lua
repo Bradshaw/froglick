@@ -44,7 +44,7 @@ Spaceman.GROUND_FISIX =
   MAX_DX = 100,
   BOOST_MAX_DY = 300,
   MOVE = 20,
-  BOOST = 70
+  BOOST = 70,
   BOOST_LOW_ENERGY = 30
 }
 
@@ -53,12 +53,12 @@ Spaceman.AIR_FISIX =
   COLLIDES_WALLS = true,
   GRAVITY = 500,
   FRICTION = 2,
-  MAX_DX = 50,
+  MAX_DX = 150,
   MAX_DY = 350,
   MOVE = 5,
   BOOST = 27,
   BOOST_MAX_DY = 150,
-  BOOST_LOW_ENERGY = 10
+  BOOST_LOW_ENERGY = 0
 }
 
 
@@ -72,10 +72,10 @@ setmetatable(prototype, { __index = Animal_mt })
 -- default attributes
 prototype.w = 10
 prototype.h = 20
-prototype.attackTimeout = 0.12
-prototype.attackCost = 30
+prototype.attackTimeout = 0.1
+prototype.attackCost = 20
 prototype.attackRecoil = 10
-prototype.boostCost = 400
+prototype.boostCost = 200
 
 --[[----------------------------------------------------------------------------
 METHODS
