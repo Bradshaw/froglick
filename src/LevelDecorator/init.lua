@@ -9,7 +9,26 @@ function LevelDecorator.decorate(lev)
 end
 
 function LevelDecorator.plant(lev)
-	
+	local candy = {}
+	for i,v in ipairs(lev.tilegrid.tiles) do
+		for j,u in ipairs(v) do
+			if lev.tilegrid:get(i,j)==Tile.EMPTY and lev.tilegrid:get(i,j+1)==Tile.FULL then
+				table.insert(candy,{i,j})
+			end
+		end
+	end
+	for i=1,#candy/2 do
+		local ind = math.random(1,#candy)
+		v = candy[ind]
+		--print(v[1],v[2])
+		lev.tilegrid.tiles[v[1]][v[2]].decoration = Tile.DECORATION.GRASS
+		table.remove(candy, ind)
+	end
+	for i,v in ipairs(lev.game_objects) do
+		for j,u in pairs(v) do
+			--print(j,u)
+		end
+	end
 end
 
 function LevelDecorator.placeJoe(lev)
@@ -41,13 +60,16 @@ function LevelDecorator.placeThings(lev)
 			end
 		end
 	end
-	for i,v in ipairs(candy) do
-		print(v[1],v[2])
+	for i=1,#candy/4 do
+		local ind = math.random(1,#candy)
+		v = candy[ind]
+		--print(v[1],v[2])
 		table.insert(lev.game_objects, GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y) )
+		table.remove(candy, ind)
 	end
 	for i,v in ipairs(lev.game_objects) do
 		for j,u in pairs(v) do
-			print(j,u)
+			--print(j,u)
 		end
 	end
 end

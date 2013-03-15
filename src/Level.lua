@@ -44,6 +44,12 @@ function prototype.update(self, dt)
   Projectile.update(dt)
   Splosion.update(dt)
   local previous = nil
+  for i,v in ipairs(self.tilegrid.tiles) do
+    for j,u in ipairs(v) do
+      u.animation = u.animation+dt*u.animspeed
+    end   
+  end 
+
   useful.map(self.game_objects, 
       
       -- update and control game objects

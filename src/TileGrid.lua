@@ -62,8 +62,17 @@ end
 function prototype.draw(self)
   --[[]]
   self.spritebatch:clear()
+  self.decospritebatch:clear()
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
+      if tilegrid:gridToTile(x, y).decoration == Tile.DECORATION.GRASS then
+        tilegrid.decospritebatch:setColor(
+          tilegrid:gridToTile(x, y).decocolour[1],
+          tilegrid:gridToTile(x, y).decocolour[2],
+          tilegrid:gridToTile(x, y).decocolour[3]
+          )
+        tilegrid.decospritebatch:addq(Tile.DECOQUADS.GRASS[math.floor(tilegrid:gridToTile(x, y).animation)%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+      end
       if tilegrid:gridToTile(x, y).wall == Tile.FULL then
         --tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
         tilegrid.spritebatch:addq(Tile.FULLQUADS[tilegrid:gridToTile(x, y).variation%4+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
@@ -93,6 +102,7 @@ function prototype.draw(self)
     self
     )
   --]]
+  love.graphics.draw(self.decospritebatch)
   love.graphics.draw(self.spritebatch)
 end
 
@@ -204,6 +214,7 @@ function TileGrid.new(xsize, ysize)
 
 
   self.spritebatch = love.graphics.newSpriteBatch( Tile.FULLIMAGE )
+  self.decospritebatch = love.graphics.newSpriteBatch( Tile.DECORATIONIMAGE )
   
   -- create attributes
   self.size = vector(xsize, ysize)

@@ -80,6 +80,21 @@ table.insert(Tile.FULLQUADS,
   love.graphics.newQuad(32,32,32,32,128,128))
 Tile.SLOPEIMAGE = love.graphics.newImage("images/Tile_Stone1_slope.PNG")
 
+Tile.DECORATIONIMAGE = love.graphics.newImage("images/enviroment.PNG")
+Tile.DECOQUADS = {}
+Tile.DECOQUADS.GRASS = {
+  love.graphics.newQuad(0,96,32,32,256,256),
+  love.graphics.newQuad(32,96,32,32,256,256),
+  love.graphics.newQuad(64,96,32,32,256,256),
+  love.graphics.newQuad(94,96,32,32,256,256)
+}
+
+
+Tile.DECORATION = {}
+Tile.DECORATION.NONE = 0
+Tile.DECORATION.GRASS = 1
+
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -129,8 +144,13 @@ function Tile.new(wall)
   
   -- initialise attributes
   self.wall = wall
+  self.decoration = Tile.DECORATION.NONE
   self.part = 0
   self.variation = math.random(10000)
+  self.animation = math.random()*10
+  self.animspeed = 2+math.random()*2
+  local r, g, b = useful.hsv(math.random(160,200), math.random(70,100), math.random(60,80))
+  self.decocolour = {r,g,b}
   
   -- return the instance
   return self
