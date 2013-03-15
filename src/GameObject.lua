@@ -21,6 +21,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local vector = require("vector")
+require("DebugView")
 
 
 --[[----------------------------------------------------------------------------
@@ -89,7 +90,6 @@ function prototype.snap_to_collision(self, dx, dy, max)
 end
 
 function prototype.update(self, dt)
-  
   -- short-hand alias
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
@@ -186,8 +186,9 @@ function prototype.update(self, dt)
     self.pos_prev:reset(self.pos)
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
   end
-
-  self.view:update(dt)
+  if self.view then
+    self.view:update(dt)
+  end
 end
 
 function prototype.control(self)
@@ -200,6 +201,9 @@ end
 function prototype.draw(self)
   if self.view then
     self.view:draw(self)
+  else
+    --print("no view")
+    DebugView:draw(self)
   end
 end
 

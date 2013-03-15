@@ -129,6 +129,7 @@ function Level.__new()
   -- create a camera to point at interest
   self.camera = Camera.new(Spaceman[1].pos.x, Spaceman[1].pos.y)
   
+  LevelDecorator.decorate(self)
   -- export new instance
   return self
 end

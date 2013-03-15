@@ -1,3 +1,4 @@
+LevelDecorator = require("LevelDecorator")
 require("TileGrid")
 vector = require("vector")
 
@@ -27,7 +28,6 @@ LevelGen.generator = {}
 LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 	local lev = TileGrid.new(100, 100)
 	local blobbiness = 3
-	print(blobbiness)
 	local dug = 0
 	LevelGen.dirty(lev,0.35,Tile.FULL,Tile.EMPTY)
 	LevelGen.blobify(lev)
@@ -35,13 +35,11 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 	LevelGen.dirty(lev,1,Tile.EMPTY,Tile.UNDECIDED)
 	LevelGen.rectangle(lev, 45,48,55,52, Tile.FULL)
 	dug = LevelGen.maze(lev, 50, 50, 1)
-	print(dug)
 	--LevelGen.maze(lev, 50, 51, 1)
 	--LevelGen.maze(lev, 51, 50, 1)
 	if blobbiness<4 then
 		dug = LevelGen.maze(lev, 51, 51, 2)
 	end
-	print(dug)
 	LevelGen.dirty(lev,1,Tile.UNDECIDED,Tile.FULL)
 	for i=1,blobbiness do
 		LevelGen.blobify(lev)

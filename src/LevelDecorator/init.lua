@@ -1,0 +1,55 @@
+local LevelDecorator = {}
+
+
+function LevelDecorator.decorate(lev)
+	LevelDecorator.placeJoe(lev)
+	LevelDecorator.plant(lev)
+	print("Calling place Things")
+	LevelDecorator.placeThings(lev)
+end
+
+function LevelDecorator.plant(lev)
+	
+end
+
+function LevelDecorator.placeJoe(lev)
+	local candy = {}
+	local i = 1
+	while not candy[1] do
+		i = i+1
+		v = lev.tilegrid.tiles[i]
+		for j,u in ipairs(v) do
+			if lev.tilegrid:get(i,j)==Tile.EMPTY and lev.tilegrid:get(i,j+1)==Tile.FULL then
+				table.insert(candy,{i,j})
+			end
+		end
+	end
+	local newpos = candy[math.random(1,#candy)]
+	for i,v in ipairs(newpos) do
+		--print(i,v)
+	end
+	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
+	Spaceman[1].pos.y=(newpos[2]+0.8)*Tile.SIZE.y
+end
+
+function LevelDecorator.placeThings(lev)
+	local candy = {}
+	for i,v in ipairs(lev.tilegrid.tiles) do
+		for j,u in ipairs(v) do
+			if lev.tilegrid:get(i,j)==Tile.EMPTY and lev.tilegrid:get(i,j+1)==Tile.FULL then
+				table.insert(candy,{i,j})
+			end
+		end
+	end
+	for i,v in ipairs(candy) do
+		print(v[1],v[2])
+		table.insert(lev.game_objects, GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y) )
+	end
+	for i,v in ipairs(lev.game_objects) do
+		for j,u in pairs(v) do
+			print(j,u)
+		end
+	end
+end
+
+return LevelDecorator
