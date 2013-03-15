@@ -33,7 +33,7 @@ Splosion = require("Splosion")
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
-local prototype = {}
+local prototype = { }
 
 
 --[[----------------------------------------------------------------------------
@@ -67,8 +67,8 @@ function prototype.update(self, dt)
         end 
         previous = object
       end
-          )
-  
+  ) -- end useful.map
+      
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
 end

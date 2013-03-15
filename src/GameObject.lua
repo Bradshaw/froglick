@@ -55,10 +55,8 @@ prototype.w = 0
 prototype.h = 0
 
 -- default physical properties
-prototype.COLLIDES_WALLS = false
 prototype.airborne = false
-prototype.GRAVITY = 0
-prototype.FRICTION = 0
+
 
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
@@ -89,6 +87,53 @@ function prototype.snap_to_collision(self, dx, dy, max)
   end
 end
 
+function prototype.wall_collisions(self, walls, dt)
+  -- move the object HORIZONTALLY FIRST
+  if self.inertia.x ~= 0 then
+    local move_x = self.inertia.x*dt
+    local new_x = self.pos.x + move_x
+    self.pos_prev.x = self.pos.x
+    -- is new x in collision ?
+    if walls:collision(self, new_x, self.pos.y) then
+      -- is collision with an UPWARD slope ?
+      if (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
+        -- teleport up slope
+        self.pos.y = self.pos.y - math.abs(move_x)
+      else
+        self.inertia.x = 0 
+      end
+      -- move as far as possible towards new position
+      self:snap_to_collision(useful.sign(self.inertia.x), 0, math.abs(move_x))
+    else
+      -- if so move to new position
+      self.pos.x = new_x
+      -- coming off a DOWNWARD slope ?
+      if (not airborne) and (self.inertia.y == 0)
+      and (not walls:collision(self, new_x, self.pos.y + 1)) then
+        -- snap to slope
+        self:snap_to_collision(0, 1, math.abs(move_x))
+      end
+    end
+  end
+  -- move the object VERTICALLY SECOND
+  if self.inertia.y ~= 0 then
+    local move_y = self.inertia.y*dt
+    local new_y = self.pos.y + move_y
+    self.pos_prev.y = self.pos.y
+    -- is new y position free ?
+    if walls:collision(self, self.pos.x, new_y) then
+      -- if not move as far as possible
+      self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move_y))
+      self.inertia.y = 0
+    else
+      -- if so move to new position
+      self.pos.y = new_y
+    end
+  end
+end
+  
+
+
 function prototype.update(self, dt)
   -- short-hand alias
   local walls = Level.get().tilegrid
@@ -105,12 +150,12 @@ function prototype.update(self, dt)
   end
   
   -- apply gravity
-  if self.airborne or not fisix.COLLIDES_WALLS then
+  if fisix.GRAVITY and (self.airborne or not fisix.COLLIDES_WALLS) then
     self.inertia.y = self.inertia.y + fisix.GRAVITY*dt
   end
   
   -- apply friction
-  if fisix.FRICTION then
+  if fisix.FRICTION and (fisix.FRICTION ~= 0) then
     self.inertia:divequals(math.pow(fisix.FRICTION, dt))
   end
   
@@ -136,52 +181,9 @@ function prototype.update(self, dt)
   if math.abs(self.inertia.x) < 0.01 then self.inertia.x = 0 end
   if math.abs(self.inertia.y) < 0.01 then self.inertia.y = 0 end
   
-  -- collider objects are tricky...
+  -- treat "hard" collisions with walls last of all
   if fisix.COLLIDES_WALLS then
-    -- move the object HORIZONTALLY FIRST
-    if self.inertia.x ~= 0 then
-      local move_x = self.inertia.x*dt
-      local new_x = self.pos.x + move_x
-      self.pos_prev.x = self.pos.x
-      -- is new x in collision ?
-      if walls:collision(self, new_x, self.pos.y) then
-        -- is collision with an UPWARD slope ?
-        if (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
-          -- teleport up slope
-          self.pos.y = self.pos.y - math.abs(move_x)
-        else
-          self.inertia.x = 0 
-        end
-        -- move as far as possible towards new position
-        self:snap_to_collision(useful.sign(self.inertia.x), 0, math.abs(move_x))
-      else
-        -- if so move to new position
-        self.pos.x = new_x
-        -- coming off a DOWNWARD slope ?
-        if (not airborne) and (self.inertia.y == 0)
-        and (not walls:collision(self, new_x, self.pos.y + 1)) then
-          -- snap to slope
-          self:snap_to_collision(0, 1, math.abs(move_x))
-        end
-      end
-    end
-    -- move the object VERTICALLY SECOND
-    if self.inertia.y ~= 0 then
-      local move_y = self.inertia.y*dt
-      local new_y = self.pos.y + move_y
-      self.pos_prev.y = self.pos.y
-      -- is new y position free ?
-      if walls:collision(self, self.pos.x, new_y) then
-        -- if not move as far as possible
-        self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move_y))
-        self.inertia.y = 0
-      else
-        -- if so move to new position
-        self.pos.y = new_y
-      end
-    end
-    
-  -- ...it's far easier to move objects that ignore walls
+    self:wall_collisions(walls, dt)
   elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos_prev:reset(self.pos)
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
@@ -202,7 +204,6 @@ function prototype.draw(self)
   if self.view then
     self.view:draw(self)
   else
-    --print("no view")
     DebugView:draw(self)
   end
 end

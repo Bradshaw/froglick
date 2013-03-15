@@ -48,7 +48,7 @@ function LevelDecorator.placeJoe(lev)
 		--print(i,v)
 	end
 	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
-	Spaceman[1].pos.y=(newpos[2]+0.8)*Tile.SIZE.y
+	Spaceman[1].pos.y=(newpos[2]+1.0)*Tile.SIZE.y
 end
 
 function LevelDecorator.placeThings(lev)
@@ -64,7 +64,12 @@ function LevelDecorator.placeThings(lev)
 		local ind = math.random(1,#candy)
 		v = candy[ind]
 		--print(v[1],v[2])
-		table.insert(lev.game_objects, GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y) )
+    
+    
+    local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
+    dude.w, dude.h = 30, 30
+    
+		table.insert(lev.game_objects, dude)
 		table.remove(candy, ind)
 	end
 	for i,v in ipairs(lev.game_objects) do
