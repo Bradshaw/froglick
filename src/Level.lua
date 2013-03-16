@@ -119,20 +119,12 @@ function Level.__new()
   -- create game object holder
   self.game_objects = {}
   
-  -- create the player character if one doesn't exist
-  if not Spaceman[1] then
-    Spaceman.new(0, 0) -- move somewhere interesting by LevelDecorator
-  end
-  table.insert(self.game_objects, Spaceman[1])
-  
   -- create tile holder
   self.tilegrid = LevelGen.new()
-  --self.tilegrid = TileGrid.new(20, 20) -- 20 by 20 tiles
 
   -- create a camera to point at interest
-  self.camera = Camera.new(Spaceman[1].pos.x, Spaceman[1].pos.y)
+  self.camera = Camera.new(0, 0)
   
-  LevelDecorator.decorate(self)
   -- export new instance
   return self
 end
@@ -140,7 +132,10 @@ end
 function Level.get()
   -- create new Level if one does not already exist
   if not Level.instance then
+    -- create FIRST...
     Level.instance = Level.__new()
+    -- ...decorate AFTER creation
+    LevelDecorator.decorate(Level.instance)
   end
   return Level.instance
 end

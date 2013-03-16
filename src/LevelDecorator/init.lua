@@ -47,6 +47,10 @@ function LevelDecorator.placeJoe(lev)
 	for i,v in ipairs(newpos) do
 		--print(i,v)
 	end
+  
+  if not Spaceman[1] then
+    Spaceman.new(0, 0)
+  end
 	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
 	Spaceman[1].pos.y=(newpos[2]+1.0)*Tile.SIZE.y
 end

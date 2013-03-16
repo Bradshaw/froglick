@@ -162,6 +162,10 @@ function prototype.pixelToTile(self, x, y)
                          math.floor(y / Tile.SIZE.y))
 end
 
+function prototype.lineCollision(self, x1, y1, x2, y2)
+  local tile1, tile2 
+end
+
 function prototype.pixelCollision(self, x, y)
   local tile = self:pixelToTile(x, y)
   if not tile then
