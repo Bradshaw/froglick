@@ -65,18 +65,27 @@ function prototype.draw(self)
   self.decospritebatch:clear()
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
+    
+      ---FIXME DEBUG
+      --love.graphics.print(tostring(x)..","..tostring(y), (x-0.5)*Tile.SIZE.x, (y-0.5)*Tile.SIZE.y)
+      --------------------------------
+      
+      
+      
       if tilegrid:gridToTile(x, y).decoration == Tile.DECORATION.GRASS then
         love.graphics.setBlendMode("additive")
         love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           80+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],(x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
+                                          (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
           love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           50+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],(x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
+                                              (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
         love.graphics.setColor(255,255,255)
         love.graphics.setBlendMode("alpha")
         tilegrid.decospritebatch:setColor(
@@ -84,7 +93,8 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3]
           )
-        tilegrid.decospritebatch:addq(Tile.DECOQUADS.GRASS[math.floor(tilegrid:gridToTile(x, y).animation)%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        tilegrid.decospritebatch:addq(Tile.DECOQUADS.GRASS[math.floor(tilegrid:gridToTile(x, y).animation)%2+1],
+            x*Tile.SIZE.x, y*Tile.SIZE.y)
       end
       if tilegrid:gridToTile(x, y).wall == Tile.FULL then
         --tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
@@ -116,13 +126,18 @@ function prototype.draw(self)
     )
   --]]
   love.graphics.setBlendMode("alpha")
-  love.graphics.draw(self.decospritebatch)
+  --love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("additive")
-  love.graphics.draw(self.decospritebatch)
+  --love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("alpha")
-  --love.graphics.setColor(127,127,127)
+  
+  --FIXME DEBUG
+  --love.graphics.setColor(255, 255, 255, 100)
+  
+  
+  love.graphics.setColor(127,127,127)
   love.graphics.draw(self.spritebatch)
-  --love.graphics.setColor(255,255,255)
+  love.graphics.setColor(255,255,255)
 end
 
 function prototype.set(self, x, y, wall)
@@ -312,5 +327,8 @@ TileGrid.pixelToGrid = function(x, y)
 end
 
 TileGrid.gridToPixel = function(x, y)
+  --FIXME DEBUG  
+  --print("checking", x, y)
+  -------------------
   return x * Tile.SIZE.x, y * Tile.SIZE.y
 end

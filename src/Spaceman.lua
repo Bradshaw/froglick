@@ -44,9 +44,9 @@ Spaceman.GROUND_FISIX =
   FRICTION = 150,
   MAX_DX = 100,
   BOOST_MAX_DY = 300,
-  MOVE = 20,
-  BOOST = 70,
-  BOOST_LOW_ENERGY = 30,
+  MOVE = 1200,
+  BOOST = 4200,
+  BOOST_LOW_ENERGY = 1800,
   CLIMB_SLOPES = true
 }
 
@@ -57,8 +57,8 @@ Spaceman.AIR_FISIX =
   FRICTION = 2,
   MAX_DX = 150,
   MAX_DY = 350,
-  MOVE = 5,
-  BOOST = 27,
+  MOVE = 300,
+  BOOST = 1620,
   BOOST_MAX_DY = 150,
   BOOST_LOW_ENERGY = 0,
   CLIMB_SLOPES = true
@@ -123,7 +123,7 @@ function prototype.tryBoost(self, dt)
       self.fisix.BOOST, self.fisix.BOOST_LOW_ENERGY)
   
   -- cap maximum upward speed of boost (math.max 'coz up is negative) 
-  self.inertia.y = math.max(-self.fisix.BOOST_MAX_DY, self.inertia.y - thrust)
+  self.inertia.y = math.max(-self.fisix.BOOST_MAX_DY, self.inertia.y - thrust*dt)
 end
 
 function prototype.tryMove(self, dt)
@@ -131,7 +131,7 @@ function prototype.tryMove(self, dt)
     Sparkle.newBooster(self.pos.x-self.legs_side*8 , self.pos.y-18,self.inertia.x-self.legs_side*500 + math.random(0,250),-self.inertia.y+math.random(-50,50))
   end
   --! TODO check if capable of moving (ie. not dead)
-  self.inertia.x = self.inertia.x + self.legs_side*self.fisix.MOVE
+  self.inertia.x = self.inertia.x + self.legs_side*self.fisix.MOVE*dt
 end
 
 function prototype.tryStop(self, dt)
