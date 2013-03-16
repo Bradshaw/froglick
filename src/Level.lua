@@ -41,8 +41,6 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.update(self, dt)
-  --Projectile.update(dt)
-  --Splosion.update(dt)
   local previous = nil
   for i,v in ipairs(self.tilegrid.tiles) do
     for j,u in ipairs(v) do

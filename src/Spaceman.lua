@@ -206,7 +206,7 @@ function prototype.update(self, dt)
   -- finish attack
   self.attackTime = self.attackTime + dt
   -- turn torso to legs after lowering weapon
-  if (self.attackTime > self.attackTimeout*2) then
+  if not self.requested_attack then
     self.torso_facing:reset(self.legs_side, 0)
   end
   
@@ -216,13 +216,11 @@ function prototype.update(self, dt)
   -- boost vertically if boost is requested
   if self.requested_boost then
     self:tryBoost(dt)
-    self.requested_boost = false
   end
   
   -- accelerate horizontally if move is requested
   if self.requested_move then
     self:tryMove(dt)
-    self.requested_move = false
   else
     self:tryStop(dt)
   end
@@ -230,8 +228,12 @@ function prototype.update(self, dt)
   -- attack if attack is requested
   if self.requested_attack then
     self:tryAttack(dt)
-    self.requested_attack = false
   end
+  
+  -- clear input requests
+  self.requested_move = false
+  self.requested_attack = false
+  self.requested_boost = false
 end
 
 --[[----------------------------------------------------------------------------
