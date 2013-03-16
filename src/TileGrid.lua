@@ -135,7 +135,7 @@ function prototype.draw(self)
   --love.graphics.setColor(255, 255, 255, 100)
   
   
-  love.graphics.setColor(127,127,127)
+  --love.graphics.setColor(127,127,127)
   love.graphics.draw(self.spritebatch)
   love.graphics.setColor(255,255,255)
 end

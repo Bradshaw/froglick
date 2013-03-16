@@ -67,6 +67,9 @@ function prototype.update(self, dt)
       end
   ) -- end useful.map
       
+  --! FIXME LAYERS ARE FORCED
+  table.sort(self.game_objects, function(a, b) return a.layer > b.layer end)
+  
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
 end

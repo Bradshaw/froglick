@@ -14,7 +14,7 @@ Sparkle.FISIX.BOOSTER =
 
 
 function Sparkle.new(x,y,dx,dy)
-	local self = GameObject.new(x,y, true) -- don't generate identifiers for sparkles!
+	local self = GameObject.new(x, y, true) -- don't generate identifiers for sparkles!
 	setmetatable(self,{__index=Sparkle_mt})
 	self.view = {
 		draw = function(self,target)
@@ -22,7 +22,6 @@ function Sparkle.new(x,y,dx,dy)
 			love.graphics.line(target.pos.x,target.pos.y,target.pos_prev.x,target.pos_prev.y)
 		end
 	}
-	self.layer = -1
 	self.inertia.x = dx or 0
 	self.inertia.y = dy or 0
 	self.age = 0

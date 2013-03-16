@@ -37,6 +37,9 @@ CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 function SpacemanView.draw(self, sm) -- sm = Spaceman
+  
+  love.graphics.setColor(255, 255, 255, 255)
+  
   --TODO FIXME for obvious reasons
   if math.abs(sm.inertia.x)>50 and not sm.airborne  then
   	SpacemanView.ANIM_WALK:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
