@@ -83,7 +83,14 @@ function prototype.snap_to_collision(self, dx, dy, max)
   end
 end
 
-function prototype.wall_collisions(self, walls, dt)
+function prototype.wall_collisions(self, dt)
+  -- short-hand alias
+  local walls = Level.get().tilegrid
+  local fisix = self.fisix or self
+  
+  -- set this to true if there was a collision
+  local was_collision = false
+  
   -- check if we're on the ground
   self.airborne = 
     (not walls:pixelCollision(self.pos.x, self.pos.y+1))
@@ -97,8 +104,10 @@ function prototype.wall_collisions(self, walls, dt)
     self.pos_prev.x = self.pos.x
     -- is new x in collision ?
     if walls:collision(self, new_x, self.pos.y) then
+      was_collision = true
       -- is collision with an UPWARD slope ?
-      if (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
+      if fisix.CLIMB_SLOPES and 
+      (not walls:collision(self, new_x, self.pos.y - math.abs(move_x))) then
         -- teleport up slope
         self.pos.y = self.pos.y - math.abs(move_x)
       else
@@ -110,7 +119,7 @@ function prototype.wall_collisions(self, walls, dt)
       -- if so move to new position
       self.pos.x = new_x
       -- coming off a DOWNWARD slope ?
-      if (not airborne) and (self.inertia.y == 0)
+      if fisix.CLIMB_SLOPES and (not airborne) and (self.inertia.y == 0)
       and (not walls:collision(self, new_x, self.pos.y + 1)) then
         -- snap to slope
         self:snap_to_collision(0, 1, math.abs(move_x))
@@ -124,6 +133,7 @@ function prototype.wall_collisions(self, walls, dt)
     self.pos_prev.y = self.pos.y
     -- is new y position free ?
     if walls:collision(self, self.pos.x, new_y) then
+      was_collision = true
       -- if not move as far as possible
       self:snap_to_collision(0, useful.sign(self.inertia.y), math.abs(move_y))
       self.inertia.y = 0
@@ -133,7 +143,7 @@ function prototype.wall_collisions(self, walls, dt)
     end
   end
   -- generate collision with walls event
-  if self.onCollision and walls:collision(self) then
+  if was_collision and self.onCollision then
     self:onCollision()
   end
 end
@@ -179,7 +189,7 @@ function prototype.update(self, dt)
   
   -- treat "hard" collisions with walls last of all
   if fisix.COLLIDES_WALLS then
-    self:wall_collisions(walls, dt)
+    self:wall_collisions(dt)
   elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos_prev:reset(self.pos)
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
@@ -197,7 +207,15 @@ end
 
 
 function prototype.draw(self)
-  if self.view then
+  -- check if in camera view
+  if not Level.get().camera:check(self.pos.x, self.pos.y) then
+    return 
+  end
+  
+  -- draw shiz
+  if self.draw then
+    self:draw()
+  elseif self.view then
     self.view:draw(self)
   else
     DebugView:draw(self)

@@ -40,7 +40,7 @@ setmetatable(prototype, { __index = super })
 prototype.SPEED = 3000
 
 -- default values
-prototype.onimpact = function(self, sx, sy)
+prototype.onCollision = function(self, sx, sy)
   Splosion.new(sx, sy, 15, 10)
 end
 
@@ -70,16 +70,10 @@ METHODS
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
-
-	if Level.get().tilegrid:pixelCollision(self.x,self.y) then
-		self:onimpact((self.oldx+self.x)/2,(self.oldy+self.y)/2)
-		self.purge = true
-	end
-
 end
 
 function prototype.draw(self)
-	love.graphics.line(self.x,self.y,self.oldx,self.oldy)
+	love.graphics.line(self.pos.x, self.pos.y, self.pos_prev.x, self.pos_prev.y)
 end
 
 --[[----------------------------------------------------------------------------

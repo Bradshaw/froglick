@@ -44,7 +44,8 @@ Spaceman.GROUND_FISIX =
   BOOST_MAX_DY = 300,
   MOVE = 20,
   BOOST = 70,
-  BOOST_LOW_ENERGY = 30
+  BOOST_LOW_ENERGY = 30,
+  CLIMB_SLOPES = true
 }
 
 Spaceman.AIR_FISIX = 
@@ -57,7 +58,8 @@ Spaceman.AIR_FISIX =
   MOVE = 5,
   BOOST = 27,
   BOOST_MAX_DY = 150,
-  BOOST_LOW_ENERGY = 0
+  BOOST_LOW_ENERGY = 0,
+  CLIMB_SLOPES = true
 }
 
 
