@@ -67,10 +67,9 @@ function prototype.draw(self)
     function(x, y, tilegrid)
     
       ---FIXME DEBUG
-      love.graphics.print(tostring(x), (x-0.5)*Tile.SIZE.x, (y)*Tile.SIZE.y)
-      love.graphics.print(tostring(y), (x-0.5)*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
-      love.graphics.setColor(255, 255, 255, 255)
-      love.graphics.rectangle("line", (x-0.5)*Tile.SIZE.x, (x-0.5)*Tile.SIZE.x, 32, 32)
+      --love.graphics.print(tostring(x)..","..tostring(y), x*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
+      --love.graphics.setColor(255, 255, 255, 255)
+      --love.graphics.rectangle("line", x*Tile.SIZE.x, y*Tile.SIZE.y, 32, 32)
       --------------------------------
       
       
@@ -81,14 +80,14 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           80+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        --love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
-         --                                 (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
+                                         (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
           love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           50+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        --love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
-          --                                    (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
+                                              (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
         love.graphics.setColor(255,255,255)
         love.graphics.setBlendMode("alpha")
         tilegrid.decospritebatch:setColor(
@@ -127,16 +126,15 @@ function prototype.draw(self)
     end,
     self
     )
-  --]]
-  --[[love.graphics.setBlendMode("alpha")
+  love.graphics.setBlendMode("alpha")
   love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("additive")
   love.graphics.draw(self.decospritebatch)
-  love.graphics.setBlendMode("alpha") --]]
+  love.graphics.setBlendMode("alpha")
   
   --FIXME DEBUG
-  love.graphics.setColor(255, 255, 255, 200)
-  
+  --love.graphics.setColor(255, 255, 255, 200)
+  ------------------------------------------------
   
   --love.graphics.setColor(127,127,127)
   love.graphics.draw(self.spritebatch)
@@ -192,28 +190,31 @@ end
 
 function prototype.lineCollision(self, x1, y1, x2, y2, pixel_perfect)
   -- convert from pixel -> tile
-  x1 = math.floor(x1 / Tile.SIZE.x)
-  x2 = math.floor(x2 / Tile.SIZE.x)
-  y1 = math.floor(y1 / Tile.SIZE.y)
-  y2 = math.floor(y2 / Tile.SIZE.y)
+  local x = math.floor(x1 / Tile.SIZE.x)
+  local y = math.floor(y1 / Tile.SIZE.y)
+  local endx = math.floor(x2 / Tile.SIZE.x)
+  local endy = math.floor(y2 / Tile.SIZE.y)
   
   -- check that both tiles are valid
-  if (not self:validGridPos(x1, y1)) or (not self:validGridPos(x2, y2)) then
-    return true, TileGrid.gridToPixel(x1, y1)
+  if (not self:validGridPos(x, y)) then
+    return true, TileGrid.gridToPixel(x + 0.5, y + 0.5)
+  elseif (not self:validGridPos(endx + 0.5, endy + 0.5)) then
+    return true, TileGrid.gridToPixel(endx + 0.5, endy + 0.5)
   end
   
   -- http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
-  local dx = math.abs(x2 - x1)
-  local dy = math.abs(y2 - y1)
-  local sx = useful.tri(x1 < x2, 1, -1)
-  local sy = useful.tri(y1 < y2, 1, -1)
+  local dx = math.abs(endx - x)
+  local dy = math.abs(endy - y)
+  local sx = useful.tri(x < endx, 1, -1)
+  local sy = useful.tri(y < endy, 1, -1)
   local err = dx - dy
 
   -- move from start (x1, y1) towards (x2, y2)
-  while (x1 ~= x2) or (y1 ~= y2) do
-    if self:gridCollision(x1, y1) then
+  while (x ~= endx) or (y ~= endy) do
+
+    if self:gridCollision(x, y) then
       -- the way is shut (it was made by those who are dead)
-      return true, TileGrid.gridToPixel(x1, y1)
+      return true, TileGrid.gridToPixel(x + 0.5, y + 0.5)
     end
     
     -- move ...
@@ -221,18 +222,18 @@ function prototype.lineCollision(self, x1, y1, x2, y2, pixel_perfect)
     -- ... horizontally
     if err2 > -dy then
       err = err - dy;
-      x1 = x1 + sx;
+      x = x + sx;
     end
     -- ... vertically
     if err2 < dx then
       err = err + dx;
-      y1 = y1 + sy;
+      y = y + sy;
     end
     
-  end -- while (x1 ~= x2) or (y1 ~= y2)
+  end -- while (x ~= endx) or (y ~= endy)
 
   -- made it - the way is clear, no collision!
-  return false, TileGrid.gridToPixel(x1, y1)
+  return false, TileGrid.gridToPixel(x + 0.5, y + 0.5)
 end
 
 function prototype.pixelCollision(self, x, y)

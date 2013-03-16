@@ -29,5 +29,6 @@ CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 function BulletView.draw(self, blt) -- blt = Bullet
+  love.graphics.setColor(255, 255, 255, 255)
   love.graphics.line(blt.pos.x, blt.pos.y, blt.pos_prev.x, blt.pos_prev.y)
 end

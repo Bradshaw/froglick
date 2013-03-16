@@ -75,7 +75,7 @@ setmetatable(prototype, { __index = super })
 -- default attributes
 prototype.w = 10
 prototype.h = 20
-prototype.attackTimeout = 0.4--0.1
+prototype.attackTimeout = 0.1
 prototype.attackCost = 20
 prototype.attackRecoil = 10
 prototype.boostCost = 200
