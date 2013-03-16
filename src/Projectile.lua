@@ -49,16 +49,6 @@ local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
 end
 
 -- default values
-prototype.onWallCollision = function(self)
-  splode(self)
-end
-prototype.onObjectCollision = function(self, other)
-  self.pos:reset(other.pos)
-  splode(self)
-end
-prototype.collidesType = function(self, t)
-  return (t == GameObject.TYPE_ENEMY)
-end
 prototype.view = BulletView
 prototype.w = 1
 prototype.h = 1
@@ -97,6 +87,23 @@ METHODS
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+end
+
+prototype.onWallCollision = function(self)
+  splode(self)
+end
+
+prototype.onObjectCollision = function(self, other)
+  self.pos:reset(other.pos)
+  splode(self)
+end
+
+prototype.collidesType = function(self, t)
+  if self.type == GameObject.TYPE_SPACEMAN_PROJECTILE then
+    return (t == GameObject.TYPE_ENEMY)
+  else
+    return (t == GameObject.TYPE_SPACEMAN)
+  end
 end
 
 --[[----------------------------------------------------------------------------

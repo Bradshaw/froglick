@@ -37,6 +37,8 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
+prototype.COLLIDES_OBJECTS = true
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
@@ -90,9 +92,14 @@ prototype.update = function(self, dt)
   
   -- shrink and disappear
   self.diam = self.diam - dt*250
+  self.w, self.h = self.diam
   if self.diam < 2 then
     self.purge = true
   end
+end
+
+prototype.collidesType = function(self, t)
+  return ((t == GameObject.TYPE_SPACEMAN) or (t == GameObject.TYPE_ENEMY))
 end
   
 --[[----------------------------------------------------------------------------

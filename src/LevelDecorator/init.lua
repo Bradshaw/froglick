@@ -74,8 +74,10 @@ function LevelDecorator.placeThings(lev)
     dude.COLLIDES_OBJECTS = true
     dude.w, dude.h = 30, 30
     dude.type = GameObject.TYPE_ENEMY
-    dude.onObjectCollision = function(self) self.purge = true end
-    dude.collidesType = function(self, t) return (t == GameObject.TYPE_SPACEMAN_PROJECTILE) end
+    dude.onObjectCollision = function(self, other) 
+      if other.type == GameObject.TYPE_SPLOSION then self.purge = true end end
+    dude.collidesType = function(self, t) return ((t == GameObject.TYPE_SPACEMAN_PROJECTILE)
+                                                  or (t == GameObject.TYPE_SPLOSION)) end
     
 		table.remove(candy, ind)
 	end
