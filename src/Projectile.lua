@@ -52,7 +52,8 @@ end
 prototype.onWallCollision = function(self)
   splode(self)
 end
-prototype.onObjectCollision = function(self)
+prototype.onObjectCollision = function(self, other)
+  self.pos:reset(other.pos)
   splode(self)
 end
 prototype.collidesType = function(self, t)
