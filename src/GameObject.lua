@@ -83,6 +83,13 @@ function prototype.snap_to_collision(self, dx, dy, max)
   end
 end
 
+function prototype.wall_collisions_fastobject(self, dt)
+   local fastobject = (math.abs(self.inertia.x) > Tile.SIZE.x) 
+                    or (math.abs(self.inertia.y) > Tile.SIZE.y)
+                    
+  print("SUPERFAST XD", fastobject, self.inertia)
+end
+
 function prototype.wall_collisions(self, dt)
   -- short-hand alias
   local walls = Level.get().tilegrid
@@ -193,11 +200,21 @@ function prototype.update(self, dt)
   if math.abs(self.inertia.y) < 0.01 then self.inertia.y = 0 end
   
   -- treat "hard" collisions with walls last of all
+  self.pos_prev:reset(self.pos)
   if fisix.COLLIDES_WALLS then
-    self.pos_prev:reset(self.pos)
-    self:wall_collisions(dt)
+    -- very fast objects need to raycast or they'll move thorough walls
+    local fastobject = (math.abs(self.inertia.x)*dt > Tile.SIZE.x + self.w) 
+                    or (math.abs(self.inertia.y)*dt > Tile.SIZE.y + self.h)             
+    
+    if fastobject then
+      -- fast objects
+      self:wall_collisions_fastobject(dt)
+    else
+      --- slow objects
+      self:wall_collisions(dt)
+    end
   elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
-    self.pos_prev:reset(self.pos)
+    
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
   end
 end

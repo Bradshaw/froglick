@@ -50,14 +50,15 @@ prototype.view = BulletView
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-Projectile.new = function(x, y, ndx, ndy, onimpact) -- nd_ = normalised delta_
+Projectile.new = function(x, y, ndx, ndy, onCollision) -- nd_ = normalised delta_
   -- metatable
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
   
+  -- initialise attributes
   self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
-  if onimpact then
-    self.onimpact = onimpact
+  if onCollision then
+    self.onCollision = onCollision
   end
   
   -- return the instance
