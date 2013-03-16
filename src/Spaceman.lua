@@ -25,6 +25,7 @@ local super = require("Animal")
 require("SpacemanView")
 require("KeyboardController")
 Sparkle = require("Sparkle")
+require("Projectile")
 Splosion = require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
@@ -181,17 +182,17 @@ function prototype.tryAttack(self, dt)
     self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
-    --Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
-      --              self.torso_facing.x, self.torso_facing.y)
+    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
+                    self.torso_facing.x, self.torso_facing.y)
   end
-end
-
-function prototype:isReloaded()
-  return (self.attackTime > self.attackTimeout)
 end
 
 function prototype:isAttacking()
   return (self.attackTime < self.attackTimeout/2)
+end
+
+function prototype:isReloaded()
+  return (self.attackTime > self.attackTimeout)
 end
 
 function prototype:weaponRaised()
@@ -206,6 +207,7 @@ Update
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+  
   -- change fisix
   self.fisix 
     = useful.tri(self.airborne, Spaceman.AIR_FISIX, Spaceman.GROUND_FISIX);
@@ -213,7 +215,7 @@ function prototype.update(self, dt)
   -- finish attack
   self.attackTime = self.attackTime + dt
   -- turn torso to legs after lowering weapon
-  if (not self:weaponRaised()) then
+  if not self.requested_attack then
     self.torso_facing:reset(self.legs_side, 0)
   end
   
@@ -223,13 +225,11 @@ function prototype.update(self, dt)
   -- boost vertically if boost is requested
   if self.requested_boost then
     self:tryBoost(dt)
-    self.requested_boost = false
   end
   
   -- accelerate horizontally if move is requested
   if self.requested_move then
     self:tryMove(dt)
-    self.requested_move = false
   else
     self:tryStop(dt)
   end
@@ -237,8 +237,12 @@ function prototype.update(self, dt)
   -- attack if attack is requested
   if self.requested_attack then
     self:tryAttack(dt)
-    self.requested_attack = false
   end
+  
+  -- clear input requests
+  self.requested_move = false
+  self.requested_attack = false
+  self.requested_boost = false
 end
 
 --[[----------------------------------------------------------------------------

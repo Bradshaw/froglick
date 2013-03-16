@@ -21,16 +21,13 @@ CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-DebugView = {}
+BulletView = {}
 
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function DebugView.draw(self, go) -- go = GameObject
-  love.graphics.setColor(255, 255, 255)
-  love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y - go.h, go.w, go.h)
-  love.graphics.printf(go:__tostring(), go.pos.x, go.pos.y, 
-                       go.w, "center")
+function BulletView.draw(self, blt) -- blt = Bullet
+  love.graphics.line(blt.pos.x, blt.pos.y, blt.pos_prev.x, blt.pos_prev.y)
 end

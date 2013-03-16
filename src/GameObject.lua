@@ -155,6 +155,11 @@ function prototype.update(self, dt)
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
   
+  -- update view if applicable
+  if self.view and self.view.update then
+    self.view:update(dt)
+  end
+  
   -- apply gravity
   if fisix.GRAVITY and (self.airborne or not fisix.COLLIDES_WALLS) then
     self.inertia.y = self.inertia.y + fisix.GRAVITY*dt
@@ -189,6 +194,7 @@ function prototype.update(self, dt)
   
   -- treat "hard" collisions with walls last of all
   if fisix.COLLIDES_WALLS then
+    self.pos_prev:reset(self.pos)
     self:wall_collisions(dt)
   elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos_prev:reset(self.pos)
