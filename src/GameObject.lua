@@ -274,13 +274,13 @@ local generate_id = function()
   return result
 end
 
-function GameObject.new(x, y)
+function GameObject.new(x, y, no_id)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
   
   -- create attributes
-  self.id = generate_id()
+  self.id = useful.tri(no_id, -1, generate_id())
   self.pos = vector(x, y)
   self.pos_prev = vector(x, y)
   self.inertia = vector(0, 0)
