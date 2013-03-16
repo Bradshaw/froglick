@@ -68,6 +68,7 @@ function prototype.draw(self)
     
       ---FIXME DEBUG
       --love.graphics.print(tostring(x)..","..tostring(y), x*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
+      --love.graphics.print(tilegrid:gridToTile(x, y).part, (x+0.5)*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
       --love.graphics.setColor(255, 255, 255, 255)
       --love.graphics.rectangle("line", x*Tile.SIZE.x, y*Tile.SIZE.y, 32, 32)
       --------------------------------

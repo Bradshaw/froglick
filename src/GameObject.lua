@@ -58,6 +58,8 @@ METATABLE (PROTOTYPE)
 
 local prototype = {}
 
+prototype.airborne = true
+
 -- default type, undefined (obviously)
 prototype.type = GameObject.TYPE_UNDEFINED
 

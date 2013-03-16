@@ -70,6 +70,7 @@ function Splosion.new(x, y, diam, pow)
     local d = math.random()*diam
     nextup[div] = { pow = pow%div, x = math.cos(a)*d, y = math.sin(a)*d }
     for i, v in ipairs(nextup) do
+      Sparkle.newBooster(self.pos.x,self.pos.y,v.x*100,v.y*100)
       Splosion.new(self.pos.x + v.x, self.pos.y + v.y, diam*0.8, v.pow)
     end
   end
