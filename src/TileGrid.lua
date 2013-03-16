@@ -173,7 +173,12 @@ function prototype.validPixelPos(self, x, y)
 end
 
 function prototype.gridCollision(self, x, y)
-  return (self:gridToTile(x, y).wall == Tile.FULL)
+  local type = self:gridToTile(x, y).wall
+  return ((type == Tile.FULL) 
+        or (type == Tile.TOP_LEFT)
+        or (type == Tile.TOP_RIGHT)
+        or (type == Tile.BOTTOM_LEFT)
+        or (type == Tile.BOTTOM_RIGHT))
 end
 
 function prototype.gridToTile(self, x, y)
