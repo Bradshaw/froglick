@@ -41,7 +41,7 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 		dug = LevelGen.maze(lev, 51, 51, 2)
 	end
 	LevelGen.dirty(lev,1,Tile.UNDECIDED,Tile.FULL)
-	for i=1,blobbiness do
+	for i=1,3 do
 		LevelGen.blobify(lev)
 	end
 
@@ -49,12 +49,13 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 		for j,u in ipairs(v) do
 			if u.part>0 then
 				u.wall = Tile.EMPTY
-				u.part = 0
+				u.part = 34
 			end
 		end
 	end
 	LevelGen.slopify(lev)
 	LevelGen.unspikeify(lev)
+	LevelGen.setPartsToDist(lev)
 	return lev
 end
 
@@ -66,6 +67,41 @@ local dummy_tg = function()
     end
   end
   return tg
+end
+
+function LevelGen.setPartsToDist(lev)
+	for i,v in ipairs(lev.tiles) do
+		for j,u in ipairs(v) do
+			u.distance = 10
+		end
+	end
+	local changed = true
+	while changed do
+		changed = false
+		for i,v in ipairs(lev.tiles) do
+			for j,u in ipairs(v) do
+				if u.wall == Tile.FULL and u.distance~= 0 then
+					u.distance = 0
+					--print("Got an unset tile")
+					changed = true
+				else
+					local min = math.huge
+					for x=-1,1 do
+						for y=-1,1 do
+							if (x~=0 or y~=0) and lev.tiles[i+x] and lev.tiles[i+x][j+y] then
+								min = math.min(lev.tiles[i+x][j+y].distance,min)
+							end
+						end
+					end
+					if u.distance> min+1 then
+						u.distance = min+1
+						--print("Got a tile with a high distance value")
+						changed = true
+					end
+				end
+			end
+		end
+	end
 end
 
 function LevelGen.new(method)
