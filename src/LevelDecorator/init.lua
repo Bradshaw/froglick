@@ -54,6 +54,14 @@ function LevelDecorator.placeJoe(lev)
   end
 	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
 	Spaceman[1].pos.y=(newpos[2]+1.0)*Tile.SIZE.y
+  
+  --FIXME debug
+  local fred = GameObject.new(Spaceman[1].pos.x + 100, Spaceman[1].pos.y)
+  fred.w = 30
+  fred.h = 30
+  print(fred, fred.w, fred.h)
+  fred.COLLIDES_OBJECTS = true
+  
 end
 
 function LevelDecorator.placeThings(lev)
@@ -70,9 +78,10 @@ function LevelDecorator.placeThings(lev)
 		v = candy[ind]
     
     --FIXME spammy spam spam test
-    --local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
-    --dude.COLLIDES_OBJECTS = true
-    --dude.w, dude.h = 30, 30
+    local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
+    dude.COLLIDES_OBJECTS = true
+    dude.w, dude.h = 30, 30
+    dude.onObjectCollision = function(self) self.purge = true end
     
 		table.remove(candy, ind)
 	end
@@ -87,7 +96,7 @@ function LevelDecorator.placeThings(lev)
 	--Gate.pos.x = candy[1][1]*Tile.SIZE.x
 	--Gate.pos.y = candy[1][2]*Tile.SIZE.y
 	print("lol",Spaceman[1].pos.x)
-	Gate.pos.x = Spaceman[1].pos.x + 60
+	Gate.pos.x = Spaceman[1].pos.x - 60
 	Gate.pos.y = Spaceman[1].pos.y
 end
 

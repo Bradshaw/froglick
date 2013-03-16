@@ -309,19 +309,20 @@ end
 
 
 GameObject.collision = function(a, b)
-
-  -- horizontally seperate ?
-  local v1x, v2x = (b.pos.x + b.w) - a.pos.x, (a.pos.x + a.w) - b.pos.x
-  if (v1x < 0 and v2x >= 0) or (v1x > 0 or v2x <= 0) then
+  -- horizontally seperate ? 
+  local v1x = (b.pos.x + b.w/2) - (a.pos.x - a.w/2)
+  local v2x = (a.pos.x + a.w) - (b.pos.x - b.w/2)
+  if useful.sign(v1x) ~= useful.sign(v2x) then
     return false
   end
   -- vertically seperate ?
-  local v1y, v2y = (b.pos.y + b.h) - a.pos.y, (a.pos.y + a.h) - b.pos.y
-  if (v1y < 0 and v2y >= 0) or (v1y > 0 or v2y <= 0) then
+  local v1y = a.pos.y - (b.pos.y - b.h) 
+  local v2y = b.pos.y - (a.pos.y - a.h)
+  if useful.sign(v1y) ~= useful.sign(v2y) then
     return false
   end
+  
   -- in every other case there is a collision
-  print("COLLISION")
   return true
 end
 

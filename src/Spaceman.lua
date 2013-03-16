@@ -274,9 +274,9 @@ function Spaceman.new(x, y)
   self.requested_attack = false
   self.requested_boost = false
   
-  -- store player
-  table.insert(Spaceman, self) -- add a new Spaceman to the Spaceman list
-  
+  -- add this new Spaceman to the Spaceman list
+  table.insert(Spaceman, self) 
+   
   -- return the instance
   return self
 end
