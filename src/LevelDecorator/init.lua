@@ -5,7 +5,6 @@ require("Gate")
 function LevelDecorator.decorate(lev)
 	LevelDecorator.placeJoe(lev)
 	LevelDecorator.plant(lev)
-	print("Calling place Things")
 	LevelDecorator.placeThings(lev)
 end
 
@@ -55,13 +54,6 @@ function LevelDecorator.placeJoe(lev)
 	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
 	Spaceman[1].pos.y=(newpos[2]+1.0)*Tile.SIZE.y
   
-  --FIXME debug
-  local fred = GameObject.new(Spaceman[1].pos.x + 100, Spaceman[1].pos.y)
-  fred.w = 30
-  fred.h = 30
-  print(fred, fred.w, fred.h)
-  fred.COLLIDES_OBJECTS = true
-  
 end
 
 function LevelDecorator.placeThings(lev)
@@ -81,7 +73,9 @@ function LevelDecorator.placeThings(lev)
     local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
     dude.COLLIDES_OBJECTS = true
     dude.w, dude.h = 30, 30
+    dude.type = GameObject.TYPE_ENEMY
     dude.onObjectCollision = function(self) self.purge = true end
+    dude.collidesType = function(self, t) return (t == GameObject.TYPE_SPACEMAN_PROJECTILE) end
     
 		table.remove(candy, ind)
 	end

@@ -40,11 +40,23 @@ setmetatable(prototype, { __index = super })
 -- constants
 prototype.SPEED = 3000
 prototype.COLLIDES_WALLS = true
+prototype.COLLIDES_OBJECTS = true
+
+-- private local function
+local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
+  Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
+  blt.purge = true
+end
 
 -- default values
 prototype.onWallCollision = function(self)
-  Splosion.new(self.pos.x, self.pos.y, 15, 10)
-  self.purge = true
+  splode(self)
+end
+prototype.onObjectCollision = function(self)
+  splode(self)
+end
+prototype.collidesType = function(self, t)
+  return (t == GameObject.TYPE_ENEMY)
 end
 prototype.view = BulletView
 prototype.w = 1
@@ -58,6 +70,10 @@ Projectile.new = function(x, y, ndx, ndy, inertia, onCollision) -- nd_ = normali
   -- metatable
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
+  
+  -- type
+  --! FIXME
+  self.type = GameObject.TYPE_SPACEMAN_PROJECTILE
   
   -- initialise attributes
   self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)

@@ -43,12 +43,23 @@ CLASS
 -- global-scoped
 GameObject = {}
 
+-- constants
+GameObject.TYPE_UNDEFINED = 0
+GameObject.TYPE_SPACEMAN = 1
+GameObject.TYPE_ENEMY = 2
+GameObject.TYPE_SPARKLE = 3
+GameObject.TYPE_SPLOSION = 4
+GameObject.TYPE_SPACEMAN_PROJECTILE = 5
+GameObject.TYPE_ENEMY_PROJECTILE = 6
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local prototype = {}
+
+-- default type, undefined (obviously)
+prototype.type = GameObject.TYPE_UNDEFINED
 
 -- default object width and height
 prototype.w = 0
@@ -57,21 +68,40 @@ prototype.h = 0
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
 
-prototype.onWallCollision = function()
+prototype.onWallCollision = function(self)
   -- override me!
 end
 
-prototype.onObjectCollision = function()
+prototype.onObjectCollision = function(self)
   -- override me!
+end
+
+prototype.collidesType = function(self)
+  -- override me!
+  return false
 end
 
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
 
+--[[----------------------------------------------------------------------------
+Accessors
+--]]
+
 function prototype.__tostring(self)
   return "GameObject(" .. self.id .. ")"
 end
+
+function prototype.superfast(self)
+  return ((math.abs(self.inertia.x)*MAX_DT > Tile.SIZE.x + self.w) 
+          or (math.abs(self.inertia.y)*MAX_DT > Tile.SIZE.y + self.h))
+end
+
+
+--[[----------------------------------------------------------------------------
+Collisions
+--]]
 
 function prototype.snap_from_collision(self, dx, dy, max)
   local i, walls = 0, Level.get().tilegrid
@@ -182,8 +212,10 @@ function prototype.wall_collisions(self, dt)
     self:onWallCollision()
   end
 end
-  
 
+--[[----------------------------------------------------------------------------
+Called each frame
+--]]
 
 function prototype.update(self, dt)
   -- short-hand alias
@@ -231,14 +263,9 @@ function prototype.update(self, dt)
   self.pos_prev:reset(self.pos)
   if self.COLLIDES_WALLS then
     -- very fast objects need to raycast or they'll move thorough walls
-    local fastobject = (math.abs(self.inertia.x)*dt > Tile.SIZE.x + self.w) 
-                    or (math.abs(self.inertia.y)*dt > Tile.SIZE.y + self.h)             
-          
-    if fastobject then
-      -- fast objects
+    if self:superfast() then
       self:wall_collisions_fastobject(dt)
     else
-      -- slow objects
       self:wall_collisions(dt)
     end
     
@@ -253,7 +280,6 @@ function prototype.control(self)
     self.controller:control(self)
   end
 end
-
 
 function prototype.draw(self)
   -- check if in camera view
@@ -272,6 +298,10 @@ end
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
+
+--[[----------------------------------------------------------------------------
+Constructor
+--]]
 
 -- private subroutine
 local next_id = 0
@@ -307,8 +337,45 @@ function GameObject.new(x, y, no_id, layer)
   return self
 end
 
+--[[----------------------------------------------------------------------------
+Object-object collision-testing
+--]]
 
-GameObject.collision = function(a, b)
+GameObject.__collision_fast_fast = function(a, b)
+  print("'GameObject.__collision_fast_fast' NOT YET IMPLEMENTED!")
+  return false
+end
+
+GameObject.__collision_fast_slow = function(fast, slow)
+  -- cache some local variable for better readibility
+  -- ... the hitbox
+  local left = slow.pos.x - slow.w/2 
+  local right = left + slow.w
+  local top = slow.pos.y - slow.h
+  local bottom = slow.pos.y
+  -- ... the raycast
+  local startx, starty = fast.pos_prev.x, fast.pos_prev.y
+  local endx, endy = fast.pos.x, fast.pos.y
+  
+  -- ray entirely left of box ?
+  if endx < left and startx < left then
+    return false
+  -- ray entirely right of box ?
+  elseif endx > right and startx > right then
+    return false
+  -- ray entirely above box ?
+  elseif endy < top and starty < top then
+    return false
+  -- ray entirely below box ?
+  elseif endy > bottom and starty > bottom then
+    return false
+  end
+    
+  -- in all other cases we're good!
+  return true
+end
+
+GameObject.__collision_slow_slow = function(a, b)
   -- horizontally seperate ? 
   local v1x = (b.pos.x + b.w/2) - (a.pos.x - a.w/2)
   local v2x = (a.pos.x + a.w) - (b.pos.x - b.w/2)
@@ -324,6 +391,24 @@ GameObject.collision = function(a, b)
   
   -- in every other case there is a collision
   return true
+end
+
+GameObject.collision = function(a, b)
+  -- collisions are handled different for very fast objects (ray-cast)
+  if (not a:superfast()) and (not b:superfast()) then
+    return GameObject.__collision_slow_slow(a, b)
+  elseif a:superfast() and (not b:superfast()) then
+    return GameObject.__collision_fast_slow(a, b)
+  elseif b:superfast() and (not a:superfast()) then
+    return GameObject.__collision_fast_slow(b, a)
+  else -- both superfast
+     return GameObject.__collision_fast_fast(a, b)
+  end
+end
+  
+GameObject.can_collide = function(a, b)
+return (a.COLLIDES_OBJECTS and b.COLLIDES_OBJECTS 
+        and a:collidesType(b.type) and b:collidesType(a.type))
 end
 
 --[[----------------------------------------------------------------------------
