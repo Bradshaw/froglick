@@ -69,9 +69,23 @@ end
 METHODS
 --]]----------------------------------------------------------------------------
 
+--[[----------------------------------------------------------------------------
+Accessors
+--]]
+
 function prototype.__tostring(self)
   return "GameObject(" .. self.id .. ")"
 end
+
+function prototype.superfast(self)
+  return ((math.abs(self.inertia.x)*MAX_DT > Tile.SIZE.x + self.w) 
+          or (math.abs(self.inertia.y)*MAX_DT > Tile.SIZE.y + self.h))
+end
+
+
+--[[----------------------------------------------------------------------------
+Collisions
+--]]
 
 function prototype.snap_from_collision(self, dx, dy, max)
   local i, walls = 0, Level.get().tilegrid
@@ -182,8 +196,10 @@ function prototype.wall_collisions(self, dt)
     self:onWallCollision()
   end
 end
-  
 
+--[[----------------------------------------------------------------------------
+Called each frame
+--]]
 
 function prototype.update(self, dt)
   -- short-hand alias
@@ -231,14 +247,9 @@ function prototype.update(self, dt)
   self.pos_prev:reset(self.pos)
   if self.COLLIDES_WALLS then
     -- very fast objects need to raycast or they'll move thorough walls
-    local fastobject = (math.abs(self.inertia.x)*dt > Tile.SIZE.x + self.w) 
-                    or (math.abs(self.inertia.y)*dt > Tile.SIZE.y + self.h)             
-          
-    if fastobject then
-      -- fast objects
+    if self:superfast() then
       self:wall_collisions_fastobject(dt)
     else
-      -- slow objects
       self:wall_collisions(dt)
     end
     
@@ -253,7 +264,6 @@ function prototype.control(self)
     self.controller:control(self)
   end
 end
-
 
 function prototype.draw(self)
   -- check if in camera view
@@ -272,6 +282,10 @@ end
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
+
+--[[----------------------------------------------------------------------------
+Constructor
+--]]
 
 -- private subroutine
 local next_id = 0
@@ -307,6 +321,9 @@ function GameObject.new(x, y, no_id, layer)
   return self
 end
 
+--[[----------------------------------------------------------------------------
+Object-object collision-testing
+--]]
 
 GameObject.collision = function(a, b)
   -- horizontally seperate ? 
@@ -325,6 +342,7 @@ GameObject.collision = function(a, b)
   -- in every other case there is a collision
   return true
 end
+  
 
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE

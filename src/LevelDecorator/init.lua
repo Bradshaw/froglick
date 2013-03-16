@@ -55,13 +55,6 @@ function LevelDecorator.placeJoe(lev)
 	Spaceman[1].pos.x=(newpos[1]+0.5)*Tile.SIZE.x
 	Spaceman[1].pos.y=(newpos[2]+1.0)*Tile.SIZE.y
   
-  --FIXME debug
-  local fred = GameObject.new(Spaceman[1].pos.x + 100, Spaceman[1].pos.y)
-  fred.w = 30
-  fred.h = 30
-  print(fred, fred.w, fred.h)
-  fred.COLLIDES_OBJECTS = true
-  
 end
 
 function LevelDecorator.placeThings(lev)
