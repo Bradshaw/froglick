@@ -228,7 +228,7 @@ function prototype.update(self, dt)
   end
   
   -- apply gravity
-  if fisix.GRAVITY and (self.airborne or not self.COLLIDES_WALLS) then
+  if fisix.GRAVITY and (self.airborne or not fisix.COLLIDES_WALLS) then
     self.inertia.y = self.inertia.y + fisix.GRAVITY*dt
   end
   
@@ -261,7 +261,7 @@ function prototype.update(self, dt)
   
   -- treat "hard" collisions with walls last of all
   self.pos_prev:reset(self.pos)
-  if self.COLLIDES_WALLS then
+  if fisix.COLLIDES_WALLS then
     -- very fast objects need to raycast or they'll move thorough walls
     if self:superfast() then
       self:wall_collisions_fastobject(dt)
