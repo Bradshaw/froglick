@@ -195,7 +195,9 @@ function prototype.update(self, dt)
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
   end
   if self.view then
-    self.view:update(dt)
+    if self.view.update then
+      self.view:update(dt)
+    end
   end
 end
 

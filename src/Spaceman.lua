@@ -24,6 +24,7 @@ local super = require("Animal")
 
 require("SpacemanView")
 require("KeyboardController")
+Sparkle = require("Sparkle")
 Splosion = require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
@@ -108,9 +109,14 @@ function prototype.requestMove(self, direction)
 end
 
 function prototype.tryBoost(self, dt)
+
+  if self.energy> 10 then
+    Sparkle.newBooster(self.pos.x-self.legs_side*8 , self.pos.y-18,-self.inertia.x+math.random(-50,50),math.max(self.inertia.y,0) + 500 + math.random(0,250))
+  end
+
   -- boost consumes energy
   self.energy = math.max(self.energy - dt*self.boostCost, 0)
-  
+
   -- boost thrust depends on remaining energy
   local thrust = useful.tri(self.energy > 10, 
       self.fisix.BOOST, self.fisix.BOOST_LOW_ENERGY)
@@ -120,6 +126,9 @@ function prototype.tryBoost(self, dt)
 end
 
 function prototype.tryMove(self, dt)
+  if self.airborne then
+    Sparkle.newBooster(self.pos.x-self.legs_side*8 , self.pos.y-18,self.inertia.x-self.legs_side*500 + math.random(0,250),-self.inertia.y+math.random(-50,50))
+  end
   --! TODO check if capable of moving (ie. not dead)
   self.inertia.x = self.inertia.x + self.legs_side*self.fisix.MOVE
 end
@@ -197,7 +206,6 @@ Update
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
-  
   -- change fisix
   self.fisix 
     = useful.tri(self.airborne, Spaceman.AIR_FISIX, Spaceman.GROUND_FISIX);
