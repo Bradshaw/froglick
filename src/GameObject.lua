@@ -213,9 +213,7 @@ function prototype.draw(self)
   end
   
   -- draw shiz
-  if self.draw then
-    self:draw()
-  elseif self.view then
+  if self.view then
     self.view:draw(self)
   else
     DebugView:draw(self)
