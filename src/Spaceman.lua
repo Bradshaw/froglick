@@ -178,12 +178,12 @@ function prototype.tryAttack(self, dt)
   end
 end
 
-function prototype:isReloaded()
-  return (self.attackTime > self.attackTimeout)
-end
-
 function prototype:isAttacking()
   return (self.attackTime < self.attackTimeout/2)
+end
+
+function prototype:isReloaded()
+  return (self.attackTime > self.attackTimeout)
 end
 
 function prototype:weaponRaised()
@@ -206,7 +206,7 @@ function prototype.update(self, dt)
   -- finish attack
   self.attackTime = self.attackTime + dt
   -- turn torso to legs after lowering weapon
-  if (not self:weaponRaised()) then
+  if (self.attackTime > self.attackTimeout*2) then
     self.torso_facing:reset(self.legs_side, 0)
   end
   

@@ -55,7 +55,7 @@ Projectile.new = function(x, y, ndx, ndy, onimpact) -- nd_ = normalised delta_
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
   
-  self.inertia:reset(ndx*self.SPEED, ndx*self.SPEED)
+  self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
   if onimpact then
     self.onimpact = onimpact
   end
