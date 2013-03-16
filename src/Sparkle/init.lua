@@ -29,18 +29,17 @@ function Sparkle.new(x,y,dx,dy)
 			love.graphics.setBlendMode("alpha")
 		end
 	}
+	self.COLLIDES_WALLS = true
 	self.inertia.x = dx or 0
 	self.inertia.y = dy or 0
 	self.age = 0
 	self.dieAt = 1
-      
 	return self
 end
 
 function Sparkle.newBooster(...)
 	local self = Sparkle.new(...)
 	self.fisix = Sparkle.FISIX.BOOSTER
-
 	return self
 end
 
