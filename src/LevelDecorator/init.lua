@@ -70,7 +70,7 @@ function LevelDecorator.placeThings(lev)
 		v = candy[ind]
     
     --FIXME spammy spam spam test
-    local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
+    local dude = GameObject.new((v[1]+0.5)*Tile.SIZE.x,(v[2]+1)*Tile.SIZE.y)
     dude.COLLIDES_OBJECTS = true
     dude.w, dude.h = 30, 30
     dude.type = GameObject.TYPE_ENEMY

@@ -307,8 +307,8 @@ function TileGrid.new(xsize, ysize)
   setmetatable(self, {__index = prototype })
 
 
-  self.spritebatch = love.graphics.newSpriteBatch( Tile.FULLIMAGE )
-  self.decospritebatch = love.graphics.newSpriteBatch( Tile.DECORATIONIMAGE )
+  self.spritebatch = love.graphics.newSpriteBatch( Tile.FULLIMAGE, 2000 )
+  self.decospritebatch = love.graphics.newSpriteBatch( Tile.DECORATIONIMAGE, 2000 )
   
   -- create attributes
   self.size = vector(xsize, ysize)
