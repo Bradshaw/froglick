@@ -126,16 +126,16 @@ function prototype.draw(self)
     )
   --]]
   love.graphics.setBlendMode("alpha")
-  --love.graphics.draw(self.decospritebatch)
+  love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("additive")
-  --love.graphics.draw(self.decospritebatch)
+  love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("alpha")
   
   --FIXME DEBUG
   --love.graphics.setColor(255, 255, 255, 100)
   
   
-  love.graphics.setColor(127,127,127)
+  --love.graphics.setColor(127,127,127)
   love.graphics.draw(self.spritebatch)
   love.graphics.setColor(255,255,255)
 end
