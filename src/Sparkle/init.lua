@@ -16,6 +16,11 @@ Sparkle.FISIX.BOOSTER =
 function Sparkle.new(x,y,dx,dy)
 	local self = GameObject.new(x, y, true, 100) -- don't generate identifiers for sparkles!
 	setmetatable(self,{__index=Sparkle_mt})
+  
+  -- type
+  self.type = GameObject.TYPE_SPARKLE
+  
+  
 	self.view = {
 		draw = function(self,target)
 			love.graphics.setColor(255,255,255,255*(1-(target.age/target.dieAt)))

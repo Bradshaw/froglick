@@ -256,6 +256,10 @@ function Spaceman.new(x, y)
   local self = Animal.new(x, y)
   setmetatable(self, {__index = prototype })
   
+  -- type
+  self.type = GameObject.TYPE_SPACEMAN
+  print("SPACEMAN TYPE", self.type)
+  
   -- MVC
   self.view = SpacemanView
   self.controller = KeyboardController

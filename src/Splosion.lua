@@ -46,6 +46,9 @@ function Splosion.new(x, y, diam, pow)
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
   
+  -- type
+  self.type = GameObject.TYPE_SPLOSION
+  
   -- initialise attributes
   self.diam = diam
   self.pow = pow

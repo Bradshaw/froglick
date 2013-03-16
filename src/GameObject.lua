@@ -43,12 +43,23 @@ CLASS
 -- global-scoped
 GameObject = {}
 
+-- constants
+GameObject.TYPE_UNDEFINED = 0
+GameObject.TYPE_SPACEMAN = 1
+GameObject.TYPE_ENEMY = 2
+GameObject.TYPE_SPARKLE = 3
+GameObject.TYPE_SPLOSION = 4
+GameObject.TYPE_SPACEMAN_PROJECTILE = 5
+GameObject.TYPE_ENEMY_PROJECTILE = 6
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local prototype = {}
+
+-- default type, undefined (obviously)
+prototype.type = GameObject.TYPE_UNDEFINED
 
 -- default object width and height
 prototype.w = 0
@@ -57,12 +68,17 @@ prototype.h = 0
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
 
-prototype.onWallCollision = function()
+prototype.onWallCollision = function(self)
   -- override me!
 end
 
-prototype.onObjectCollision = function()
+prototype.onObjectCollision = function(self)
   -- override me!
+end
+
+prototype.collidesType = function(self)
+  -- override me!
+  return false
 end
 
 --[[----------------------------------------------------------------------------
@@ -330,9 +346,33 @@ GameObject.__collision_fast_fast = function(a, b)
   return false
 end
 
-GameObject.__collision_fast_slow = function(fast, low)
-  print("'GameObject.__collision_fast_slow' NOT YET IMPLEMENTED!")
-  return false
+GameObject.__collision_fast_slow = function(fast, slow)
+  -- cache some local variable for better readibility
+  -- ... the hitbox
+  local left = slow.pos.x - slow.w/2 
+  local right = left + slow.w
+  local top = slow.pos.y - slow.h
+  local bottom = slow.pos.y
+  -- ... the raycast
+  local startx, starty = fast.pos_prev.x, fast.pos_prev.y
+  local endx, endy = fast.pos.x, fast.pos.y
+  
+  -- ray entirely left of box ?
+  if endx < left and startx < left then
+    return false
+  -- ray entirely right of box ?
+  elseif endx > right and startx > right then
+    return false
+  -- ray entirely above box ?
+  elseif endy < top and starty < top then
+    return false
+  -- ray entirely below box ?
+  elseif endy > bottom and starty > bottom then
+    return false
+  end
+    
+  -- in all other cases we're good!
+  return true
 end
 
 GameObject.__collision_slow_slow = function(a, b)
@@ -366,6 +406,10 @@ GameObject.collision = function(a, b)
   end
 end
   
+GameObject.can_collide = function(a, b)
+return (a.COLLIDES_OBJECTS and b.COLLIDES_OBJECTS 
+        and a:collidesType(b.type) and b:collidesType(a.type))
+end
 
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE
