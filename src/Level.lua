@@ -67,7 +67,7 @@ function prototype.update(self, dt)
       end
   ) -- end useful.map
       
-  -- camera follows player 1      
+  -- camera follows player 1
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
 end
   
@@ -138,6 +138,10 @@ function Level.get()
   return Level.instance
 end
 
+function Level.reset()
+  Level.instance = nil
+  table.insert(Level.get().game_objects,Spaceman[1])
+end
 
 --[[----------------------------------------------------------------------------
 EXPORT THE CLASS

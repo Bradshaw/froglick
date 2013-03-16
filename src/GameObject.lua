@@ -270,7 +270,7 @@ function GameObject.new(x, y)
   self.inertia = vector(0, 0)
   
   -- add to list of game objects in the current level
-  table.insert(Level.get().game_objects, self)
+  table.insert(Level.get().game_objects, #Level.get().game_objects+1, self)
   
   return self
 end

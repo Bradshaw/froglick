@@ -1,4 +1,5 @@
 local LevelDecorator = {}
+require("Gate")
 
 
 function LevelDecorator.decorate(lev)
@@ -47,7 +48,7 @@ function LevelDecorator.placeJoe(lev)
 	for i,v in ipairs(newpos) do
 		--print(i,v)
 	end
-  
+
   if not Spaceman[1] then
     Spaceman.new(0, 0)
   end
@@ -79,6 +80,14 @@ function LevelDecorator.placeThings(lev)
 			--print(j,u)
 		end
 	end
+	if not Gate.pos then
+		Gate.new()
+	end
+	--Gate.pos.x = candy[1][1]*Tile.SIZE.x
+	--Gate.pos.y = candy[1][2]*Tile.SIZE.y
+	print("lol",Spaceman[1].pos.x)
+	Gate.pos.x = Spaceman[1].pos.x + 60
+	Gate.pos.y = Spaceman[1].pos.y
 end
 
 return LevelDecorator
