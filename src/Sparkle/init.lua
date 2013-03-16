@@ -14,7 +14,7 @@ Sparkle.FISIX.BOOSTER =
 
 
 function Sparkle.new(x,y,dx,dy)
-	local self = GameObject.new(x,y)
+	local self = GameObject.new(x,y, true) -- don't generate identifiers for sparkles!
 	setmetatable(self,{__index=Sparkle_mt})
 	self.view = {
 		draw = function(self,target)

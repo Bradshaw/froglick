@@ -108,7 +108,7 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 
 -- methods
-function prototype.draw(self,x,y)
+function prototype.draw(self, x, y)
   if self.wall and self.wall > 0 then
     -- switch over Tile wall types
     if self.wall == Tile.TOP_LEFT then

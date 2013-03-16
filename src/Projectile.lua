@@ -44,8 +44,11 @@ prototype.COLLIDES_WALLS = true
 -- default values
 prototype.onCollision = function(self)
   Splosion.new(self.pos.x, self.pos.y, 15, 10)
+  self.purge = true
 end
 prototype.view = BulletView
+prototype.w = 1
+prototype.h = 1
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
