@@ -71,6 +71,7 @@ function LevelDecorator.placeThings(lev)
     
     --FIXME spammy spam spam test
     --local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
+    --dude.COLLIDES_OBJECTS = true
     --dude.w, dude.h = 30, 30
     
 		table.remove(candy, ind)
