@@ -157,6 +157,10 @@ function Level.get()
   return Level.instance
 end
 
+function Level.reset()
+  Level.instance = nil
+  table.insert(Level.get().game_objects,Spaceman[1])
+end
 
 --[[----------------------------------------------------------------------------
 EXPORT THE CLASS

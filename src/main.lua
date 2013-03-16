@@ -1,8 +1,30 @@
 function love.load(arg)
+	fontim = love.graphics.newImage("images/font.png")
+    fontim:setFilter("nearest","nearest")
+    font = love.graphics.newImageFont("images/myfont.png",
+    " abcdefghijklmnopqrstuvwxyz" ..
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
+    "123456789.,!?-+/():;%_`'*__[]\"" ..
+    "<>&#=$")
+	--]]
+	--font = love.graphics.newFont("images/DisposableDroidBB.ttf",12)
+	translote = love.graphics.translate
+	love.graphics.translate = function(x,y)
+		translote(math.floor(x),math.floor(y))
+	end
+	pront = love.graphics.print
+	love.graphics.print = function(txt,x,y,...)
+		pront(txt,math.floor(x),math.floor(y),...)
+	end
+	drow = love.graphics.draw
+	love.graphics.print = function(txt,x,y,...)
+		pront(txt,math.floor(x),math.floor(y),...)
+	end
+    love.graphics.setFont(font)
 	local modes = love.graphics.getModes()
 	table.sort(modes, function(a, b) return a.width*a.height < b.width*b.height end)
 	local m = modes[#modes]
-  --local success = love.graphics.setMode( m.width, m.height, false )
+  --local success = love.graphics.setMode( m.width, m.height, true )
   local success = true
   
 	if not success then
