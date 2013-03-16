@@ -40,6 +40,7 @@ setmetatable(prototype, { __index = super })
 -- constants
 prototype.SPEED = 3000
 prototype.COLLIDES_WALLS = true
+prototype.COLLIDES_OBJECTS = true
 
 -- default values
 prototype.onWallCollision = function(self)

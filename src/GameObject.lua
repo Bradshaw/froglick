@@ -325,7 +325,17 @@ end
 Object-object collision-testing
 --]]
 
-GameObject.collision = function(a, b)
+GameObject.__collision_fast_fast = function(a, b)
+  print("'GameObject.__collision_fast_fast' NOT YET IMPLEMENTED!")
+  return false
+end
+
+GameObject.__collision_fast_slow = function(fast, low)
+  print("'GameObject.__collision_fast_slow' NOT YET IMPLEMENTED!")
+  return false
+end
+
+GameObject.__collision_slow_slow = function(a, b)
   -- horizontally seperate ? 
   local v1x = (b.pos.x + b.w/2) - (a.pos.x - a.w/2)
   local v2x = (a.pos.x + a.w) - (b.pos.x - b.w/2)
@@ -341,6 +351,19 @@ GameObject.collision = function(a, b)
   
   -- in every other case there is a collision
   return true
+end
+
+GameObject.collision = function(a, b)
+  -- collisions are handled different for very fast objects (ray-cast)
+  if (not a:superfast()) and (not b:superfast()) then
+    return GameObject.__collision_slow_slow(a, b)
+  elseif a:superfast() and (not b:superfast()) then
+    return GameObject.__collision_fast_slow(a, b)
+  elseif b:superfast() and (not a:superfast()) then
+    return GameObject.__collision_fast_slow(b, a)
+  else -- both superfast
+     return GameObject.__collision_fast_fast(a, b)
+  end
 end
   
 

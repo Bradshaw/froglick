@@ -5,7 +5,6 @@ require("Gate")
 function LevelDecorator.decorate(lev)
 	LevelDecorator.placeJoe(lev)
 	LevelDecorator.plant(lev)
-	print("Calling place Things")
 	LevelDecorator.placeThings(lev)
 end
 
