@@ -183,7 +183,7 @@ function prototype.tryAttack(self, dt)
     
     -- create projectile
     Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
-                    self.torso_facing.x, self.torso_facing.y)
+                    self.torso_facing.x, self.torso_facing.y, self.inertia)
   end
 end
 

@@ -54,13 +54,16 @@ prototype.h = 1
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-Projectile.new = function(x, y, ndx, ndy, onCollision) -- nd_ = normalised delta_
+Projectile.new = function(x, y, ndx, ndy, inertia, onCollision) -- nd_ = normalised delta_
   -- metatable
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
   
   -- initialise attributes
   self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
+  if inertia then
+    self.inertia:plusequals(inertia)
+  end
   if onCollision then
     self.onCollision = onCollision
   end
