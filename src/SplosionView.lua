@@ -31,8 +31,8 @@ CLASS (STATIC) FUNCTIONS
 function FirebombView.draw(self, spl) -- spl = Splosion
   -- yellow outline
   love.graphics.setColor(255, 180, 0)
-  love.graphics.circle("fill", spl.x, spl.y, spl.diam+2)
-  -- white 
+  love.graphics.circle("fill", spl.pos.x, spl.pos.y, spl.diam+2)
+  -- white centre
   love.graphics.setColor(255, 255, 255)
-  love.graphics.circle("fill", spl.x, spl.y, spl.diam)
+  love.graphics.circle("fill", spl.pos.x, spl.pos.y, spl.diam)
 end

@@ -25,7 +25,7 @@ local super = require("Animal")
 require("SpacemanView")
 require("KeyboardController")
 require("Projectile")
-Splosion = require("Splosion")
+require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
 

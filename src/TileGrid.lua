@@ -142,11 +142,21 @@ function prototype.get(self, x, y)
 end
 
 function prototype.validGridPos(self, x, y)
-  return x >= 1 
+  return (x >= 1 
       and y >= 1
       and x <= self.size.x 
-      and y <= self.size.y
-      
+      and y <= self.size.y) 
+end
+
+function prototype.validPixelPos(self, x, y)
+  return (x >= 0
+      and y >= 0
+      and x <= self.size.x*Tile.SIZE.x
+      and y <= self.size.y*Tile.SIZE.y)
+end
+
+function prototype.gridCollision(self, x, y)
+  return (self:gridToTile(x, y).wall == Tile.FULL)
 end
 
 function prototype.gridToTile(self, x, y)
@@ -162,8 +172,49 @@ function prototype.pixelToTile(self, x, y)
                          math.floor(y / Tile.SIZE.y))
 end
 
-function prototype.lineCollision(self, x1, y1, x2, y2)
-  local tile1, tile2 
+function prototype.lineCollision(self, x1, y1, x2, y2, pixel_perfect)
+  -- convert from pixel -> tile
+  x1 = math.floor(x1 / Tile.SIZE.x)
+  x2 = math.floor(x2 / Tile.SIZE.x)
+  y1 = math.floor(y1 / Tile.SIZE.y)
+  y2 = math.floor(y2 / Tile.SIZE.y)
+  
+  -- check that both tiles are valid
+  if (not self:validGridPos(x1, y1)) or (not self:validGridPos(x2, y2)) then
+    return true, TileGrid.gridToPixel(x1, y1)
+  end
+  
+  -- http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+  local dx = math.abs(x2 - x1)
+  local dy = math.abs(y2 - y1)
+  local sx = useful.tri(x1 < x2, 1, -1)
+  local sy = useful.tri(y1 < y2, 1, -1)
+  local err = dx - dy
+
+  -- move from start (x1, y1) towards (x2, y2)
+  while (x1 ~= x2) or (y1 ~= y2) do
+    if self:gridCollision(x1, y1) then
+      -- the way is shut (it was made by those who are dead)
+      return true, TileGrid.gridToPixel(x1, y1)
+    end
+    
+    -- move ...
+    local err2 = 2*err;
+    -- ... horizontally
+    if err2 > -dy then
+      err = err - dy;
+      x1 = x1 + sx;
+    end
+    -- ... vertically
+    if err2 < dx then
+      err = err + dx;
+      y1 = y1 + sy;
+    end
+    
+  end -- while (x1 ~= x2) or (y1 ~= y2)
+
+  -- made it - the way is clear, no collision!
+  return false, TileGrid.gridToPixel(x1, y1)
 end
 
 function prototype.pixelCollision(self, x, y)
@@ -254,4 +305,12 @@ function TileGrid.new(xsize, ysize)
   
   -- return the instance
   return self
+end
+
+TileGrid.pixelToGrid = function(x, y)
+    return math.floor(x / Tile.SIZE.x), math.floor(y / Tile.SIZE.y)
+end
+
+TileGrid.gridToPixel = function(x, y)
+  return x * Tile.SIZE.x, y * Tile.SIZE.y
 end

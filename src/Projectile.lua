@@ -39,10 +39,11 @@ setmetatable(prototype, { __index = super })
 
 -- constants
 prototype.SPEED = 3000
+prototype.COLLIDES_WALLS = true
 
 -- default values
-prototype.onCollision = function(self, sx, sy)
-  Splosion.new(sx, sy, 15, 10)
+prototype.onCollision = function(self)
+  Splosion.new(self.pos.x, self.pos.y, 15, 10)
 end
 prototype.view = BulletView
 

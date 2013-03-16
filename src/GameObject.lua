@@ -205,10 +205,11 @@ function prototype.update(self, dt)
     -- very fast objects need to raycast or they'll move thorough walls
     local fastobject = (math.abs(self.inertia.x)*dt > Tile.SIZE.x + self.w) 
                     or (math.abs(self.inertia.y)*dt > Tile.SIZE.y + self.h)             
-    
+          
     if fastobject then
       -- fast objects
-      self:wall_collisions_fastobject(dt)
+      self:wall_collisions(dt)
+      --self:wall_collisions_fastobject(dt)
     else
       --- slow objects
       self:wall_collisions(dt)

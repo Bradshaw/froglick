@@ -61,7 +61,9 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   end
   love.graphics.setColor(64,127,255)
   love.graphics.rectangle("fill",sm.pos.x-8,sm.pos.y-34,sm.energy/100*16,2)
+  
 end
+
 
 function SpacemanView.update(self, dt, sm)
 	SpacemanView.ANIM_WALK:update(dt)

@@ -49,6 +49,8 @@ function Splosion.new(x, y, diam, pow)
   -- initialise attributes
   self.diam = diam
   self.pow = pow
+  self.view = FirebombView
+  self.bink = true
   
   -- recursive creation of smaller sub-explosions
   if pow > 1 then
@@ -58,15 +60,15 @@ function Splosion.new(x, y, diam, pow)
       local a = math.random()*math.pi*2
       local d = math.random()*diam
 
-      nextup[i]={pow = math.floor(pow/div),
-      x = math.cos(a)*d,
-      y = math.sin(a)*d}
+      nextup[i]= { pow = math.floor(pow/div),
+                    x = math.cos(a)*d,
+                    y = math.sin(a)*d }
     end
     local a = math.random()*math.pi*2
     local d = math.random()*diam
     nextup[div] = { pow = pow%div, x = math.cos(a)*d, y = math.sin(a)*d }
-    for i,v in ipairs(nextup) do
-      Splosion.new(self.x+v.x, self.y+v.y, diam*0.8, v.pow)
+    for i, v in ipairs(nextup) do
+      Splosion.new(self.pos.x + v.x, self.pos.y + v.y, diam*0.8, v.pow)
     end
   end
   
