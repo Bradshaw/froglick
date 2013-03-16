@@ -114,7 +114,7 @@ end
 function prototype.tryBoost(self, dt)
 
   if self.energy> 10 then
-    Sparkle.newBooster(self.pos.x-self.legs_side*8 , self.pos.y-18,-self.inertia.x+math.random(-50,50),math.max(self.inertia.y,0) + 500 + math.random(0,250))
+    Sparkle.newBooster(self.pos.x-self.legs_side*8+math.random(-3,3) , self.pos.y-18+math.random(-3,3),-self.inertia.x+math.random(-50,50),math.max(self.inertia.y,0) + 500 + math.random(0,250))
   end
 
   -- boost consumes energy

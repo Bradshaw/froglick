@@ -78,7 +78,6 @@ table.insert(Tile.FULLQUADS,
   love.graphics.newQuad(32,0,32,32,128,128))
 table.insert(Tile.FULLQUADS,
   love.graphics.newQuad(32,32,32,32,128,128))
-Tile.SLOPEIMAGE = love.graphics.newImage("images/Tile_Stone1_slope.PNG")
 
 Tile.DECORATIONIMAGE = love.graphics.newImage("images/enviroment.PNG")
 Tile.DECOQUADS = {}
