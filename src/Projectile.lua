@@ -42,7 +42,7 @@ prototype.SPEED = 3000
 prototype.COLLIDES_WALLS = true
 
 -- default values
-prototype.onCollision = function(self)
+prototype.onWallCollision = function(self)
   Splosion.new(self.pos.x, self.pos.y, 15, 10)
   self.purge = true
 end

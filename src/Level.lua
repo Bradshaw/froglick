@@ -61,9 +61,22 @@ function prototype.update(self, dt)
         object:update(dt)
       end,
           
+      -- generate inter-object collisions
+      function(a, a_index)
+        if a.COLLIDES_OBJECTS then
+          for b_index = a_index + 1, #self.game_objects do
+            local b = self.game_objects[b_index]  
+            if b.COLLIDES_OBJECTS and GameObject.collision(a, b) then
+              a:onObjectCollision(b)
+              b:onObjectCollision(a)
+            end
+          end
+        end
+      end,
+          
       -- sort objects by layer
       function(object, object_index)
-        if previous and previous.layer < object.layer then
+        if previous and previous.layer > object.layer then
           self.game_objects[object_index] = previous
           self.game_objects[object_index - 1] = object
         end 

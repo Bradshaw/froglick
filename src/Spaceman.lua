@@ -39,7 +39,6 @@ Spaceman = { }
 
 Spaceman.GROUND_FISIX = 
 {
-  COLLIDES_WALLS = true,
   GRAVITY = 0,
   FRICTION = 150,
   MAX_DX = 100,
@@ -52,7 +51,6 @@ Spaceman.GROUND_FISIX =
 
 Spaceman.AIR_FISIX = 
 {
-  COLLIDES_WALLS = true,
   GRAVITY = 500,
   FRICTION = 2,
   MAX_DX = 150,
@@ -79,6 +77,10 @@ prototype.attackTimeout = 0.1
 prototype.attackCost = 20
 prototype.attackRecoil = 10
 prototype.boostCost = 200
+
+-- constants
+prototype.COLLIDES_OBJECTS = true
+prototype.COLLIDES_WALLS = true
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -275,9 +277,9 @@ function Spaceman.new(x, y)
   self.requested_attack = false
   self.requested_boost = false
   
-  -- store player
-  table.insert(Spaceman, self) -- add a new Spaceman to the Spaceman list
-  
+  -- add this new Spaceman to the Spaceman list
+  table.insert(Spaceman, self) 
+   
   -- return the instance
   return self
 end

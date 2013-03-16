@@ -57,6 +57,14 @@ prototype.h = 0
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
 
+prototype.onWallCollision = function()
+  -- override me!
+end
+
+prototype.onObjectCollision = function()
+  -- override me!
+end
+
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
@@ -79,7 +87,6 @@ function prototype.snap_to_collision(self, dx, dy, max)
         and (not max or i < max)  do
     self.pos:plusequals(dx, dy)
     i = i + 1
-    
   end
 end
 
@@ -105,7 +112,7 @@ function prototype.wall_collisions_fastobject(self, dt)
     -- stop moving
     self.inertia:reset(0, 0)
     -- execute callback
-    self:onCollision()
+    self:onWallCollision()
   else
     self.pos:reset(new_x, new_y)
   end
@@ -171,8 +178,8 @@ function prototype.wall_collisions(self, dt)
     end
   end
   -- generate collision with walls event
-  if was_collision and self.onCollision then
-    self:onCollision()
+  if was_collision and self.onWallCollision then
+    self:onWallCollision()
   end
 end
   
@@ -189,7 +196,7 @@ function prototype.update(self, dt)
   end
   
   -- apply gravity
-  if fisix.GRAVITY and (self.airborne or not fisix.COLLIDES_WALLS) then
+  if fisix.GRAVITY and (self.airborne or not self.COLLIDES_WALLS) then
     self.inertia.y = self.inertia.y + fisix.GRAVITY*dt
   end
   
@@ -222,7 +229,7 @@ function prototype.update(self, dt)
   
   -- treat "hard" collisions with walls last of all
   self.pos_prev:reset(self.pos)
-  if fisix.COLLIDES_WALLS then
+  if self.COLLIDES_WALLS then
     -- very fast objects need to raycast or they'll move thorough walls
     local fastobject = (math.abs(self.inertia.x)*dt > Tile.SIZE.x + self.w) 
                     or (math.abs(self.inertia.y)*dt > Tile.SIZE.y + self.h)             
@@ -300,6 +307,24 @@ function GameObject.new(x, y, no_id, layer)
   return self
 end
 
+
+GameObject.collision = function(a, b)
+  -- horizontally seperate ? 
+  local v1x = (b.pos.x + b.w/2) - (a.pos.x - a.w/2)
+  local v2x = (a.pos.x + a.w) - (b.pos.x - b.w/2)
+  if useful.sign(v1x) ~= useful.sign(v2x) then
+    return false
+  end
+  -- vertically seperate ?
+  local v1y = a.pos.y - (b.pos.y - b.h) 
+  local v2y = b.pos.y - (a.pos.y - a.h)
+  if useful.sign(v1y) ~= useful.sign(v2y) then
+    return false
+  end
+  
+  -- in every other case there is a collision
+  return true
+end
 
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE

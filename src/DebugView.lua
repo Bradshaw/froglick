@@ -29,6 +29,7 @@ CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
 function DebugView.draw(self, go) -- go = GameObject
+  --print(go.w, go.h)
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y - go.h, go.w, go.h)
   love.graphics.printf(go:__tostring(), go.pos.x, go.pos.y, 
