@@ -24,6 +24,7 @@ local super = require("Animal")
 
 require("SpacemanView")
 require("KeyboardController")
+require("Projectile")
 Splosion = require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
@@ -172,8 +173,8 @@ function prototype.tryAttack(self, dt)
     self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
-    --Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
-      --              self.torso_facing.x, self.torso_facing.y)
+    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
+                    self.torso_facing.x, self.torso_facing.y)
   end
 end
 

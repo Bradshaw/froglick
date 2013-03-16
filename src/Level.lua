@@ -25,8 +25,8 @@ require("Spaceman")
 require("TileGrid")
 LevelGen = require("LevelGen")
 Camera = require("Camera")
-Projectile = require("Projectile")
-Splosion = require("Splosion")
+require("Projectile")
+require("Splosion")
 
 
 --[[----------------------------------------------------------------------------

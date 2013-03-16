@@ -1,5 +1,5 @@
 local Splosion_mt = {}
-local Splosion = {}
+Splosion = {}
 
 Splosion.all = {}
 
@@ -61,4 +61,4 @@ end
 
 
 
-return Splosion
+return Splosion_mt

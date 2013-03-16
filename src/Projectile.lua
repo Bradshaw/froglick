@@ -20,6 +20,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local super = require("GameObject")
+require("BulletView")
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -43,12 +44,13 @@ prototype.SPEED = 3000
 prototype.onCollision = function(self, sx, sy)
   Splosion.new(sx, sy, 15, 10)
 end
+prototype.view = BulletView
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Projectile.new(x, y, ndx, ndy, onimpact)
+Projectile.new = function(x, y, ndx, ndy, onimpact) -- nd_ = normalised delta_
   -- metatable
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
@@ -70,10 +72,6 @@ METHODS
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
-end
-
-function prototype.draw(self)
-	love.graphics.line(self.pos.x, self.pos.y, self.pos_prev.x, self.pos_prev.y)
 end
 
 --[[----------------------------------------------------------------------------
