@@ -67,7 +67,10 @@ function prototype.draw(self)
     function(x, y, tilegrid)
     
       ---FIXME DEBUG
-      --love.graphics.print(tostring(x)..","..tostring(y), (x-0.5)*Tile.SIZE.x, (y-0.5)*Tile.SIZE.y)
+      love.graphics.print(tostring(x), (x-0.5)*Tile.SIZE.x, (y)*Tile.SIZE.y)
+      love.graphics.print(tostring(y), (x-0.5)*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
+      love.graphics.setColor(255, 255, 255, 255)
+      love.graphics.rectangle("line", (x-0.5)*Tile.SIZE.x, (x-0.5)*Tile.SIZE.x, 32, 32)
       --------------------------------
       
       
@@ -78,14 +81,14 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           80+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
-                                          (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        --love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
+         --                                 (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
           love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           50+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
-                                              (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        --love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
+          --                                    (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
         love.graphics.setColor(255,255,255)
         love.graphics.setBlendMode("alpha")
         tilegrid.decospritebatch:setColor(
@@ -125,14 +128,14 @@ function prototype.draw(self)
     self
     )
   --]]
-  love.graphics.setBlendMode("alpha")
+  --[[love.graphics.setBlendMode("alpha")
   love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("additive")
   love.graphics.draw(self.decospritebatch)
-  love.graphics.setBlendMode("alpha")
+  love.graphics.setBlendMode("alpha") --]]
   
   --FIXME DEBUG
-  --love.graphics.setColor(255, 255, 255, 100)
+  love.graphics.setColor(255, 255, 255, 200)
   
   
   --love.graphics.setColor(127,127,127)
