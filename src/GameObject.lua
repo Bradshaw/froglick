@@ -274,7 +274,7 @@ local generate_id = function()
   return result
 end
 
-function GameObject.new(x, y, no_id)
+function GameObject.new(x, y, no_id, layer)
   -- attach metatable
   local self = {}
   setmetatable(self, {__index = prototype })
@@ -284,9 +284,18 @@ function GameObject.new(x, y, no_id)
   self.pos = vector(x, y)
   self.pos_prev = vector(x, y)
   self.inertia = vector(0, 0)
+  if layer then
+    self.layer = layer
+  end
   
   -- add to list of game objects in the current level 
-  table.insert( Level.get().game_objects, self)
+  if self.layer <= 0 then
+    -- insert at END of table (foreground)
+    Level.get():addForeground(self)
+  else
+    -- insert at the START of the table (background) *DEFER TILL END OF UPDATE*
+    Level.get():addBackground(self)
+  end
   
   return self
 end

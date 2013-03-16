@@ -126,9 +126,9 @@ function prototype.draw(self)
     )
   --]]
   love.graphics.setBlendMode("alpha")
-  --love.graphics.draw(self.decospritebatch)
+  love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("additive")
-  --love.graphics.draw(self.decospritebatch)
+  love.graphics.draw(self.decospritebatch)
   love.graphics.setBlendMode("alpha")
   
   --FIXME DEBUG

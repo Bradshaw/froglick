@@ -41,6 +41,9 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.update(self, dt)
+  
+  -- animate tiles
+  --! FIXME only animate those in the view
   local previous = nil
   for i,v in ipairs(self.tilegrid.tiles) do
     for j,u in ipairs(v) do
@@ -48,6 +51,7 @@ function prototype.update(self, dt)
     end   
   end 
 
+  -- update game objects
   useful.map(self.game_objects, 
       
       -- update and control game objects
@@ -66,12 +70,24 @@ function prototype.update(self, dt)
         previous = object
       end
   ) -- end useful.map
-      
-  --! FIXME LAYERS ARE FORCED
-  table.sort(self.game_objects, function(a, b) return a.layer > b.layer end)
+  
+  -- add all background objects AFTER full update
+  for k, v in pairs(self.__deferred_add) do
+    table.insert(self.game_objects, 1, v)
+  end
+  self.__deferred_add = {}
   
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
+end
+
+function prototype.addForeground(self, object)
+  table.insert(self.game_objects, object)
+end
+
+function prototype.addBackground(self, object)
+  -- inserting at the beginning of the table during an update is a BAD idea
+  table.insert(self.__deferred_add, object)
 end
   
 function prototype.draw(self)
@@ -93,9 +109,8 @@ function prototype.draw(self)
         function(object) 
           object:draw() 
         end)
-
-    --Splosion.draw()
-    --unindent to show graphics stack level
+        
+  --unindent to show graphics stack level
   love.graphics.pop()
 end
 
@@ -119,6 +134,7 @@ function Level.__new()
   
   -- create game object holder
   self.game_objects = {}
+  self.__deferred_add = {}
   
   -- create tile holder
   self.tilegrid = LevelGen.new()
