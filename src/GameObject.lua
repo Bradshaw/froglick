@@ -68,7 +68,7 @@ end
 function prototype.snap_from_collision(self, dx, dy, max)
   local i, walls = 0, Level.get().tilegrid
   while walls:collision(self) and (not max or i < max)  do
-    self.pos:minequals(dx, dy)
+    self.pos:plusequals(dx, dy)
     i = i + 1
   end
 end
@@ -83,11 +83,32 @@ function prototype.snap_to_collision(self, dx, dy, max)
   end
 end
 
-function prototype.wall_collisions_fastobject(self, dt)
-   local fastobject = (math.abs(self.inertia.x) > Tile.SIZE.x) 
-                    or (math.abs(self.inertia.y) > Tile.SIZE.y)
-                    
-  print("SUPERFAST XD", fastobject, self.inertia)
+function prototype.wall_collisions_fastobject(self, dt)    
+  -- short-hand alias
+  local walls = Level.get().tilegrid
+  local fisix = self.fisix or self
+  
+  -- desired new position
+  local new_x, new_y 
+      = self.pos.x + self.inertia.x*dt, self.pos.y + self.inertia.y*dt
+  
+  -- broad-phase raycast
+  local broad_collision, broad_x, broad_y 
+      = walls:lineCollision(self.pos.x, self.pos.y, new_x, new_y) 
+  -- broad-phase collision ?
+  if broad_collision then
+    -- snap to collision
+    self.pos:reset(broad_x, broad_y)
+    local snap_dir = self.inertia:normalized()
+    self:snap_from_collision(-snap_dir.x, -snap_dir.y, 
+                              Tile.SIZE.x + Tile.SIZE.y)
+    -- stop moving
+    self.inertia:reset(0, 0)
+    -- execute callback
+    self:onCollision()
+  else
+    self.pos:reset(new_x, new_y)
+  end
 end
 
 function prototype.wall_collisions(self, dt)
@@ -208,20 +229,15 @@ function prototype.update(self, dt)
           
     if fastobject then
       -- fast objects
-      self:wall_collisions(dt)
-      --self:wall_collisions_fastobject(dt)
+      self:wall_collisions_fastobject(dt)
     else
-      --- slow objects
+      -- slow objects
       self:wall_collisions(dt)
     end
-  elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     
+  -- for objects that don't collide, simply move to their new position
+  elseif self.inertia.x ~= 0 or self.inertia.y ~= 0 then
     self.pos:plusequals(self.inertia.x*dt, self.inertia.y*dt)
-  end
-  if self.view then
-    if self.view.update then
-      self.view:update(dt)
-    end
   end
 end
 

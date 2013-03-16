@@ -50,8 +50,7 @@ function Splosion.new(x, y, diam, pow)
   self.diam = diam
   self.pow = pow
   self.view = FirebombView
-  self.bink = true
-  
+
   -- recursive creation of smaller sub-explosions
   if pow > 1 then
     local div = math.random(1, pow-1)
