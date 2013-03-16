@@ -67,13 +67,11 @@ function LevelDecorator.placeThings(lev)
 	for i=1,#candy/4 do
 		local ind = math.random(1,#candy)
 		v = candy[ind]
-		--print(v[1],v[2])
     
-    
+    --FIXME spammy spam spam test
     local dude = GameObject.new(v[1]*Tile.SIZE.x,v[2]*Tile.SIZE.y)
     dude.w, dude.h = 30, 30
     
-		table.insert(lev.game_objects, dude)
 		table.remove(candy, ind)
 	end
 	for i,v in ipairs(lev.game_objects) do
