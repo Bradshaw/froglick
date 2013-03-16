@@ -45,7 +45,7 @@ CLASS (STATIC) FUNCTIONS
 
 function Splosion.new(x, y, diam, pow)
   -- metatable
-  local self = GameObject.new(x, y)
+  local self = GameObject.new(x, y, true, -100) -- no id generated, foreground
   setmetatable(self, {__index = prototype })
   
   -- type

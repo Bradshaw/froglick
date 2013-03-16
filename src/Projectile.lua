@@ -59,7 +59,7 @@ CLASS (STATIC) FUNCTIONS
 
 Projectile.new = function(x, y, ndx, ndy, inertia, onCollision) -- nd_ = normalised delta_
   -- metatable
-  local self = GameObject.new(x, y)
+  local self = GameObject.new(x, y, true, 10)  -- no id generated, background
   setmetatable(self, {__index = prototype })
   
   -- type
