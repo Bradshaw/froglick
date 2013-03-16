@@ -54,10 +54,6 @@ local prototype = {}
 prototype.w = 0
 prototype.h = 0
 
--- default physical properties
-prototype.airborne = false
-
-
 -- default layer of the object (for Z-ordering)
 prototype.layer = 0
 
@@ -88,6 +84,12 @@ function prototype.snap_to_collision(self, dx, dy, max)
 end
 
 function prototype.wall_collisions(self, walls, dt)
+  -- check if we're on the ground
+  self.airborne = 
+    (not walls:pixelCollision(self.pos.x, self.pos.y+1))
+  if not self.airborne and self.inertia.y > 0 then
+    self.inertia.y = 0
+  end 
   -- move the object HORIZONTALLY FIRST
   if self.inertia.x ~= 0 then
     local move_x = self.inertia.x*dt
@@ -130,6 +132,10 @@ function prototype.wall_collisions(self, walls, dt)
       self.pos.y = new_y
     end
   end
+  -- generate collision with walls event
+  if self.onCollision and walls:collision(self) then
+    self:onCollision()
+  end
 end
   
 
@@ -138,16 +144,6 @@ function prototype.update(self, dt)
   -- short-hand alias
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
-  
-  -- check for collision with walls
-  if fisix.COLLIDES_WALLS then
-    -- check if we're on the ground
-    self.airborne = 
-      (not walls:pixelCollision(self.pos.x, self.pos.y+1))
-    if not self.airborne and self.inertia.y > 0 then
-      self.inertia.y = 0
-    end 
-  end
   
   -- apply gravity
   if fisix.GRAVITY and (self.airborne or not fisix.COLLIDES_WALLS) then

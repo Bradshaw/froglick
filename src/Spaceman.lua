@@ -20,8 +20,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local Animal_mt = require("Animal")
---require("DebugView")
+local super = require("Animal")
 
 require("SpacemanView")
 require("KeyboardController")
@@ -67,7 +66,7 @@ METATABLE (PROTOTYPE)
 --]]----------------------------------------------------------------------------
 
 local prototype = {}
-setmetatable(prototype, { __index = Animal_mt })
+setmetatable(prototype, { __index = super })
 
 -- default attributes
 prototype.w = 10
@@ -171,8 +170,8 @@ function prototype.tryAttack(self, dt)
     self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
-    Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
-                    self.torso_facing.x, self.torso_facing.y)
+    --Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
+      --              self.torso_facing.x, self.torso_facing.y)
   end
 end
 
@@ -195,8 +194,7 @@ Update
 
 function prototype.update(self, dt)
   -- super-class update
-  local super = getmetatable(prototype) --FIXME BAD
-  super.__index.update(self, dt)
+  super.update(self, dt)
   
   -- change fisix
   self.fisix 
@@ -243,11 +241,11 @@ function Spaceman.new(x, y)
   setmetatable(self, {__index = prototype })
   
   -- MVC
-  self.view = SpacemanView --! FIXME
+  self.view = SpacemanView
   self.controller = KeyboardController
   
   -- combat
-  self.attackTime = math.huge -- infinite time has passed since last attack
+  self.attackTime = math.huge -- "infinite time has passed since last attack"
   self.energy = 100
   
   -- movement
@@ -261,8 +259,9 @@ function Spaceman.new(x, y)
   self.requested_boost = false
   
   -- store player
-  table.insert(Spaceman, self) -- there can only be one
+  table.insert(Spaceman, self) -- add a new Spaceman to the Spaceman list
   
+  -- return the instance
   return self
 end
 

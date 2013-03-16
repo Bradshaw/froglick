@@ -1,44 +1,75 @@
-local Projectile_mt = {}
+--[[
+Copyright (C) 2013 William Dyce, Kevin Bradshaw and Hannes Delbeke
 
-local Projectile = {}
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-function Projectile.new( x, y, ndx, ndy, onimpact)
-	local self = setmetatable({},{__index=Projectile_mt})
-	self.x = x
-	self.y = y
-	self.oldx = x
-	self.oldy = y
-	self.dx = ndx*3000
-	self.dy = ndy*3000
-	self.onimpact = onimpact or function(self,sx,sy)
-		Splosion.new(sx,sy,15,10)
-	end
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-	table.insert(Projectile.all,self)
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/.
+--]]
 
-	return self
+--[[----------------------------------------------------------------------------
+IMPORTS
+--]]----------------------------------------------------------------------------
+
+local super = require("GameObject")
+
+--[[----------------------------------------------------------------------------
+CLASS
+--]]----------------------------------------------------------------------------
+
+-- global-scoped
+Projectile = {}
+
+
+--[[----------------------------------------------------------------------------
+METATABLE (PROTOTYPE)
+--]]----------------------------------------------------------------------------
+
+local prototype = {}
+setmetatable(prototype, { __index = super })
+
+-- constants
+prototype.SPEED = 3000
+
+-- default values
+prototype.onimpact = function(self, sx, sy)
+  Splosion.new(sx, sy, 15, 10)
 end
 
-Projectile.all = {}
+--[[----------------------------------------------------------------------------
+CLASS (STATIC) FUNCTIONS
+--]]----------------------------------------------------------------------------
 
-function Projectile.update(dt)
-	useful.map(Projectile.all,function(prj)
-			prj:update(dt)
-		end)
+function Projectile.new(x, y, ndx, ndy, onimpact)
+  -- metatable
+  local self = GameObject.new(x, y)
+  setmetatable(self, {__index = prototype })
+  
+  self.inertia:reset(ndx*self.SPEED, ndx*self.SPEED)
+  if onimpact then
+    self.onimpact = onimpact
+  end
+  
+  -- return the instance
+  return self
 end
 
-function Projectile.draw()
-	useful.map(Projectile.all,function(prj)
-			prj:draw()
-		end)
-end
 
+--[[----------------------------------------------------------------------------
+METHODS
+--]]----------------------------------------------------------------------------
 
-function Projectile_mt.update(self, dt)
-	self.oldx = self.x
-	self.oldy = self.y
-	self.x = self.x+self.dx * dt
-	self.y = self.y+self.dy * dt
+function prototype.update(self, dt)
+  -- super-class update
+  super.update(self, dt)
 
 	if Level.get().tilegrid:pixelCollision(self.x,self.y) then
 		self:onimpact((self.oldx+self.x)/2,(self.oldy+self.y)/2)
@@ -47,9 +78,12 @@ function Projectile_mt.update(self, dt)
 
 end
 
-function Projectile_mt.draw(self)
+function prototype.draw(self)
 	love.graphics.line(self.x,self.y,self.oldx,self.oldy)
 end
 
+--[[----------------------------------------------------------------------------
+EXPORT THE METATABLE
+--]]----------------------------------------------------------------------------
 
-return Projectile
+return prototype

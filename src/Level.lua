@@ -41,8 +41,8 @@ CLASS METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.update(self, dt)
-  Projectile.update(dt)
-  Splosion.update(dt)
+  --Projectile.update(dt)
+  --Splosion.update(dt)
   local previous = nil
   for i,v in ipairs(self.tilegrid.tiles) do
     for j,u in ipairs(v) do
@@ -85,7 +85,7 @@ function prototype.draw(self)
     
     -- draw the terrain
     self.tilegrid:draw()
-    Projectile.draw()
+    --Projectile.draw()
     
     -- draw game objects (characters, particles, etc)
     useful.map(self.game_objects, 
@@ -93,7 +93,7 @@ function prototype.draw(self)
           object:draw() 
         end)
 
-    Splosion.draw()
+    --Splosion.draw()
     --unindent to show graphics stack level
   love.graphics.pop()
 end
@@ -116,15 +116,12 @@ function Level.__new()
   local self = {}
   setmetatable(self, {__index = prototype })
   
-
-
   -- create game object holder
   self.game_objects = {}
   
   -- create the player character if one doesn't exist
   if not Spaceman[1] then
-    --Spaceman.new(100, 100)
-    Spaceman.new(50*Tile.SIZE.x+10, 50*Tile.SIZE.y+10)
+    Spaceman.new(0, 0) -- move somewhere interesting by LevelDecorator
   end
   table.insert(self.game_objects, Spaceman[1])
   
