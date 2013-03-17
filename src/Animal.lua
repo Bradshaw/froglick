@@ -37,10 +37,6 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
--- default attributes
-prototype.hp = 100
-prototype.speed = 1
-
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------

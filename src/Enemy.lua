@@ -29,10 +29,22 @@ CLASS
 -- global-scoped
 Enemy = {}
 
+-- enemies attach to wall
 Enemy.WALL_LEFT = 0
 Enemy.WALL_RIGHT = 1
 Enemy.FLOOR = 2
 Enemy.ROOF = 4
+
+-- enemy bodies / movement types
+Enemy.SHROOM = 0
+Enemy.ZOMBIE = 1
+Enemy.SCUTTLER = 2
+Enemy.FLOATER = 3
+
+-- enemy attack types
+Enemy.BITE = 0
+Enemy.SPIT = 1
+Enemy.SPORES = 2
 
 
 --[[----------------------------------------------------------------------------
@@ -41,10 +53,6 @@ METATABLE (PROTOTYPE)
 
 local prototype = {}
 setmetatable(prototype, { __index = super })
-
--- default attributes
-prototype.hp = 100
-prototype.speed = 1
 
 --[[----------------------------------------------------------------------------
 METHODS
@@ -74,7 +82,7 @@ CLASS (STATIC) FUNCTIONS
 Constructors
 --]]
 
-function Enemy.__new(x, y, hitpoints, attach)
+function Enemy.__new(x, y, hitpoints)
   -- metatable
   local self = Animal.new(x, y)
   setmetatable(self, {__index = prototype })
@@ -83,29 +91,11 @@ function Enemy.__new(x, y, hitpoints, attach)
   self.type = GameObject.ENEMY
   
   -- clinging to a wall / floor / ceiling ?
-  self.attach = useful.tri(attach, attach, Enemy.FLOOR)
+  --! TODO
+  self.attach = Enemy.FLOOR
   
   -- number of hitpoints
   self.hitpoints = useful.tri(hitpoints, hitpoints, 100)
-  
-  return self
-end
-
-function Enemy.newShroom(x, y, attach)
-  -- default constructor
-  local self = Enemy.__new(x, y, 200, attach)
-  
-  -- hitbox 
-  if self:attachWall() then
-    self.w, self.h = 32, 16
-    -- TODO clamp to wall correctly
-  else
-    self.w, self.h = 16, 32
-    -- TODO clamp to roof / floor correctly
-  end
-  
-  -- view
-  -- TODO shroom-view
   
   return self
 end
