@@ -46,17 +46,42 @@ prototype.h = 0
 METHODS
 --]]----------------------------------------------------------------------------
 
+--[[----------------------------------------------------------------------------
+Utility
+--]]--
+
 function prototype.map(self, ...)
   args = useful.packArgs(...)
   for x = 1, self.size.x do
     for y = 1, self.size.y do
       for fi, func in ipairs(args) do
         if type(func)=="function" then -- self is an argument, but not a function
-          func(self.tiles[x][y], x, y)
+          func(self.tiles[x][y], x, y, self)
         end
       end
     end
   end
+end
+
+--[[----------------------------------------------------------------------------
+Rendering
+--]]--
+
+function prototype.batchTiles(self)
+  self.spritebatch:bind()
+  --self.spritebatch:clear()
+  local i = 0
+  for i,v in ipairs(self.tiles) do
+    for j,u in ipairs(v) do
+      if u.wall==Tile.FULL then
+        --print(i*Tile.SIZE.x,j*Tile.SIZE.y)
+        i = i+1
+        self.spritebatch:add(i*Tile.SIZE.x,j*Tile.SIZE.y)
+      end
+    end
+  end
+  print(i)
+  self.spritebatch:unbind()
 end
 
 function prototype.draw(self)
@@ -72,9 +97,7 @@ function prototype.draw(self)
       --love.graphics.setColor(255, 255, 255, 255)
       --love.graphics.rectangle("line", x*Tile.SIZE.x, y*Tile.SIZE.y, 32, 32)
       --------------------------------
-      
-      
-      
+
       if tilegrid:gridToTile(x, y).decoration == Tile.DECORATION.GRASS then
         love.graphics.setBlendMode("additive")
         love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
@@ -142,21 +165,11 @@ function prototype.draw(self)
   love.graphics.setColor(255,255,255)
 end
 
-function prototype.set(self, x, y, wall)
-  --FIXME redundant: use tg:gridToTile(x, y).wall = value instead
-  if self:validGridPos(x,y) then
-    self.tiles[x][y].wall=wall
-  end
-end
 
-function prototype.get(self, x, y)
-  --FIXME duplicate of gridToTile
-  if self:validGridPos(x,y) then
-    return self.tiles[x][y].wall
-  else
-    return Tile.DEFAULT
-  end
-end
+--[[----------------------------------------------------------------------------
+Avoid array out-of-bounds exceptions
+--]]--
+
 
 function prototype.validGridPos(self, x, y)
   return (x >= 1 
@@ -172,6 +185,11 @@ function prototype.validPixelPos(self, x, y)
       and y <= self.size.y*Tile.SIZE.y)
 end
 
+
+--[[----------------------------------------------------------------------------
+Basic collision tests
+--]]--
+
 function prototype.gridCollision(self, x, y)
   local type = self:gridToTile(x, y).wall
   return ((type == Tile.FULL) 
@@ -179,19 +197,6 @@ function prototype.gridCollision(self, x, y)
         or (type == Tile.TOP_RIGHT)
         or (type == Tile.BOTTOM_LEFT)
         or (type == Tile.BOTTOM_RIGHT))
-end
-
-function prototype.gridToTile(self, x, y)
-  if self:validGridPos(x, y) then
-    return self.tiles[x][y]
-  else
-    return Tile.DEFAULT
-  end
-end
-
-function prototype.pixelToTile(self, x, y)
-  return self:gridToTile(math.floor(x / Tile.SIZE.x),
-                         math.floor(y / Tile.SIZE.y))
 end
 
 function prototype.lineCollision(self, x1, y1, x2, y2, pixel_perfect)
@@ -268,6 +273,10 @@ function prototype.pixelCollision(self, x, y)
   end
 end
 
+--[[----------------------------------------------------------------------------
+GameObject collision tests
+--]]--
+
 function prototype.collision(self, go, x, y)
   -- x & y are optional: leave them out to test the object where it actually is
   x = x or go.pos.x
@@ -285,26 +294,44 @@ function prototype.collision_next(self, go, dt)
   return self:collision(go, go.pos.x + go.inertia.x*dt, go.pos.y + go.inertia.y*dt)
 end
 
-function prototype.batchTiles(self)
-  self.spritebatch:bind()
-  --self.spritebatch:clear()
-  local i = 0
-  for i,v in ipairs(self.tiles) do
-    for j,u in ipairs(v) do
-      if u.wall==Tile.FULL then
-        --print(i*Tile.SIZE.x,j*Tile.SIZE.y)
-        i = i+1
-        self.spritebatch:add(i*Tile.SIZE.x,j*Tile.SIZE.y)
-      end
-    end
+--[[----------------------------------------------------------------------------
+Accessors
+--]]--
+
+function prototype:getWall(x, y)
+  return (self:gridToTile(x, y).wall)
+end
+
+function prototype:isWall(x, y, walltype)
+  walltype = walltype or Tile.FULL
+  return (self:gridToTile(x, y).wall == walltype)
+end
+    
+function prototype:setWall(x, y, wall)
+  self:gridToTile(x, y).wall = wall
+end
+
+function prototype.gridToTile(self, x, y)
+  if self:validGridPos(x, y) then
+    return self.tiles[x][y]
+  else
+    return Tile.DEFAULT
   end
-  print(i)
-  self.spritebatch:unbind()
+end
+
+function prototype.pixelToTile(self, x, y)
+  return self:gridToTile(math.floor(x / Tile.SIZE.x),
+                         math.floor(y / Tile.SIZE.y))
 end
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
+
+--[[----------------------------------------------------------------------------
+Constructor
+--]]--
+
 
 function TileGrid.new(xsize, ysize)
   -- attach metatable
@@ -332,13 +359,14 @@ function TileGrid.new(xsize, ysize)
   return self
 end
 
+--[[----------------------------------------------------------------------------
+Conversion
+--]]--
+
 TileGrid.pixelToGrid = function(x, y)
-    return math.floor(x / Tile.SIZE.x), math.floor(y / Tile.SIZE.y)
+  return math.floor(x / Tile.SIZE.x), math.floor(y / Tile.SIZE.y)
 end
 
 TileGrid.gridToPixel = function(x, y)
-  --FIXME DEBUG  
-  --print("checking", x, y)
-  -------------------
   return x * Tile.SIZE.x, y * Tile.SIZE.y
 end

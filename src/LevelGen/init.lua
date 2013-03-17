@@ -25,27 +25,27 @@ end
 
 LevelGen.generator = {}
 
-LevelGen.generator[LevelGen.DEFAULT] = function(lev)
-	local lev = TileGrid.new(100, 100)
+LevelGen.generator[LevelGen.DEFAULT] = function(grid)
+	local grid = TileGrid.new(100, 100)
 	local blobbiness = 3
 	local dug = 0
-	LevelGen.dirty(lev,0.35,Tile.FULL,Tile.EMPTY)
-	LevelGen.blobify(lev)
-	LevelGen.dirty(lev,0.3,Tile.FULL,Tile.EMPTY)
-	LevelGen.dirty(lev,1,Tile.EMPTY,Tile.UNDECIDED)
-	LevelGen.rectangle(lev, 45,48,55,52, Tile.FULL)
-	dug = LevelGen.maze(lev, 50, 50, 1)
-	--LevelGen.maze(lev, 50, 51, 1)
-	--LevelGen.maze(lev, 51, 50, 1)
+	LevelGen.dirty(grid,0.35,Tile.FULL,Tile.EMPTY)
+	LevelGen.blobify(grid)
+	LevelGen.dirty(grid,0.3,Tile.FULL,Tile.EMPTY)
+	LevelGen.dirty(grid,1,Tile.EMPTY,Tile.UNDECIDED)
+	LevelGen.rectangle(grid, 45,48,55,52, Tile.FULL)
+	dug = LevelGen.maze(grid, 50, 50, 1)
+	--LevelGen.maze(grid, 50, 51, 1)
+	--LevelGen.maze(grid, 51, 50, 1)
 	if blobbiness<4 then
-		dug = LevelGen.maze(lev, 51, 51, 2)
+		dug = LevelGen.maze(grid, 51, 51, 2)
 	end
-	LevelGen.dirty(lev,1,Tile.UNDECIDED,Tile.FULL)
+	LevelGen.dirty(grid,1,Tile.UNDECIDED,Tile.FULL)
 	for i=1,3 do
-		LevelGen.blobify(lev)
+		LevelGen.blobify(grid)
 	end
 
-	for i,v in ipairs(lev.tiles) do
+	for i,v in ipairs(grid.tiles) do
 		for j,u in ipairs(v) do
 			if u.part>0 then
 				u.wall = Tile.EMPTY
@@ -53,10 +53,10 @@ LevelGen.generator[LevelGen.DEFAULT] = function(lev)
 			end
 		end
 	end
-	LevelGen.slopify(lev)
-	LevelGen.unspikeify(lev)
-	LevelGen.setPartsToDist(lev)
-	return lev
+	LevelGen.slopify(grid)
+	LevelGen.unspikeify(grid)
+	LevelGen.setPartsToDist(grid)
+	return grid
 end
 
 local dummy_tg = function()
@@ -69,8 +69,8 @@ local dummy_tg = function()
   return tg
 end
 
-function LevelGen.setPartsToDist(lev)
-	for i,v in ipairs(lev.tiles) do
+function LevelGen.setPartsToDist(grid)
+	for i,v in ipairs(grid.tiles) do
 		for j,u in ipairs(v) do
 			u.distance = 10
 		end
@@ -78,7 +78,7 @@ function LevelGen.setPartsToDist(lev)
 	local changed = true
 	while changed do
 		changed = false
-		for i,v in ipairs(lev.tiles) do
+		for i,v in ipairs(grid.tiles) do
 			for j,u in ipairs(v) do
 				if u.wall == Tile.FULL and u.distance~= 0 then
 					u.distance = 0
@@ -88,8 +88,8 @@ function LevelGen.setPartsToDist(lev)
 					local min = math.huge
 					for x=-1,1 do
 						for y=-1,1 do
-							if (x~=0 or y~=0) and lev.tiles[i+x] and lev.tiles[i+x][j+y] then
-								min = math.min(lev.tiles[i+x][j+y].distance,min)
+							if (x~=0 or y~=0) and grid.tiles[i+x] and grid.tiles[i+x][j+y] then
+								min = math.min(grid.tiles[i+x][j+y].distance,min)
 							end
 						end
 					end
@@ -105,31 +105,31 @@ function LevelGen.setPartsToDist(lev)
 end
 
 function LevelGen.new(method)
-  --local lev = dummy_tg()
-	local lev = LevelGen.generator[method or LevelGen.DEFAULT]()
+  --local grid = dummy_tg()
+	local grid = LevelGen.generator[method or LevelGen.DEFAULT]()
   -- FIXME currently "LevelGen" returns a TileGrid, not a Level
-  lev:batchTiles()
-	return lev
+  grid:batchTiles()
+	return grid
 end
 
-function LevelGen.rectangle(lev, x1, y1, x2, y2, wall)
+function LevelGen.rectangle(grid, x1, y1, x2, y2, wall)
 	for i=x1,x2 do
 		for j=y1,y2 do
-			lev:set(i,j,wall)
+			grid:setWall(i,j,wall)
 		end
 	end
 end
 
-function LevelGen.slopify(lev)
+function LevelGen.slopify(grid)
 	local temp = {}
-	for i,v in ipairs(lev.tiles) do
+	for i,v in ipairs(grid.tiles) do
 		temp[i]={}
 		for j,u in ipairs(v) do
 			temp[i][j]=u.wall==Tile.FULL
 		end
 	end
 	for i = 2,#temp-1 do
-		local v = lev.tiles[i]
+		local v = grid.tiles[i]
 		for j=2,#temp[i]-1 do
 			local u=v[j]
 			if temp[i][j] then
@@ -147,20 +147,20 @@ function LevelGen.slopify(lev)
 	end
 end
 
-function LevelGen.unspikeify(lev)
-	for i,v in ipairs(lev.tiles) do
+function LevelGen.unspikeify(grid)
+	for i,v in ipairs(grid.tiles) do
 		for j,u in ipairs(v) do
-			if u.wall == Tile.BOTTOM_RIGHT and lev.tiles[i+1][j].wall==Tile.BOTTOM_LEFT then
+			if u.wall == Tile.BOTTOM_RIGHT and grid.tiles[i+1][j].wall==Tile.BOTTOM_LEFT then
 				if j<#v then
 					u.wall = Tile.FULL
-					lev.tiles[i+1][j].wall=Tile.FULL
+					grid.tiles[i+1][j].wall=Tile.FULL
 				end
 			end
 		end
 	end
 end
 
-function LevelGen.maze(lev, x, y,part)
+function LevelGen.maze(grid, x, y,part)
 	local dug = 0
 	local unshuf = {{x=-1,y=0},{x=1,y=0},{x=0,y=-1},{x=0,y=1}}
 	local shuf = {}
@@ -170,24 +170,24 @@ function LevelGen.maze(lev, x, y,part)
 		table.remove(unshuf,i)
 	end
 	for i,v in ipairs(shuf) do
-		if lev:get(x+v.x*2,y+v.y*2)==Tile.FULL then
+		if grid:isWall(x+v.x*2,y+v.y*2) and grid:validGridPos(x+v.x*2,y+v.y*2) then
 			dug = dug + 2
-			lev:set(x+v.x,y+v.y,Tile.EMPTY)
-			lev:set(x+v.x*2,y+v.y*2,Tile.EMPTY)
-			lev.tiles[x+v.x][y+v.y].part=part
-			lev.tiles[x+v.x*2][y+v.y*2].part=part
-			dug = dug + LevelGen.maze(lev,x+v.x*2,y+v.y*2,part)
+			grid:setWall(x+v.x,y+v.y,Tile.EMPTY)
+			grid:setWall(x+v.x*2,y+v.y*2,Tile.EMPTY)
+			grid.tiles[x + v.x][y + v.y].part = part
+			grid.tiles[x + v.x*2][y + v.y*2].part = part
+			dug = dug + LevelGen.maze(grid,x+v.x*2,y+v.y*2,part)
 		end
 	end
 	return dug
 end
 
-function LevelGen.count( lev, x, y )
+function LevelGen.count( grid, x, y )
 	local cnt = 0
 	for i=-1,1 do
 		for j=-1,1 do
 			if i~=0 or j~=0 then
-				if lev:get(x,y)==lev:get(x+i,y+j) then
+				if grid:getWall(x, y) == grid:getWall(x+i, y+j) then
 					cnt = cnt + 1
 				end
 			end
@@ -196,11 +196,11 @@ function LevelGen.count( lev, x, y )
 	return cnt
 end
 
-function LevelGen.dirty(lev, prob, mat1, mat2)
+function LevelGen.dirty(grid, prob, mat1, mat2)
 	prob = prob or 0.5
 	mat1 = mat1 or Tile.FULL
 	mat2 = mat2 or Tile.EMPTY
-	for i,v in ipairs(lev.tiles) do
+	for i,v in ipairs(grid.tiles) do
 		for j,u in ipairs(v) do
 			if u.wall == mat1 and math.random()<prob then
 				u.wall = mat2
@@ -209,20 +209,20 @@ function LevelGen.dirty(lev, prob, mat1, mat2)
 	end
 end
 
-function LevelGen.blobify(lev)
+function LevelGen.blobify(grid)
 	local temp = {}
-	for i,v in ipairs(lev.tiles) do
+	for i,v in ipairs(grid.tiles) do
 		temp[i]={}
 		for j,u in ipairs(v) do
 
-			if (u.wall==Tile.FULL and LevelGen.count(lev,i,j)>=4) or (u.wall==Tile.EMPTY and LevelGen.count(lev,i,j)<math.random(3,4)) then
+			if (u.wall==Tile.FULL and LevelGen.count(grid,i,j)>=4) or (u.wall==Tile.EMPTY and LevelGen.count(grid,i,j)<math.random(3,4)) then
 				temp[i][j] = Tile.FULL
 			else
 				temp[i][j] = Tile.EMPTY
 			end
 		end
 	end
-	for i,v in ipairs(lev.tiles) do
+	for i,v in ipairs(grid.tiles) do
 		for j,u in ipairs(v) do
 			u.wall = temp[i][j]
 		end
