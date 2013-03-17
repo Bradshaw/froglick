@@ -59,15 +59,6 @@ LevelGen.generator[LevelGen.DEFAULT] = function(grid)
 	return grid
 end
 
-local dummy_tg = function()
-  local tg = TileGrid.new(10, 10)
-  for x = 1, tg.size.x do 
-    for y = 1, tg.size.y do
-      tg:gridToTile(x, y).wall = Tile.EMPTY;
-    end
-  end
-  return tg
-end
 
 function LevelGen.setPartsToDist(grid)
 	for i,v in ipairs(grid.tiles) do
@@ -110,6 +101,11 @@ function LevelGen.new(method)
   -- FIXME currently "LevelGen" returns a TileGrid, not a Level
   grid:batchTiles()
 	return grid
+end
+
+
+function LevelGen.generate(lvl)
+  lvl.tilegrid = LevelGen.new()
 end
 
 function LevelGen.rectangle(grid, x1, y1, x2, y2, wall)

@@ -20,6 +20,7 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 require("Gate")
+require("Enemy")
 
 --[[----------------------------------------------------------------------------
 SINGLETON CLASS
@@ -92,10 +93,13 @@ Main
 
 local DEFAULT_GRASS = 0.5
 
+local DEFAULT_ENEMIES = 0.3
+
 function LevelDecorator.decorate(lev, grass_amount)
 
   -- 0. set missing parameters to default
   grass_amount = grass_amount or DEFAULT_GRASS
+  enemies_amount = grass_amount or DEFAULT_ENEMIES
   
   -- 1. compile a list of all the cells with walls below, above and to the sides
   local stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
@@ -119,7 +123,17 @@ function LevelDecorator.decorate(lev, grass_amount)
                     (cell.y + 1)*Tile.SIZE.y) end)
     
   -- 4. place enemies
-  --TODO
+  popCandidateCells(stand_cells, function(cell)
+    Enemy.spawnGround((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
+    end, grass_amount)
+  popCandidateCells(climb_cells, function(cell)
+    Enemy.spawnWall((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
+    end, grass_amount)
+  popCandidateCells(hang_cells, function(cell)
+    Enemy.spawnRoof((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
+    end, grass_amount)
+
+  
     
   -- 5. place vegetation
   stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)

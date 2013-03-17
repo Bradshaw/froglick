@@ -19,7 +19,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local super = require("Enemy")
+local super = require("Animal")
 
  
 --[[----------------------------------------------------------------------------
@@ -74,6 +74,17 @@ function prototype.attachWall(self)
   return ((self.attach == Enemy.WALL_LEFT) or (self.attach == Enemy.WALL_RIGHT))
 end
 
+prototype.onObjectCollision = function(self, other)
+  if other.type == GameObject.TYPE_SPLOSION then
+    self.purge = true
+  end
+end
+
+prototype.collidesType = function(self, t)
+  return ((t == GameObject.TYPE_SPACEMAN_PROJECTILE) 
+          or (t == GameObject.TYPE_SPLOSION))
+end
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
@@ -90,6 +101,9 @@ function Enemy.__new(x, y, hitpoints)
   -- all enemies are enemies
   self.type = GameObject.ENEMY
   
+  -- enemy hitbox
+  self.w, self.h = 30, 30
+  
   -- clinging to a wall / floor / ceiling ?
   --! TODO
   self.attach = Enemy.FLOOR
@@ -98,6 +112,18 @@ function Enemy.__new(x, y, hitpoints)
   self.hitpoints = useful.tri(hitpoints, hitpoints, 100)
   
   return self
+end
+
+function Enemy.spawnGround(x, y)
+  return Enemy.__new(x, y)
+end
+
+function Enemy.spawnWall(x, y)
+  return Enemy.__new(x, y)
+end
+
+function Enemy.spawnRoof(x, y)
+  return Enemy.__new(x, y)
 end
 
 

@@ -155,23 +155,23 @@ function Level.__new()
   -- create a camera to point at interest
   self.camera = Camera.new(0, 0)
   
-  -- export new instance
+  -- export new __instance
   return self
 end
 
 function Level.get()
   -- create new Level if one does not already exist
-  if not Level.instance then
+  if not Level.__instance then
     -- create FIRST...
-    Level.instance = Level.__new()
+    Level.__instance = Level.__new()
     -- ...decorate AFTER creation
-    LevelDecorator.decorate(Level.instance)
+    LevelDecorator.decorate(Level.__instance)
   end
-  return Level.instance
+  return Level.__instance
 end
 
 function Level.reset()
-  Level.instance = nil
+  Level.__instance = nil
   table.insert(Level.get().game_objects,Spaceman[1])
 end
 

@@ -19,8 +19,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
-local GameObject_mt = require("Level")
-
+require("Level")
+LevelGen = require("LevelGen")
 
 --[[----------------------------------------------------------------------------
 'GAME' GAMESTATE - state during which the game is played
@@ -93,7 +93,10 @@ end
 
 
 function state:update(dt)
+  -- update the game level
   Level.get():update(dt)
+  
+  -- 2D "shaders"
   toggleDrunk = math.max(0,toggleDrunk-dt*10)
   time = (time or 0) + dt*100
 end
