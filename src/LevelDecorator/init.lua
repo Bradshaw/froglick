@@ -38,10 +38,9 @@ Map functions
 
 local pushCandidateCells = function(grid, predicate, dest)
   dest = dest or {}
-  grid:map(function(t, x, y) 
-      if predicate(grid, x, y) then 
-        table.insert(dest, { x = (x + 0.5)*Tile.SIZE.x, 
-                             y = (y + 1.0)*Tile.SIZE.y }) 
+  grid:map(function(t, xx, yy) 
+      if predicate(grid, xx, yy) then 
+        table.insert(dest, { x = xx, y = yy}) 
       end 
     end)
   return dest
@@ -108,14 +107,16 @@ function LevelDecorator.decorate(lev, grass_amount)
     Spaceman.new(0, 0)
   end
   popCandidateCells(stand_cells, function(cell)
-    Spaceman[1].pos:reset(cell.x, cell.y) end)
+    Spaceman[1].pos:reset((cell.x + 0.5)*Tile.SIZE.x, 
+                          (cell.y + 1)*Tile.SIZE.y) end)
   
   -- 3. place the level exit
   if not Gate.pos then
     Gate.new()
   end
   popCandidateCells(stand_cells, function(cell)
-    Gate.pos:reset(cell.x, cell.y) end)
+    Gate.pos:reset((cell.x + 0.5)*Tile.SIZE.x, 
+                    (cell.y + 1)*Tile.SIZE.y) end)
     
   -- 4. place enemies
   --TODO
@@ -123,7 +124,7 @@ function LevelDecorator.decorate(lev, grass_amount)
   -- 5. place vegetation
   stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
   popCandidateCells(stand_cells, function(cell)
-    lev.tilegrid:pixelToTile(cell.x, cell.y).decoration = Tile.DECORATION.GRASS
+    lev.tilegrid:gridToTile(cell.x, cell.y).decoration = Tile.DECORATION.GRASS
     end, grass_amount)
 end
 
