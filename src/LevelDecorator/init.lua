@@ -49,8 +49,8 @@ end
 
 local popCandidateCells = function(array, f, percentage)
   -- pop a single cell if no percentage is specified
-  local n_popped 
-  if percentage then n_popped = (#array)*percentage 
+  local n_popped
+  if percentage then n_popped = (#array)*percentage
                 else n_popped = 1 end
   
   for i = 1, n_popped do
@@ -90,9 +90,13 @@ METHODS
 --[[----------------------------------------------------------------------------
 Main
 --]]--
-function LevelDecorator.decorate(lev)
-  
-  -- 0. save an alias to the level's tilegrid for easy use
+
+local DEFAULT_GRASS = 0.5
+
+function LevelDecorator.decorate(lev, grass_amount)
+
+  -- 0. set missing parameters to default
+  grass_amount = grass_amount or DEFAULT_GRASS
   
   -- 1. compile a list of all the cells with walls below, above and to the sides
   local stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
@@ -115,6 +119,12 @@ function LevelDecorator.decorate(lev)
     
   -- 4. place enemies
   --TODO
+    
+  -- 5. place vegetation
+  stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
+  popCandidateCells(stand_cells, function(cell)
+    lev.tilegrid:pixelToTile(cell.x, cell.y).decoration = Tile.DECORATION.GRASS
+    end, grass_amount)
 end
 
 
