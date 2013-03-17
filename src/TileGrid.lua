@@ -81,14 +81,14 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           80+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
-                                         (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,2,2,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.draw(Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
+                                         (x+0.5)*Tile.SIZE.x,(y+0.5)*Tile.SIZE.y,0,0.2,0.2,192,192)
           love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           50+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
-        love.graphics.drawq(Tile.DECORATIONIMAGE,Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
-                                              (x-0.5)*Tile.SIZE.x,(y-0.5)*Tile.SIZE.y,0,4,4,Tile.SIZE.x/2,Tile.SIZE.y/2)
+        love.graphics.draw(Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
+                                         (x+0.5)*Tile.SIZE.x,(y+0.5)*Tile.SIZE.y,0,0.6,0.6,192,192)
         love.graphics.setColor(255,255,255)
         love.graphics.setBlendMode("alpha")
         tilegrid.decospritebatch:setColor(
