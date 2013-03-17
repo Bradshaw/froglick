@@ -24,8 +24,8 @@ function love.load(arg)
 	local modes = love.graphics.getModes()
 	table.sort(modes, function(a, b) return a.width*a.height < b.width*b.height end)
 	local m = modes[#modes]
-  --local success = love.graphics.setMode( m.width, m.height, true )
-  local success = true
+  	local success = love.graphics.setMode( m.width, m.height, true )
+  	--local success = true
   
 	if not success then
 		print("Failed to set mode")
