@@ -63,12 +63,12 @@ function prototype.update(self, dt)
           
       -- generate inter-object collisions
       function(a, a_index)
-        if a.COLLIDES_OBJECTS then
+        if a.canCollideObject then
           for b_index = a_index + 1, #self.game_objects do
-            local b = self.game_objects[b_index]  
+            local b = self.game_objects[b_index]
             if GameObject.can_collide(a, b) and GameObject.collision(a, b) then
-              a:onObjectCollision(b)
-              b:onObjectCollision(a)
+                a:onObjectCollision(b)
+                b:onObjectCollision(a)
             end
           end
         end
@@ -115,7 +115,6 @@ function prototype.draw(self)
     
     -- draw the terrain
     self.tilegrid:draw()
-    --Projectile.draw()
     
     -- draw game objects (characters, particles, etc)
     useful.map(self.game_objects, 

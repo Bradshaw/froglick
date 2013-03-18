@@ -184,7 +184,8 @@ function prototype.tryAttack(self, dt)
     self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
-    local prj = Projectile.new(self.pos.x, self.pos.y -20 + math.random(0, 1), 
+    local prj = Projectile.new(self.pos.x + self.torso_facing.x*10,
+                    self.pos.y -20 + self.torso_facing.y*10,
                     self.torso_facing.x, self.torso_facing.y, self.inertia)
     for i=1,3 do
       Sparkle.newBooster(prj.pos.x+prj.inertia.x/200, prj.pos.y+prj.inertia.y/200, prj.inertia.x/8+math.random(-250,250), prj.inertia.y/8+math.random(-250,250))
@@ -261,7 +262,6 @@ function Spaceman.new(x, y)
   
   -- type
   self.type = GameObject.TYPE_SPACEMAN
-  print("SPACEMAN TYPE", self.type)
   
   -- MVC
   self.view = SpacemanView

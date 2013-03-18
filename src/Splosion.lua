@@ -37,8 +37,6 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
-prototype.COLLIDES_OBJECTS = true
-
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
@@ -98,10 +96,13 @@ prototype.update = function(self, dt)
   end
 end
 
-prototype.collidesType = function(self, t)
-  return ((t == GameObject.TYPE_SPACEMAN) or (t == GameObject.TYPE_ENEMY))
+prototype.canCollideObject = function(self, other)
+  return ((other.type == GameObject.TYPE_ENEMY)
+        or (other.type == GameObject.TYPE_SPACEMAN))
 end
-  
+
+prototype.onObjectCollision = function() end
+
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE
 --]]----------------------------------------------------------------------------

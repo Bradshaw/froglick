@@ -80,9 +80,9 @@ prototype.onObjectCollision = function(self, other)
   end
 end
 
-prototype.collidesType = function(self, t)
-  return ((t == GameObject.TYPE_SPACEMAN_PROJECTILE) 
-          or (t == GameObject.TYPE_SPLOSION))
+prototype.canCollideObject = function(self, other)
+  return ((other.type == GameObject.TYPE_SPACEMAN_PROJECTILE) 
+          or (other.type == GameObject.TYPE_SPLOSION))
 end
 
 --[[----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ function Enemy.__new(x, y, hitpoints)
   setmetatable(self, {__index = prototype })
   
   -- all enemies are enemies
-  self.type = GameObject.ENEMY
+  self.type = GameObject.TYPE_ENEMY
   
   -- enemy hitbox
   self.w, self.h = 30, 30

@@ -285,8 +285,9 @@ end
 
 function prototype.draw(self)
   -- check if in camera view
-  if not Level.get().camera:check(self.pos.x, self.pos.y) then
-    return 
+  self.in_view = (Level.get().camera:check(self.pos.x, self.pos.y))
+  if (not self.in_view) then
+    return
   end
   
   -- draw shiz
@@ -409,8 +410,8 @@ GameObject.collision = function(a, b)
 end
   
 GameObject.can_collide = function(a, b)
-return (a.COLLIDES_OBJECTS and b.COLLIDES_OBJECTS 
-        and a:collidesType(b.type) and b:collidesType(a.type))
+return (a.in_view and b.in_view and a.canCollideObject and b.canCollideObject
+        and a:canCollideObject(b) and b:canCollideObject(a))
 end
 
 --[[----------------------------------------------------------------------------

@@ -40,7 +40,6 @@ setmetatable(prototype, { __index = super })
 -- constants
 prototype.SPEED = 3000
 prototype.COLLIDES_WALLS = true
-prototype.COLLIDES_OBJECTS = true
 
 -- private local function
 local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
@@ -98,11 +97,11 @@ prototype.onObjectCollision = function(self, other)
   splode(self)
 end
 
-prototype.collidesType = function(self, t)
+prototype.canCollideObject = function(self, other)
   if self.type == GameObject.TYPE_SPACEMAN_PROJECTILE then
-    return (t == GameObject.TYPE_ENEMY)
+    return (other.type == GameObject.TYPE_ENEMY)
   else
-    return (t == GameObject.TYPE_SPACEMAN)
+    return (other.type == GameObject.TYPE_SPACEMAN)
   end
 end
 
