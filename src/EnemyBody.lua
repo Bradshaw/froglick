@@ -21,8 +21,31 @@ CONTAINER
 
 EnemyBody = {}
 
+EnemyBody.draw_debug = function(body, nmi)
+    love.graphics.setColor(255, 255, 255)
+    -- hitbox
+    love.graphics.rectangle("line", nmi.pos.x - nmi.w/2, 
+                                    nmi.pos.y - nmi.h, nmi.w, nmi.h)
+    
+    -- hit points
+    love.graphics.printf(nmi.hitpoints .. " / " .. body.getHitpoints(), 
+        nmi.pos.x - 32, nmi.pos.y - nmi.h/2, 64, "center")
+    
+    -- body and weapon
+    love.graphics.printf(nmi.weapon:__tostring(), nmi.pos.x - 16, nmi.pos.y, 16, 
+        "center")
+    love.graphics.printf(body:__tostring(), nmi.pos.x + 16, nmi.pos.y, 16, 
+        "center")
+    -- state
+    love.graphics.printf(nmi:getStateName(), nmi.pos.x, nmi.pos.y + 10, 
+                       nmi.w, "center")
+end
+
 --[[----------------------------------------------------------------------------
 SHROOM BODY
+
+It's a 'shroom. It shrooms.
+
 --]]----------------------------------------------------------------------------
 
 EnemyBody.SHROOM = 
@@ -36,29 +59,28 @@ EnemyBody.SHROOM =
   end,
       
   getSize = function()
-    return 10, Tile.SIZE.y
+    return Tile.SIZE.x / 2, Tile.SIZE.y
   end,
       
   getHitpoints = function()
     return 220
   end,
             
-  draw = function(self, go)
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y - go.h, go.w, go.h)
+  draw = function(self, owner)
+    EnemyBody.draw_debug(self, owner)
+    --TODO
+  end,
   
-    love.graphics.printf("SHROOM", go.pos.x, go.pos.y, 
-                       go.w, "center")
-    love.graphics.printf(go:getStateName(), go.pos.x, go.pos.y + 20, 
-                       go.w, "center")
-    
-    
-    
+  __tostring = function()
+    return "shroom"
   end
 }
 
 --[[----------------------------------------------------------------------------
 ZOMBIE BODY
+
+The obligatory zombie. Same platform physics as the player. Falls off cliffs.
+
 --]]----------------------------------------------------------------------------
   
 EnemyBody.ZOMBIE = 
@@ -79,14 +101,22 @@ EnemyBody.ZOMBIE =
     return 100 --TODO
   end,
       
-  draw = function(who)
+  draw = function(self, owner)
+    EnemyBody.draw_debug(self, owner)
     --TODO
+  end,
+  
+  __tostring = function()
+    return "zombie"
   end
 }
 
 
 --[[----------------------------------------------------------------------------
 SCUTTLER BODY
+
+Scuttles on walls. Can jump. Also scuttles. On walls.
+
 --]]----------------------------------------------------------------------------
 
 EnemyBody.SCUTTLER = 
@@ -107,13 +137,21 @@ EnemyBody.SCUTTLER =
     return 100 --TODO
   end,
       
-  draw = function(who)
+  draw = function(self, owner)
+    EnemyBody.draw_debug(self, owner)
     --TODO
+  end,
+  
+  __tostring = function()
+    return "scuttler"
   end
 }
   
 --[[----------------------------------------------------------------------------
 FLOATER BODY
+
+Floats around the level. Goes "gloumf, gloumf, gloumf".
+
 --]]----------------------------------------------------------------------------
   
 EnemyBody.FLOATER = 
@@ -136,5 +174,9 @@ EnemyBody.FLOATER =
       
   draw = function(who)
     --TODO
+  end,
+  
+  __tostring = function()
+    return "floater"
   end
 }

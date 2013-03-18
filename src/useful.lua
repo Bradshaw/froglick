@@ -106,6 +106,7 @@ function useful.dist2(x1, y1, x2, y2)
   return (dx*dx + dy*dy)
 end
 
+-- Hue-Saturation-Value function o' death
 function useful.hsv(H, S, V, A, div, max, ang)
   local max = max or 255
   local ang = ang or 360

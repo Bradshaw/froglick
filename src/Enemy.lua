@@ -21,7 +21,7 @@ IMPORTS
 
 local super = require("Animal")
 require("EnemyBody")
-require("EnemyBody")
+require("EnemyWeapon")
 
  
 --[[----------------------------------------------------------------------------
@@ -185,18 +185,19 @@ function Enemy.__new(x, y, attach)
   -- attached to wall, roof or floor ?
   self.attach = attach
   
-  -- body
+  -- BODY
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
   self.view = self.body
   self.hitpoints = self.body.getHitpoints()
-  
   if self:isAttachedWall() then
     self.h, self.w = self.body.getSize()
   else
     self.w, self.h = self.body.getSize()
   end
   
+  -- BODY
+  self.weapon = EnemyWeapon.BITE
   
   -- artificial intelligence
   self.state = prototype.IDLING

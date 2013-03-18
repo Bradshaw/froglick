@@ -23,46 +23,68 @@ EnemyWeapon = {}
 
 --[[----------------------------------------------------------------------------
 BITE WEAPON
+
+Bite, scratch, claw: a close-range attack.
+
 --]]----------------------------------------------------------------------------
 
 EnemyWeapon.BITE = 
 {
   tryAttack = function(wielder, direction)
     --TODO
-  end
+  end,
   
   canAttack = function(wielder, direction)
     return false --TODO
+  end,
+  
+  __tostring = function()
+    return "bite"
   end
 }
 
 --[[----------------------------------------------------------------------------
-ACID SPIT WEAPON
+SPIT WEAPON
+
+Spit some sort of nasty alien fungal-goo at the player. May explode on impact
+to release spores.
+
 --]]----------------------------------------------------------------------------
 
 EnemyWeapon.SPIT =
 {
   tryAttack = function(wielder, direction)
     --TODO
-  end
+  end,
   
   canAttack = function(wielder, direction)
     return false --TODO
+  end,
+  
+  __tostring = function()
+    return "spit"
   end
 }
 
 --[[----------------------------------------------------------------------------
 SPORE CLOUD WEAPON
+
+Spray spores out in all directs to contaminate the player. Heals allies (?)
+
 --]]----------------------------------------------------------------------------
 
 EnemyWeapon.SPORES =
 {
   tryAttack = function(wielder, direction)
     --TODO
-  end
+  end,
   
   canAttack = function(wielder, direction)
     return false --TODO
+  end,
+  
+  __tostring = function()
+    return "spore"
   end
 }
 
