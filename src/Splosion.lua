@@ -37,7 +37,7 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
-prototype.damage = 0 --18
+prototype.damage = 1
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
