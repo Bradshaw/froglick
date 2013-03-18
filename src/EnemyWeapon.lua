@@ -19,6 +19,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 IMPORTS
 --]]----------------------------------------------------------------------------
 
+require("MuzzleBlast")
+
 --[[----------------------------------------------------------------------------
 CONTAINER
 --]]----------------------------------------------------------------------------
@@ -34,18 +36,29 @@ Bite, scratch, claw: a close-range attack.
 
 EnemyWeapon.BITE = 
 {
-  attack = function(wielder, direction)
-    --TODO
+  RANGE = 20,
+  RANGE2 = 20*20,
+  DAMAGE = 17,
+  RELOAD_TIME = 1.5,
+  
+  attack = function(wielder, target_pos)
+    MuzzleBlast.new(wielder.pos.x, wielder.pos.y, EnemyWeapon.BITE.DAMAGE, 
+                    GameObject.TYPE_SPACEMAN)
   end,
   
-  canAttack = function(wielder, direction)
-    return false --TODO
+  canAttack = function(wielder, t)
+    return ((wielder.timer <= 0) and
+      useful.dist2(wielder.pos.x, wielder.pos.y, t.pos.x, t.pos.y) < 
+            EnemyWeapon.BITE.RANGE2)
   end,
   
   __tostring = function()
     return "bite"
   end
+  
+  
 }
+
 
 --[[----------------------------------------------------------------------------
 SPIT WEAPON
@@ -57,6 +70,8 @@ to release spores.
 
 EnemyWeapon.SPIT =
 {
+  RELOAD_TIME = 1,
+  
   attack = function(wielder, direction)
     --TODO
   end,
@@ -79,6 +94,8 @@ Spray spores out in all directs to contaminate the player. Heals allies (?)
 
 EnemyWeapon.SPORES =
 {
+  RELOAD_TIME = 1,
+  
   attack = function(wielder, direction)
     --TODO
   end,

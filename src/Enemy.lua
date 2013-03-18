@@ -71,19 +71,31 @@ Overrides Animals
 --]]--
 
 function prototype.requestMove(self, direction)
-  self.body:tryMove(direction.x, direction.y)
+  self.body:tryMove(direction.x)
 end
 
 function prototype.requestAttack(self, direction)
   local target_pos = self.pos + 10*direction
-  if self.weapon:canAttack(target_pos) then
-    self.weapon:attack(target_pos)
+  if self.weapon.canAttack(self, target_pos) then
+    self:__attack(target_pos)
   end
+end
+
+function prototype.__attack(self, pos)
+  self.weapon.attack(self, target_pos)
+  self.timer = self.weapon.RELOAD_TIME
 end
 
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+  
+  -- countdown timer
+  if self.timer > 0 then
+    self.timer = self.timer - dt
+  else
+    self.timer = 0
+  end
   
   -- run current state method
   self:state(dt)
@@ -97,9 +109,9 @@ function prototype:setState(new_state)
   if new_state == prototype.IDLING then
     -- do stuff
   elseif new_state == prototype.HUNTING then
-    self.timer = Enemy.HUNTING_TIMEOUT
+    self.timer = Enemy.HUNTING_TIMEOUT -- act as boredom timer
   elseif new_state == prototype.FIGHTING then
-    -- do stuff
+    self.timer = 0 -- act as reload timer
   end
   self.state = new_state
 end
@@ -128,9 +140,6 @@ function prototype:HUNTING(dt)
   -- look for player, get bored
   if self:canSee(Spaceman[1]) then
     return self:setState(prototype.FIGHTING)
-  else
-    --TODO search for player?
-    self.timer = self.timer - dt
   end
 end
 
@@ -138,9 +147,9 @@ function prototype:FIGHTING(dt)
   
   if self:canSee(Spaceman[1]) then
     -- check if attack is possible
-    if self.weapon:canAttack(Spaceman[1]) then
+    if self.weapon.canAttack(self, Spaceman[1]) then
       -- attack the player
-      self.weapon:attack(Spaceman[1])
+      self:__attack(Spaceman[1])
     end
   else
     return self:setState(prototype.HUNTING)
@@ -153,7 +162,7 @@ AI
 
 function prototype:canSee(who)
   return (not Level.get().tilegrid:lineCollision(self.pos.x, self.pos.y - self.h/2, 
-                                                  who.pos.x, who.pos.y))
+                                                  who.pos.x, who.pos.y - who.h/2))
 end
 
 --[[----------------------------------------------------------------------------

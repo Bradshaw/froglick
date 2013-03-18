@@ -100,6 +100,10 @@ function useful.sign(x)
   end
 end
 
+function useful.sqr(x)
+  return x*x
+end
+
 -- square distance between 2 points
 function useful.dist2(x1, y1, x2, y2)
   local dx, dy = x1-x2, y1-y2

@@ -42,20 +42,18 @@ prototype.damage = 47
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function MuzzleBlast.new(x, y)
+function MuzzleBlast.new(x, y, damage, target_type)
   -- metatable
   local self = GameObject.new(x, y, true, -100) -- no id generated, foreground
   setmetatable(self, {__index = prototype })
   
-  -- type
+  -- types
   self.type = GameObject.TYPE_SPLOSION
+  self.target_type = target_type or GameObject.TYPE_ENEMY
   
   -- size
   self.w, self.h = 30, 30
-  self.pos.y = self.pos.y + 10
   
-  self.view = NoView
-
   -- return instance
   return self
 end
@@ -78,7 +76,7 @@ prototype.update = function(self, dt)
 end
 
 prototype.canCollideObject = function(self, other)
-  return (other.type == GameObject.TYPE_ENEMY)
+  return (other.type == self.target_type)
 end
 
 

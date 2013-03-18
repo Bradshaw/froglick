@@ -64,7 +64,7 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
   setmetatable(self, {__index = prototype })
   
   -- muzzle-blast o' death
-  MuzzleBlast.new(x + ndx*5, y + ndy *5)
+  MuzzleBlast.new(x + ndx*5, y + ndy *5 + 15)
   
   -- type
   --! FIXME
