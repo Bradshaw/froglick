@@ -39,6 +39,9 @@ EnemyBody.draw_debug = function(body, nmi)
     -- state
     love.graphics.printf(nmi:getStateName(), nmi.pos.x, nmi.pos.y + 10, 
                        nmi.w, "center")
+    -- timer
+    love.graphics.printf(math.floor(nmi.timer), nmi.pos.x, nmi.pos.y + 20, 
+                       nmi.w, "center")
 end
 
 --[[----------------------------------------------------------------------------

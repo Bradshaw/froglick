@@ -16,6 +16,10 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
 --[[----------------------------------------------------------------------------
+IMPORTS
+--]]----------------------------------------------------------------------------
+
+--[[----------------------------------------------------------------------------
 CONTAINER
 --]]----------------------------------------------------------------------------
 
@@ -30,7 +34,7 @@ Bite, scratch, claw: a close-range attack.
 
 EnemyWeapon.BITE = 
 {
-  tryAttack = function(wielder, direction)
+  attack = function(wielder, direction)
     --TODO
   end,
   
@@ -53,7 +57,7 @@ to release spores.
 
 EnemyWeapon.SPIT =
 {
-  tryAttack = function(wielder, direction)
+  attack = function(wielder, direction)
     --TODO
   end,
   
@@ -75,7 +79,7 @@ Spray spores out in all directs to contaminate the player. Heals allies (?)
 
 EnemyWeapon.SPORES =
 {
-  tryAttack = function(wielder, direction)
+  attack = function(wielder, direction)
     --TODO
   end,
   

@@ -48,6 +48,8 @@ Enemy.BITE = 0
 Enemy.SPIT = 1
 Enemy.SPORES = 2
 
+Enemy.HUNTING_TIMEOUT = 6
+
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -69,13 +71,13 @@ Overrides Animals
 --]]--
 
 function prototype.requestMove(self, direction)
-  self.body:tryMove(direction)
+  self.body:tryMove(direction.x, direction.y)
 end
 
 function prototype.requestAttack(self, direction)
   local target_pos = self.pos + 10*direction
   if self.weapon:canAttack(target_pos) then
-    self.weapon:tryAttack(target_pos)
+    self.weapon:attack(target_pos)
   end
 end
 
@@ -84,14 +86,25 @@ function prototype.update(self, dt)
   super.update(self, dt)
   
   -- run current state method
-  self:state()
+  self:state(dt)
 end
 
 --[[----------------------------------------------------------------------------
 States
 --]]--
 
-function prototype:IDLING()
+function prototype:setState(new_state)
+  if new_state == prototype.IDLING then
+    -- do stuff
+  elseif new_state == prototype.HUNTING then
+    self.timer = Enemy.HUNTING_TIMEOUT
+  elseif new_state == prototype.FIGHTING then
+    -- do stuff
+  end
+  self.state = new_state
+end
+
+function prototype:IDLING(dt)
   -- do nothing if not in the camera's field of view
   if (not self.in_view) then
     return
@@ -99,23 +112,38 @@ function prototype:IDLING()
   
   -- check if player is in sight
   if self:canSee(Spaceman[1]) then
-    self.state = prototype.HUNTING
+    return self:setState(prototype.HUNTING)
   end
   
   -- wander around
   self.body:wander()
 end
 
-function prototype:HUNTING()
+function prototype:HUNTING(dt)
+  -- bored yet?
+  if self.timer < 0 then
+    return self:setState(prototype.IDLING)
+  end
+  
+  -- look for player, get bored
+  if self:canSee(Spaceman[1]) then
+    return self:setState(prototype.FIGHTING)
+  else
+    --TODO search for player?
+    self.timer = self.timer - dt
+  end
 end
 
-function prototype:FIGHTING()
-  -- check if attack is possible
-  if self.weapon:canAttack(Spaceman[1]) then
-    -- attack the player
-    self.weapon:attackTarget()
+function prototype:FIGHTING(dt)
+  
+  if self:canSee(Spaceman[1]) then
+    -- check if attack is possible
+    if self.weapon:canAttack(Spaceman[1]) then
+      -- attack the player
+      self.weapon:attack(Spaceman[1])
+    end
   else
-    self.state = protoype.HUNTING
+    return self:setState(prototype.HUNTING)
   end
 end
 
@@ -196,11 +224,12 @@ function Enemy.__new(x, y, attach)
     self.w, self.h = self.body.getSize()
   end
   
-  -- BODY
+  -- WEAPON
   self.weapon = EnemyWeapon.BITE
   
   -- artificial intelligence
   self.state = prototype.IDLING
+  self.timer = 0
   
   return self
 end
