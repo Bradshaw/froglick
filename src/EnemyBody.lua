@@ -36,7 +36,7 @@ EnemyBody.SHROOM =
   end,
       
   getSize = function()
-    return 10, 28
+    return 10, Tile.SIZE.y
   end,
       
   getHitpoints = function()
@@ -45,9 +45,15 @@ EnemyBody.SHROOM =
             
   draw = function(self, go)
     love.graphics.setColor(255, 255, 255)
-  love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y - go.h, go.w, go.h)
-  love.graphics.printf("SHROOM", go.pos.x, go.pos.y, 
+    love.graphics.rectangle("line", go.pos.x - go.w/2, go.pos.y - go.h, go.w, go.h)
+  
+    love.graphics.printf("SHROOM", go.pos.x, go.pos.y, 
                        go.w, "center")
+    love.graphics.printf(go:getStateName(), go.pos.x, go.pos.y + 20, 
+                       go.w, "center")
+    
+    
+    
   end
 }
 

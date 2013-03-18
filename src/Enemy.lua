@@ -124,7 +124,7 @@ AI
 --]]--
 
 function prototype:canSee(who)
-  return (not Level.get().tilegrid:lineCollision(self.pos.x, self.pos.y, 
+  return (not Level.get().tilegrid:lineCollision(self.pos.x, self.pos.y - self.h/2, 
                                                   who.pos.x, who.pos.y))
 end
 
@@ -134,6 +134,18 @@ Accessors
 
 function prototype.isAttachedWall(self)
   return ((self.attach == Enemy.WALL_LEFT) or (self.attach == Enemy.WALL_RIGHT))
+end
+
+function prototype.getStateName(self)
+  if self.state == prototype.IDLING then
+    return "idling"
+  elseif self.state == prototype.HUNTING then
+    return "hunting"
+  elseif self.state == prototype.FIGHTING then
+    return "fighting"
+  else
+    return "unknown"
+  end
 end
 
 --[[----------------------------------------------------------------------------
