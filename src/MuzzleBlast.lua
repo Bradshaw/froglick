@@ -20,15 +20,13 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local super = require("GameObject")
-require("ProjectileView")
-require("MuzzleBlast")
 
 --[[----------------------------------------------------------------------------
 CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-Projectile = {}
+MuzzleBlast = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -38,49 +36,27 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
--- constants
-prototype.SPEED = 3000
-prototype.COLLIDES_WALLS = true
-
--- private local function
-local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
-  Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
-  blt.purge = true
-end
-
--- default values
-prototype.view = BulletView
-prototype.w = 1
-prototype.h = 1
-prototype.damage = 33
+prototype.damage = 47
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalised delta_
+function MuzzleBlast.new(x, y)
   -- metatable
-  local self = GameObject.new(x, y, true, 10)  -- no id generated, background
+  local self = GameObject.new(x, y, true, -100) -- no id generated, foreground
   setmetatable(self, {__index = prototype })
   
-  -- muzzle-blast o' death
-  MuzzleBlast.new(x + ndx*5, y + ndy *5)
-  
   -- type
-  --! FIXME
-  self.type = GameObject.TYPE_SPACEMAN_PROJECTILE
+  self.type = GameObject.TYPE_SPLOSION
   
-  -- initialise attributes
-  self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
-  if firer then 
-    self.pos_prev:reset(firer.pos)
-    self.inertia:plusequals(firer.inertia)
-  end
-  if onCollision then
-    self.onCollision = onCollision
-  end
+  -- size
+  self.w, self.h = 30, 30
+  self.pos.y = self.pos.y + 10
   
-  -- return the instance
+  self.view = NoView
+
+  -- return instance
   return self
 end
 
@@ -89,27 +65,22 @@ end
 METHODS
 --]]----------------------------------------------------------------------------
 
-function prototype.update(self, dt)
+prototype.update = function(self, dt)
   -- super-class update
   super.update(self, dt)
-end
-
-prototype.onWallCollision = function(self)
-  splode(self)
-end
-
-prototype.onObjectCollision = function(self, other)
-  self.pos:reset(other.pos)
-  splode(self)
+  
+  -- fade away
+  local amount = dt*100
+  self.w, self.h, self.pos.y = self.w - amount, self.h - amount, self.pos.y - amount/2
+  if self.w <= 1 or self.h <= 1 then
+    self.purge = true
+  end
 end
 
 prototype.canCollideObject = function(self, other)
-  if self.type == GameObject.TYPE_SPACEMAN_PROJECTILE then
-    return (other.type == GameObject.TYPE_ENEMY)
-  else
-    return (other.type == GameObject.TYPE_SPACEMAN)
-  end
+  return (other.type == GameObject.TYPE_ENEMY)
 end
+
 
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE

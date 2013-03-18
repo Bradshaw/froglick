@@ -23,6 +23,8 @@ CLASS
 -- global-scoped
 DebugView = {}
 
+NoView = { draw = function(self, go) end }
+
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
