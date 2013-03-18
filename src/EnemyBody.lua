@@ -82,7 +82,9 @@ EnemyBody.SHROOM =
 --[[----------------------------------------------------------------------------
 ZOMBIE BODY
 
-The obligatory zombie. Same platform physics as the player. Falls off cliffs.
+The obligatory zombie. Same platform physics as the player. Falls off cliffs for 
+comic relief. Also makes scary noises. Has alien ray-gun, or not. Perhaps we
+can save that for the non-zombie version you meet at the end (spoilers)
 
 --]]----------------------------------------------------------------------------
   
@@ -106,7 +108,7 @@ EnemyBody.ZOMBIE =
       
   draw = function(self, owner)
     EnemyBody.draw_debug(self, owner)
-    --TODO
+    --TODO TEH MUSHROOM BODY
   end,
   
   __tostring = function()
@@ -153,7 +155,8 @@ EnemyBody.SCUTTLER =
 --[[----------------------------------------------------------------------------
 FLOATER BODY
 
-Floats around the level. Goes "gloumf, gloumf, gloumf".
+Floats around the level. Goes "gloumf, gloumf, gloumf". Does not go 
+"lardy-dardy-da". Unless nobody is watching.
 
 --]]----------------------------------------------------------------------------
   

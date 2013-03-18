@@ -42,14 +42,22 @@ EnemyWeapon.BITE =
   RELOAD_TIME = 1.5,
   
   attack = function(wielder, target_pos)
-    MuzzleBlast.new(wielder.pos.x, wielder.pos.y, EnemyWeapon.BITE.DAMAGE, 
+    -- project the attack away from the attack
+    local v = target_pos - wielder.pos
+    local dist = v:len()
+    if dist > EnemyWeapon.BITE.RANGE then
+      (v:divequals(dist)):mulequals(EnemyWeapon.BITE.RANGE)
+    end
+    v:plusequals(wielder.pos)
+    -- create a 'bite' object to deal damage to enemies
+    MuzzleBlast.new(v.x, v.y, EnemyWeapon.BITE.DAMAGE, 
                     GameObject.TYPE_SPACEMAN)
   end,
   
   canAttack = function(wielder, t)
     return ((wielder.timer <= 0) and
-      useful.dist2(wielder.pos.x, wielder.pos.y, t.pos.x, t.pos.y) < 
-            EnemyWeapon.BITE.RANGE2)
+      useful.dist2(wielder.pos.x, wielder.pos.y, t.x, t.y) 
+                      < EnemyWeapon.BITE.RANGE2)
   end,
   
   __tostring = function()

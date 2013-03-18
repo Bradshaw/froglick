@@ -81,7 +81,7 @@ function prototype.requestAttack(self, direction)
   end
 end
 
-function prototype.__attack(self, pos)
+function prototype.__attack(self, target_pos)
   self.weapon.attack(self, target_pos)
   self.timer = self.weapon.RELOAD_TIME
 end
@@ -147,9 +147,9 @@ function prototype:FIGHTING(dt)
   
   if self:canSee(Spaceman[1]) then
     -- check if attack is possible
-    if self.weapon.canAttack(self, Spaceman[1]) then
+    if self.weapon.canAttack(self, Spaceman[1].pos) then
       -- attack the player
-      self:__attack(Spaceman[1])
+      self:__attack(Spaceman[1].pos)
     end
   else
     return self:setState(prototype.HUNTING)
