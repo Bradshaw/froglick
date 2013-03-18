@@ -224,6 +224,9 @@ function prototype.update(self, dt)
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
   
+  -- check if in camera view
+  self.in_view = (Level.get().camera:check(self.pos.x, self.pos.y))
+  
   -- update view if applicable
   if self.view and self.view.update then
     self.view:update(dt)
@@ -284,8 +287,7 @@ function prototype.control(self)
 end
 
 function prototype.draw(self)
-  -- check if in camera view
-  self.in_view = (Level.get().camera:check(self.pos.x, self.pos.y))
+  -- don't draw if not in view
   if (not self.in_view) then
     return
   end

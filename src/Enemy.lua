@@ -59,7 +59,7 @@ METHODS
 --]]----------------------------------------------------------------------------
 
 function prototype.__tostring(self)
-  return "Enemy(" .. self.id .. ")"
+  return "Enemy(" .. self.id .. ") " .. self.hitpoints
 end
 
 function prototype.requestMove(self, direction)
@@ -75,8 +75,9 @@ function prototype.attachWall(self)
 end
 
 prototype.onObjectCollision = function(self, other)
-  if other.type == GameObject.TYPE_SPLOSION then
-    self.purge = true
+  if (other.type == GameObject.TYPE_SPLOSION)
+  or (other.type == GameObject.TYPE_SPACEMAN_PROJECTILE) then
+    self:takeDamage(other.damage)
   end
 end
 
@@ -95,7 +96,7 @@ Constructors
 
 function Enemy.__new(x, y, hitpoints)
   -- metatable
-  local self = Animal.new(x, y)
+  local self = Animal.new(x, y, hitpoints)
   setmetatable(self, {__index = prototype })
   
   -- all enemies are enemies
@@ -107,9 +108,6 @@ function Enemy.__new(x, y, hitpoints)
   -- clinging to a wall / floor / ceiling ?
   --! TODO
   self.attach = Enemy.FLOOR
-  
-  -- number of hitpoints
-  self.hitpoints = useful.tri(hitpoints, hitpoints, 100)
   
   return self
 end

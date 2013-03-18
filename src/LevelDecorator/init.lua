@@ -23,6 +23,15 @@ require("Gate")
 require("Enemy")
 
 --[[----------------------------------------------------------------------------
+PRIVATE CONSTANTS -- tweak me ;)
+--]]----------------------------------------------------------------------------
+
+local CLOSEST_ENEMY2 = 100*100
+local CLOSEST_GATE2 = 400*400
+local DEFAULT_GRASS = 0.5
+local DEFAULT_ENEMIES = 100
+
+--[[----------------------------------------------------------------------------
 SINGLETON CLASS
 --]]----------------------------------------------------------------------------
 
@@ -47,13 +56,9 @@ local pushCandidateCells = function(grid, predicate, dest)
   return dest
 end
 
-local popCandidateCells = function(array, f, percentage)
-  -- pop a single cell if no percentage is specified
-  local n_popped
-  if percentage then n_popped = (#array)*percentage
-                else n_popped = 1 end
-  
-  for i = 1, n_popped do
+local popCandidateCells = function(array, f, n_popped)
+  n_popped = n_popped or 1
+  for i = 1, math.min(#array, n_popped) do
     local i = math.random(1, (#array))
     local cell = array[i]
     -- ... apply the callback
@@ -62,6 +67,11 @@ local popCandidateCells = function(array, f, percentage)
     table.remove(array, i)
   end
 end
+
+local popPercentageCandidateCells = function(array, f, percentage)
+  popCandidateCells(array, f, (#array)*percentage)
+end
+
 
 
 --[[----------------------------------------------------------------------------
@@ -83,6 +93,22 @@ local groundAbove = function(grid, x, y)
 end
 
 
+
+--[[----------------------------------------------------------------------------
+Create enemies
+--]]--
+
+local spawn = function(cell, constructor)
+  local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
+  if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) > CLOSEST_ENEMY2 
+  then
+    return constructor(x, y)
+  else
+    return nil
+  end
+end
+
+
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
@@ -91,15 +117,11 @@ METHODS
 Main
 --]]--
 
-local DEFAULT_GRASS = 0.5
-
-local DEFAULT_ENEMIES = 0.3
-
-function LevelDecorator.decorate(lev, grass_amount)
+function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
 
   -- 0. set missing parameters to default
   grass_amount = grass_amount or DEFAULT_GRASS
-  enemies_amount = grass_amount or DEFAULT_ENEMIES
+  enemies_amount = enemies_amount or DEFAULT_ENEMIES
   
   -- 1. compile a list of all the cells with walls below, above and to the sides
   local stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
@@ -119,25 +141,43 @@ function LevelDecorator.decorate(lev, grass_amount)
     Gate.new()
   end
   popCandidateCells(stand_cells, function(cell)
-    Gate.pos:reset((cell.x + 0.5)*Tile.SIZE.x, 
-                    (cell.y + 1)*Tile.SIZE.y) end)
+    local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
+    if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) < CLOSEST_GATE2 
+    then
+      Gate.pos:reset(x, y) 
+    else
+      -- reject this cell, put it back at the bottom of the stack
+      table.insert(stand_cells, cell)
+    end
+  end)
     
   -- 4. place enemies
-  popCandidateCells(stand_cells, function(cell)
-    Enemy.spawnGround((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
-    end, grass_amount)
-  popCandidateCells(climb_cells, function(cell)
-    Enemy.spawnWall((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
-    end, grass_amount)
-  popCandidateCells(hang_cells, function(cell)
-    Enemy.spawnRoof((cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y)
-    end, grass_amount)
-
+  local total = enemies_amount
   
-    
+  -- keep trying to place enemies until you run out of candidates
+  while math.min(enemies_amount, #stand_cells + #climb_cells + #hang_cells) > 0
+  do
+    -- 4a. on the roof
+    popCandidateCells(hang_cells, function(cell)
+      if spawn(cell, Enemy.spawnRoof) then enemies_amount = enemies_amount - 1 
+        end end, enemies_amount / 3)
+
+    -- 4b. on the walls
+    popCandidateCells(climb_cells, function(cell)
+      if spawn(cell, Enemy.spawnWall) then enemies_amount = enemies_amount - 1 
+        end end, enemies_amount / 2)
+
+    -- 4c. on the ground
+    popCandidateCells(stand_cells, function(cell)
+      if spawn(cell, Enemy.spawnGround) then enemies_amount = enemies_amount - 1 
+        end end, enemies_amount)
+  end
+  print("was unable to place", enemies_amount, "enemies of", total)
+  
+  
   -- 5. place vegetation
   stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
-  popCandidateCells(stand_cells, function(cell)
+  popPercentageCandidateCells(stand_cells, function(cell)
     lev.tilegrid:gridToTile(cell.x, cell.y).decoration = Tile.DECORATION.GRASS
     end, grass_amount)
 end

@@ -40,17 +40,19 @@ local prototype = { }
 CLASS METHODS
 --]]----------------------------------------------------------------------------
 
+local check_collisions, check_collisions_period = 0, 10
 function prototype.update(self, dt)
   
   -- animate tiles
   --! FIXME only animate those in the view
-  local previous = nil
   for i,v in ipairs(self.tilegrid.tiles) do
     for j,u in ipairs(v) do
       u.animation = u.animation+dt*u.animspeed
     end   
   end 
 
+  -- 'previous', for sorting layer
+  local previous = nil
   -- update game objects
   useful.map(self.game_objects, 
       
@@ -64,7 +66,7 @@ function prototype.update(self, dt)
       -- generate inter-object collisions
       function(a, a_index)
         if a.canCollideObject then
-          for b_index = a_index + 1, #self.game_objects do
+          for b_index = 1, #self.game_objects do
             local b = self.game_objects[b_index]
             if GameObject.can_collide(a, b) and GameObject.collision(a, b) then
                 a:onObjectCollision(b)
@@ -83,6 +85,7 @@ function prototype.update(self, dt)
         previous = object
       end
   ) -- end useful.map
+  
   
   -- add all background objects AFTER full update
   for k, v in pairs(self.__deferred_add) do

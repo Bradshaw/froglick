@@ -37,6 +37,8 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
+prototype.hitpoints = 100
+
 --[[----------------------------------------------------------------------------
 METHODS
 --]]----------------------------------------------------------------------------
@@ -53,13 +55,33 @@ function prototype.requestAttack(self, direction)
   --! override me!
 end
 
+function prototype.die()
+  --! override me!
+end
+
+function prototype.takeDamage(self, amount)
+  if amount > self.hitpoints then
+    self:die()
+    self.purge = true
+  else
+    self.hitpoints = self.hitpoints - amount
+  end
+end
+
+
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function Animal.new(x, y)
+function Animal.new(x, y, hitpoints)
+  -- metatables
   local self = GameObject.new(x, y)
   setmetatable(self, {__index = prototype })
+  
+  -- attributes
+  if hitpoints then 
+    self.hitpoints = hitpoints 
+  end
   
   return self
 end

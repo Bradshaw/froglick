@@ -51,6 +51,7 @@ end
 prototype.view = BulletView
 prototype.w = 1
 prototype.h = 1
+prototype.damage = 33
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
