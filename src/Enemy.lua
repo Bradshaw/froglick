@@ -174,7 +174,7 @@ CLASS (STATIC) FUNCTIONS
 Constructors
 --]]
 
-function Enemy.__new(x, y, hitpoints)
+function Enemy.__new(x, y, attach)
   -- metatable
   local self = Animal.new(x, y, hitpoints)
   setmetatable(self, {__index = prototype })
@@ -182,12 +182,20 @@ function Enemy.__new(x, y, hitpoints)
   -- all enemies are enemies, obviously
   self.type = GameObject.TYPE_ENEMY
   
+  -- attached to wall, roof or floor ?
+  self.attach = attach
+  
   -- body
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
   self.view = self.body
   self.hitpoints = self.body.getHitpoints()
-  self.w, self.h = self.body.getSize()
+  
+  if self:isAttachedWall() then
+    self.h, self.w = self.body.getSize()
+  else
+    self.w, self.h = self.body.getSize()
+  end
   
   
   -- artificial intelligence
@@ -197,22 +205,19 @@ function Enemy.__new(x, y, hitpoints)
 end
 
 function Enemy.spawnGround(x, y)
-  local spawn = Enemy.__new(x, y)
-  spawn.attach = Enemy.FLOOR
+  local spawn = Enemy.__new(x, y, Enemy.FLOOR)
   -- TODO different enemies like different positions
   return spawn
 end
 
 function Enemy.spawnWall(x, y)
-  local spawn = Enemy.__new(x, y)
-  spawn.attach = Enemy.WALL_LEFT -- FIXME
+  local spawn = Enemy.__new(x, y, Enemy.WALL_LEFT) -- FIXME
   -- TODO different enemies like different positions
   return spawn
 end
 
 function Enemy.spawnRoof(x, y)
-  local spawn = Enemy.__new(x, y)
-  spawn.attach = Enemy.ROOF
+  local spawn = Enemy.__new(x, y, Enemy.ROOF)
   -- TODO different enemies like different positions
   return spawn
 end
