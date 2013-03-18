@@ -199,7 +199,7 @@ function prototype.gridCollision(self, x, y)
         or (type == Tile.BOTTOM_RIGHT))
 end
 
-function prototype.lineCollision(self, x1, y1, x2, y2, pixel_perfect)
+function prototype.lineCollision(self, x1, y1, x2, y2)
   -- convert from pixel -> tile
   local x = math.floor(x1 / Tile.SIZE.x)
   local y = math.floor(y1 / Tile.SIZE.y)

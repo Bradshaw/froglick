@@ -20,6 +20,8 @@ IMPORTS
 --]]----------------------------------------------------------------------------
 
 local super = require("Animal")
+require("EnemyBody")
+require("EnemyBody")
 
  
 --[[----------------------------------------------------------------------------
@@ -62,17 +64,81 @@ function prototype.__tostring(self)
   return "Enemy(" .. self.id .. ") " .. self.hitpoints
 end
 
+--[[----------------------------------------------------------------------------
+Overrides Animals
+--]]--
+
 function prototype.requestMove(self, direction)
-  --! override me!
+  self.body:tryMove(direction)
 end
 
 function prototype.requestAttack(self, direction)
-  --! override me!
+  local target_pos = self.pos + 10*direction
+  if self.weapon:canAttack(target_pos) then
+    self.weapon:tryAttack(target_pos)
+  end
 end
 
-function prototype.attachWall(self)
+function prototype.update(self, dt)
+  -- super-class update
+  super.update(self, dt)
+  
+  -- run current state method
+  self:state()
+end
+
+--[[----------------------------------------------------------------------------
+States
+--]]--
+
+function prototype:IDLING()
+  -- do nothing if not in the camera's field of view
+  if (not self.in_view) then
+    return
+  end
+  
+  -- check if player is in sight
+  if self:canSee(Spaceman[1]) then
+    self.state = prototype.HUNTING
+  end
+  
+  -- wander around
+  self.body:wander()
+end
+
+function prototype:HUNTING()
+end
+
+function prototype:FIGHTING()
+  -- check if attack is possible
+  if self.weapon:canAttack(Spaceman[1]) then
+    -- attack the player
+    self.weapon:attackTarget()
+  else
+    self.state = protoype.HUNTING
+  end
+end
+
+--[[----------------------------------------------------------------------------
+AI
+--]]--
+
+function prototype:canSee(who)
+  return (not Level.get().tilegrid:lineCollision(self.pos.x, self.pos.y, 
+                                                  who.pos.x, who.pos.y))
+end
+
+--[[----------------------------------------------------------------------------
+Accessors
+--]]--
+
+function prototype.isAttachedWall(self)
   return ((self.attach == Enemy.WALL_LEFT) or (self.attach == Enemy.WALL_RIGHT))
 end
+
+--[[----------------------------------------------------------------------------
+Collisions
+--]]--
 
 prototype.onObjectCollision = function(self, other)
   if ((other.type == GameObject.TYPE_SPLOSION)
@@ -101,29 +167,42 @@ function Enemy.__new(x, y, hitpoints)
   local self = Animal.new(x, y, hitpoints)
   setmetatable(self, {__index = prototype })
   
-  -- all enemies are enemies
+  -- all enemies are enemies, obviously
   self.type = GameObject.TYPE_ENEMY
   
-  -- enemy hitbox
-  self.w, self.h = 30, 30
+  -- body
+  --FIXME should be determined randomly depending on spawn position
+  self.body = EnemyBody.SHROOM
+  self.view = self.body
+  self.hitpoints = self.body.getHitpoints()
+  self.w, self.h = self.body.getSize()
   
-  -- clinging to a wall / floor / ceiling ?
-  --! TODO
-  self.attach = Enemy.FLOOR
+  
+  -- artificial intelligence
+  self.state = prototype.IDLING
   
   return self
 end
 
 function Enemy.spawnGround(x, y)
-  return Enemy.__new(x, y)
+  local spawn = Enemy.__new(x, y)
+  spawn.attach = Enemy.FLOOR
+  -- TODO different enemies like different positions
+  return spawn
 end
 
 function Enemy.spawnWall(x, y)
-  return Enemy.__new(x, y)
+  local spawn = Enemy.__new(x, y)
+  spawn.attach = Enemy.WALL_LEFT -- FIXME
+  -- TODO different enemies like different positions
+  return spawn
 end
 
 function Enemy.spawnRoof(x, y)
-  return Enemy.__new(x, y)
+  local spawn = Enemy.__new(x, y)
+  spawn.attach = Enemy.ROOF
+  -- TODO different enemies like different positions
+  return spawn
 end
 
 
