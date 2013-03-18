@@ -167,7 +167,7 @@ local l = self:len()
 if l > 0 then
 self.x, self.y = self.x / l, self.y / l
 end
-return self, l
+return self
 end
 
 
