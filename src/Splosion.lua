@@ -103,7 +103,6 @@ prototype.canCollideObject = function(self, other)
         or (other.type == GameObject.TYPE_SPACEMAN))
 end
 
-prototype.onObjectCollision = function() end
 
 --[[----------------------------------------------------------------------------
 EXPORT THE METATABLE

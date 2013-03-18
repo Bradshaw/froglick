@@ -412,7 +412,8 @@ GameObject.collision = function(a, b)
 end
   
 GameObject.can_collide = function(a, b)
-return (a.in_view and b.in_view and a.canCollideObject and b.canCollideObject
+return (a.in_view and b.in_view 
+        and a.canCollideObject and b.canCollideObject
         and a:canCollideObject(b) and b:canCollideObject(a))
 end
 

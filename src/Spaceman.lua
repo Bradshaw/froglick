@@ -186,7 +186,7 @@ function prototype.tryAttack(self, dt)
     -- create projectile
     local prj = Projectile.new(self.pos.x + self.torso_facing.x*10,
                     self.pos.y -20 + self.torso_facing.y*10,
-                    self.torso_facing.x, self.torso_facing.y, self.inertia)
+                    self.torso_facing.x, self.torso_facing.y, self)
     for i=1,3 do
       Sparkle.newBooster(prj.pos.x + prj.inertia.x/200, 
           prj.pos.y + prj.inertia.y/200, 

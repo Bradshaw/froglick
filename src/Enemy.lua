@@ -75,9 +75,11 @@ function prototype.attachWall(self)
 end
 
 prototype.onObjectCollision = function(self, other)
-  if (other.type == GameObject.TYPE_SPLOSION)
-  or (other.type == GameObject.TYPE_SPACEMAN_PROJECTILE) then
+  if ((other.type == GameObject.TYPE_SPLOSION)
+      or (other.type == GameObject.TYPE_SPACEMAN_PROJECTILE))
+  and (not other.has_dealt_damage) then
     self:takeDamage(other.damage)
+    other.has_dealt_damage = true
   end
 end
 

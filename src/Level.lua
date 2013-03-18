@@ -56,13 +56,6 @@ function prototype.update(self, dt)
   -- update game objects
   useful.map(self.game_objects, 
       
-      -- update and control game objects
-      function(object)
-        --! control FIRST always
-        object:control()
-        object:update(dt)
-      end,
-          
       -- generate inter-object collisions
       function(a, a_index)
         if a.canCollideObject then
@@ -74,6 +67,13 @@ function prototype.update(self, dt)
             end
           end
         end
+      end,
+      
+      -- update and control game objects
+      function(object)
+        --! control FIRST always
+        object:control()
+        object:update(dt)
       end,
           
       -- sort objects by layer

@@ -57,7 +57,7 @@ prototype.damage = 33
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-Projectile.new = function(x, y, ndx, ndy, inertia, onCollision) -- nd_ = normalised delta_
+Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalised delta_
   -- metatable
   local self = GameObject.new(x, y, true, 10)  -- no id generated, background
   setmetatable(self, {__index = prototype })
@@ -68,8 +68,9 @@ Projectile.new = function(x, y, ndx, ndy, inertia, onCollision) -- nd_ = normali
   
   -- initialise attributes
   self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
-  if inertia then
-    self.inertia:plusequals(inertia)
+  if firer then 
+    self.pos_prev:reset(firer.pos)
+    self.inertia:plusequals(firer.inertia)
   end
   if onCollision then
     self.onCollision = onCollision
