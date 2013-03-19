@@ -88,6 +88,10 @@ function prototype.draw(self)
   --[[]]
   self.spritebatch:clear()
   self.decospritebatch:clear()
+  local x,y = Level.get().camera:getBounds()
+  love.graphics.setColor(64,64,64)
+  love.graphics.drawq(Tile.SINGLE, Tile.BACKQUAD, x+love.graphics.getWidth()/4-(x/2)%32, y+love.graphics.getHeight()/4-(y/2)%32)
+  love.graphics.setColor(255,255,255)
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
     
