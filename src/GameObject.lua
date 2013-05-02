@@ -295,7 +295,10 @@ function prototype.draw(self)
   -- draw shiz
   if self.view then
     self.view:draw(self)
-  else
+  end
+    
+  -- draw hitboxes
+  if DEBUG then
     DebugView:draw(self)
   end
 end
