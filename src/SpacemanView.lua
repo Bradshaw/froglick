@@ -31,6 +31,7 @@ SpacemanView.ANIM_MUZZLE = newAnimation(SpacemanView.IMAGE, 96, 32, 0.1, 1, 0, 4
 SpacemanView.ANIM_UPPER_BODY_SHOOTY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 2, 0)
 SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 0, 1)
 SpacemanView.ANIM_STOP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 4, 0)
+SpacemanView.ANIM_AIRBORNE = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 7, 0)
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
@@ -40,12 +41,18 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   
   love.graphics.setColor(255, 255, 255, 255)
   
-  --TODO FIXME for obvious reasons
-  if math.abs(sm.inertia.x)>50 and not sm.airborne  then
-  	SpacemanView.ANIM_WALK:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+  -- LEGS
+  if sm.airborne then
+    SpacemanView.ANIM_AIRBORNE:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
   else
-  	SpacemanView.ANIM_STOP:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+    if math.abs(sm.inertia.x)>50 then
+      SpacemanView.ANIM_WALK:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+    else
+      SpacemanView.ANIM_STOP:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+    end
   end
+    
+  -- ARMS
   if sm:weaponRaised() then
     
     -- attacking
