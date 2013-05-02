@@ -28,7 +28,14 @@ SpacemanView = {}
 SpacemanView.IMAGE = love.graphics.newImage("images/charactersheet1.PNG")
 SpacemanView.ANIM_UPPER_BODY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 0, 0)
 SpacemanView.ANIM_MUZZLE = newAnimation(SpacemanView.IMAGE, 96, 32, 0.1, 1, 0, 4)
-SpacemanView.ANIM_UPPER_BODY_SHOOTY = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 2, 0)
+SpacemanView.ANIM_SHOOT = 
+{
+  HORIZONTAL = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 2, 0),
+  DOWN = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 5, 0),
+  UP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 6, 0),
+  DIAGONAL_DOWN = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 3, 0),
+  DIAGONAL_UP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 1, 0) 
+}
 SpacemanView.ANIM_WALK = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 0, 1)
 SpacemanView.ANIM_STOP = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 8, 4, 0)
 SpacemanView.ANIM_AIRBORNE = newAnimation(SpacemanView.IMAGE, 32, 32, 0.1, 1, 7, 0)
@@ -55,16 +62,35 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   -- ARMS
   if sm:weaponRaised() then
     
+    -- check firing direction
+    
+    local shootAnim
+    if math.abs(sm.torso_facing.x) > 0 then
+      if sm.torso_facing.y > 0 then
+        shootAnim = SpacemanView.ANIM_SHOOT.DIAGONAL_DOWN
+      elseif sm.torso_facing.y < 0 then
+        shootAnim = SpacemanView.ANIM_SHOOT.DIAGONAL_UP
+      else
+        shootAnim = SpacemanView.ANIM_SHOOT.HORIZONTAL
+      end
+    else
+      if sm.torso_facing.y > 0 then
+        shootAnim = SpacemanView.ANIM_SHOOT.DOWN
+      else
+        shootAnim = SpacemanView.ANIM_SHOOT.UP
+      end
+    end
+    
     -- attacking
   	if sm:isAttacking() then
-	  	SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(sm.pos.x, sm.pos.y - 32, 0, 
+	  	shootAnim:draw(sm.pos.x, sm.pos.y - 32, 0, 
           -sm.legs_side, 1, 16+math.random(-1,1), math.random(-1,1))
       SpacemanView.ANIM_MUZZLE:draw(sm.pos.x, sm.pos.y-19, 0, -sm.legs_side, 
           useful.tri(self.muzflip,1,-1), 96+13+math.random(-1,1), 12)
     
     -- not attacking
     else
-      SpacemanView.ANIM_UPPER_BODY_SHOOTY:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+      shootAnim:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
     end
   else
   	SpacemanView.ANIM_UPPER_BODY:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
