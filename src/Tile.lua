@@ -44,6 +44,13 @@ Tile.UNDECIDED = 6
 
 -- TODO THIS; BETTER!
 Tile.FULLIMAGE = love.graphics.newImage("images/Tile_Stone1_filled.PNG")
+Tile.SINGLE = love.graphics.newImage("images/Tile_single.png")
+Tile.SINGLE:setWrap("repeat","repeat")
+Tile.BACKQUAD = love.graphics.newQuad(
+  0,0,
+  love.graphics.getWidth()/2+32,
+  love.graphics.getHeight()/2+32,
+  32,32)
 Tile.FULLQUADS = {}
 Tile.CORNERQUADS = {}
 Tile.CORNERQUADS[Tile.TOP_LEFT] = love.graphics.newQuad(64,32,32,32,128,128)

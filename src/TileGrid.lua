@@ -88,16 +88,24 @@ function prototype.draw(self)
   --[[]]
   self.spritebatch:clear()
   self.decospritebatch:clear()
+  local x,y = Level.get().camera:getBounds()
+  love.graphics.setColor(64,64,64)
+  love.graphics.drawq(Tile.SINGLE, Tile.BACKQUAD, x+love.graphics.getWidth()/4-(x/2)%32, y+love.graphics.getHeight()/4-(y/2)%32)
+  love.graphics.setColor(255,255,255)
+  local function off(x,y)
+    local ox = (Spaceman[1].pos.x-(x*Tile.SIZE.x))
+    local oy = (Spaceman[1].pos.y-(y*Tile.SIZE.y))
+    return ox,oy
+  end
   Level.get().camera:doForTiles(
     function(x, y, tilegrid)
-    
       ---FIXME DEBUG
       --love.graphics.print(tostring(x)..","..tostring(y), x*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
       --love.graphics.print(tilegrid:gridToTile(x, y).part, (x+0.5)*Tile.SIZE.x, (y+0.5)*Tile.SIZE.y)
       --love.graphics.setColor(255, 255, 255, 255)
       --love.graphics.rectangle("line", x*Tile.SIZE.x, y*Tile.SIZE.y, 32, 32)
       --------------------------------
-
+      local ox,oy = off(x,y)
       if tilegrid:gridToTile(x, y).decoration == Tile.DECORATION.GRASS then
         love.graphics.setBlendMode("additive")
         love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
@@ -105,13 +113,13 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[3],
           80+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
         love.graphics.draw(Tile.DECOQUADS.HIGHLIGHTS[tilegrid:gridToTile(x, y).variation%2+1],
-                                         (x+0.5)*Tile.SIZE.x,(y+0.5)*Tile.SIZE.y,0,0.2,0.2,192,192)
+                                         (x+0.5)*Tile.SIZE.x+ox/16,(y+0.5)*Tile.SIZE.y+oy/16,0,0.2,0.2,192,192)
           love.graphics.setColor(tilegrid:gridToTile(x, y).decocolour[1],
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3],
           50+math.sin(tilegrid:gridToTile(x, y).animation/3)*10)
         love.graphics.draw(Tile.DECOQUADS.HIGHLIGHTS[(1+tilegrid:gridToTile(x, y).variation)%2+1],
-                                         (x+0.5)*Tile.SIZE.x,(y+0.5)*Tile.SIZE.y,0,0.6,0.6,192,192)
+                                         (x+0.5)*Tile.SIZE.x+ox/4,(y+0.5)*Tile.SIZE.y+oy/4,0,0.6,0.6,192,192)
         love.graphics.setColor(255,255,255)
         love.graphics.setBlendMode("alpha")
         tilegrid.decospritebatch:setColor(
