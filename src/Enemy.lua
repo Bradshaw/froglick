@@ -92,6 +92,8 @@ function prototype.update(self, dt)
   super.update(self, dt)
   
   
+  -- update view
+  self.view:update(dt)
   if self.attach == Enemy.WALL_LEFT then
     self.view.rotation = useful.RAD90
   elseif self.attach == Enemy.WALL_RIGHT then
@@ -119,10 +121,13 @@ States
 
 function prototype:setState(new_state)
   if new_state == prototype.IDLING then
+    self.view:setAnimation(self.body.anim_idle)
     -- do stuff
   elseif new_state == prototype.HUNTING then
+    self.view:setAnimation(self.body.anim_agressive)
     self.timer = Enemy.HUNTING_TIMEOUT -- act as boredom timer
   elseif new_state == prototype.FIGHTING then
+    self.view:setAnimation(self.body.anim_agressive)
     self.timer = 0 -- act as reload timer
   end
   self.state = new_state
@@ -152,6 +157,9 @@ function prototype:HUNTING(dt)
   -- look for player, get bored
   if self:canSee(Spaceman[1]) then
     return self:setState(prototype.FIGHTING)
+  else
+    self.body.tryMove(self, 
+        Spaceman[1].pos - self.pos)
   end
 end
 
@@ -162,6 +170,9 @@ function prototype:FIGHTING(dt)
     if self.weapon.canAttack(self, Spaceman[1].pos) then
       -- attack the player
       self:__attack(Spaceman[1].pos)
+    else
+      self.body.tryMove(self, 
+        Spaceman[1].pos - self.pos)
     end
   else
     return self:setState(prototype.HUNTING)
@@ -238,6 +249,7 @@ function Enemy.__new(x, y, attach)
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
   self.view = AnimationView(self.body.anim_idle)
+  
   self.hitpoints = self.body.getHitpoints()
   if self:isAttachedWall() then
     self.h, self.w = self.body.getSize()

@@ -64,11 +64,15 @@ local SHROOM_SHEET =
 EnemyBody.SHROOM = 
 {
   tryMove = function(owner, direction)
-    -- it's a mushroom dude -_-'
+    if owner:isAttachedWall() then 
+      owner.view.flip_x = (direction.y > 0)
+    else
+      owner.view.flip_x = (direction.x > 0)
+    end
   end,
       
   wander = function(owner)
-    -- what part of "it's a mushroom" don't you understand?
+    -- it's a mushroom dude -_-'
   end,
       
   getSize = function()
@@ -80,10 +84,13 @@ EnemyBody.SHROOM =
   end,
             
   anim_idle = 
-    Animation(SHROOM_SHEET, 32, 32, 2),
+    Animation(SHROOM_SHEET, 32, 32, 1),
+        
+  anim_agressive = 
+    Animation(SHROOM_SHEET, 32, 32, 1, 32),
   
   anim_attack = 
-    Animation(SHROOM_SHEET, 32, 32, 3, 32, 0),
+    Animation(SHROOM_SHEET, 32, 32, 2, 64, 0),
   
   __tostring = function()
     return "shroom"
