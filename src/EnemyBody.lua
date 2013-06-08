@@ -16,6 +16,12 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
 --[[----------------------------------------------------------------------------
+INCLUDE
+--]]----------------------------------------------------------------------------
+
+local Animation = require("Animation")
+
+--[[----------------------------------------------------------------------------
 CONTAINER
 --]]----------------------------------------------------------------------------
 
@@ -47,9 +53,13 @@ end
 --[[----------------------------------------------------------------------------
 SHROOM BODY
 
-It's a 'shroom. It shrooms.
+It's a 'shroom. It 'shrooms.
 
 --]]----------------------------------------------------------------------------
+
+
+local SHROOM_SHEET = 
+  love.graphics.newImage("images/enemy_mushroom.png")
 
 EnemyBody.SHROOM = 
 {
@@ -69,10 +79,11 @@ EnemyBody.SHROOM =
     return 220
   end,
             
-  draw = function(self, owner)
-    EnemyBody.draw_debug(self, owner)
-    --TODO
-  end,
+  anim_idle = 
+    Animation(SHROOM_SHEET, 32, 32, 2),
+  
+  anim_attack = 
+    Animation(SHROOM_SHEET, 32, 32, 3, 32, 0),
   
   __tostring = function()
     return "shroom"
@@ -108,7 +119,7 @@ EnemyBody.ZOMBIE =
       
   draw = function(self, owner)
     EnemyBody.draw_debug(self, owner)
-    --TODO TEH MUSHROOM BODY
+    --TODO TEH ZOMBIE BODY
   end,
   
   __tostring = function()

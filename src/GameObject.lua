@@ -101,6 +101,13 @@ function prototype.superfast(self)
           or (math.abs(self.inertia.y)*MAX_DT > Tile.SIZE.y + self.h))
 end
 
+function prototype:centreX()
+  return self.pos.x
+end
+
+function prototype:centreY()
+  return self.pos.y - self.h / 2
+end
 
 --[[----------------------------------------------------------------------------
 Collisions

@@ -98,11 +98,11 @@ end
 Create enemies
 --]]--
 
-local spawn = function(cell, constructor)
+local spawn = function(cell, constructor, leftWall, rightWall)
   local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
   if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) > CLOSEST_ENEMY2 
   then
-    return constructor(x, y)
+    return constructor(x, y, leftWall, rightWall)
   else
     return nil
   end
@@ -163,13 +163,19 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   do
     -- 4a. on the roof
     popCandidateCells(hang_cells, function(cell)
-      if spawn(cell, Enemy.spawnRoof) then enemies_amount = enemies_amount - 1 
-        end end, enemies_amount / 3)
+      if spawn(cell, Enemy.spawnRoof) then 
+        enemies_amount = enemies_amount - 1 
+      end 
+    end, enemies_amount / 3)
 
     -- 4b. on the walls
     popCandidateCells(climb_cells, function(cell)
-      if spawn(cell, Enemy.spawnWall) then enemies_amount = enemies_amount - 1 
-        end end, enemies_amount / 2)
+      local leftWall = lev.tilegrid:isWall(cell.x-1, cell.y)
+      local rightWall =lev.tilegrid:isWall(cell.x+1, cell.y)
+      if spawn(cell, Enemy.spawnWall, leftWall, rightWall) then 
+        enemies_amount = enemies_amount - 1 
+      end 
+    end, enemies_amount / 2)
 
     -- 4c. on the ground
     popCandidateCells(stand_cells, function(cell)

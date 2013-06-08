@@ -22,6 +22,7 @@ IMPORTS
 local super = require("Animal")
 require("EnemyBody")
 require("EnemyWeapon")
+local AnimationView = require("AnimationView")
 
  
 --[[----------------------------------------------------------------------------
@@ -89,6 +90,17 @@ end
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+  
+  
+  if self.attach == Enemy.WALL_LEFT then
+    self.view.rotation = useful.RAD90
+  elseif self.attach == Enemy.WALL_RIGHT then
+    self.view.rotation = -useful.RAD90
+  elseif self.attach == Enemy.FLOOR then
+    self.view.flip_y = false
+  elseif self.attach == Enemy.ROOF then
+    self.view.flip_y = true
+  end
   
   -- countdown timer
   if self.timer > 0 then
@@ -225,7 +237,7 @@ function Enemy.__new(x, y, attach)
   -- BODY
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
-  self.view = self.body
+  self.view = AnimationView(self.body.anim_idle)
   self.hitpoints = self.body.getHitpoints()
   if self:isAttachedWall() then
     self.h, self.w = self.body.getSize()
@@ -249,8 +261,15 @@ function Enemy.spawnGround(x, y)
   return spawn
 end
 
-function Enemy.spawnWall(x, y)
-  local spawn = Enemy.__new(x, y, Enemy.WALL_LEFT) -- FIXME
+function Enemy.spawnWall(x, y, leftWall, rightWall)
+  
+  local wall = Enemy.WALL_LEFT
+  if (not leftWall) 
+  or (rightWall and (math.random() > 0.5)) then
+    wall = Enemy.WALL_RIGHT
+  end
+  
+  local spawn = Enemy.__new(x, y, wall)
   -- TODO different enemies like different positions
   return spawn
 end
