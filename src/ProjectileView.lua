@@ -15,6 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 --]]
 
+--[[----------------------------------------------------------------------------
+IMPORTS
+--]]----------------------------------------------------------------------------
+
+local super = require("GameObject")
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -25,10 +30,50 @@ BulletView = {}
 
 
 --[[----------------------------------------------------------------------------
+METATABLE (PROTOTYPE)
+--]]----------------------------------------------------------------------------
+
+local prototype = {}
+setmetatable(prototype, { __index = super })
+
+
+--[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function BulletView.draw(self, blt) -- blt = Bullet
-  love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.line(blt.pos.x, blt.pos.y, blt.pos_prev.x, blt.pos_prev.y)
+function BulletView.new(x1, y1, x2, y2)
+  
+  -- metatable
+  local self = GameObject.new(x2, y2, true, -10)  -- no id generated
+  setmetatable(self, {__index = prototype })
+  self.pos_prev:reset(x1, y1)
+  
+  -- type
+  --! FIXME
+  self.type = GameObject.TYPE_SPACEMAN_PROJECTILE
+  
+  -- return instance
+  return self
 end
+
+
+--[[----------------------------------------------------------------------------
+METHODS
+--]]----------------------------------------------------------------------------
+
+prototype.update = function(self, dt)
+  self.purge = true
+end
+
+prototype.draw = function(self)
+  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.line(self.pos_prev.x, self.pos_prev.y, 
+        self.pos.x, self.pos.y)
+end
+
+
+--[[----------------------------------------------------------------------------
+EXPORT THE METATABLE
+--]]----------------------------------------------------------------------------
+
+return prototype

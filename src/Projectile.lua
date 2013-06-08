@@ -45,11 +45,11 @@ prototype.COLLIDES_WALLS = true
 -- private local function
 local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
   Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
+  BulletView.new(blt.start_x, blt.start_y, blt.pos.x, blt.pos.y)
   blt.purge = true
 end
 
 -- default values
-prototype.view = BulletView
 prototype.w = 1
 prototype.h = 1
 prototype.damage = 33
