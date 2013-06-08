@@ -63,6 +63,13 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   if sm:weaponRaised() then
     
     -- check firing direction
+    local flip_x, offset_x = -1, 0
+    if sm.torso_facing.x < 0 then
+      flip_x = 1 
+    end
+    if flip_x * sm.legs_side > 0 then
+      offset_x = -4*flip_x
+    end
     
     local shootAnim
     if math.abs(sm.torso_facing.x) > 0 then
@@ -81,23 +88,24 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
       end
     end
     
-    -- attacking
+    -- weapon raised and attacking
   	if sm:isAttacking() then
-	  	shootAnim:draw(sm.pos.x, sm.pos.y - 32, 0, 
-          -sm.legs_side, 1, 16+math.random(-1,1), math.random(-1,1))
+	  	shootAnim:draw(sm.pos.x + offset_x, sm.pos.y - 32, 0, 
+          flip_x, 1, 16+math.random(-1,1), math.random(-1,1))
       SpacemanView.ANIM_MUZZLE:draw(sm.pos.x, sm.pos.y-19, 0, -sm.legs_side, 
           useful.tri(self.muzflip,1,-1), 96+13+math.random(-1,1), 12)
     
-    -- not attacking
+    -- weapon raised but not attacking
     else
-      shootAnim:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+      shootAnim:draw(sm.pos.x + offset_x, sm.pos.y - 32, 0, 
+                flip_x, 1, 16, 0)
     end
   else
-  	SpacemanView.ANIM_UPPER_BODY:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
+  	SpacemanView.ANIM_UPPER_BODY:draw(sm.pos.x, sm.pos.y - 32, 
+                              0, -sm.legs_side, 1, 16, 0)
   end
   love.graphics.setColor(64,127,255)
   love.graphics.rectangle("fill",sm.pos.x-8,sm.pos.y-34,sm.energy/100*16,2)
-  
 end
 
 

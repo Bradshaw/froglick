@@ -163,7 +163,9 @@ end
 
 function prototype.tryAttack(self, dt)
   -- able to fire?
-  if (self.energy > self.attackCost) and self:isReloaded() then
+  if (self.energy > self.attackCost) 
+      and self:isReloaded() 
+  then
     
     -- play gun sound and wobble camera
     gunsound:rewind()
@@ -180,7 +182,8 @@ function prototype.tryAttack(self, dt)
     end
     
     -- apply recoil
-    self.inertia:plusequals(-self.torso_facing.x * self.attackRecoil, 0) 
+    self.inertia:plusequals(
+      -self.torso_facing.x * self.attackRecoil, 0) 
     
     -- create projectile
     local prj = Projectile.new(self.pos.x + self.torso_facing.x*10,
