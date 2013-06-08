@@ -64,9 +64,17 @@ local SHROOM_SHEET =
 EnemyBody.SHROOM = 
 {
   tryMove = function(owner, direction)
-    if owner:isAttachedWall() then 
-      owner.view.flip_x = (direction.y > 0)
-    else
+  
+  
+    -- face the player
+    if owner:isAttachedWall() 
+    and (math.abs(direction.y) > owner.h) then
+      if owner.attach == Enemy.WALL_LEFT then 
+        owner.view.flip_x = (direction.y > 0)
+      elseif owner.attach == Enemy.WALL_RIGHT then
+        owner.view.flip_x = (direction.y < 0)
+      end
+    elseif (math.abs(direction.x) > owner.w) then
       owner.view.flip_x = (direction.x > 0)
     end
   end,
