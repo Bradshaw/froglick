@@ -130,17 +130,12 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   
   -- 2. place the player character, Spaceman Joe
   if not Spaceman[1] then
-    Spaceman.new(5*Tile.SIZE.x, 5*Tile.SIZE.y)
+    Spaceman.new(0, 0)
   end
   
-  --FIXME
-  Enemy.spawnGround(2*Tile.SIZE.x, 6*Tile.SIZE.y)
-  
-  --FIXME
-  --[[popCandidateCells(stand_cells, function(cell)
+  popCandidateCells(stand_cells, function(cell)
     Spaceman[1].pos:reset((cell.x + 0.5)*Tile.SIZE.x, 
                           (cell.y + 1)*Tile.SIZE.y) end)
-  --]]
   
   -- 3. place the level exit
   if not Gate.pos then
@@ -149,7 +144,7 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   Gate.pos:reset(x, y) 
   
   --FIXME
-  --[[ popCandidateCells(stand_cells, function(cell)
+  popCandidateCells(stand_cells, function(cell)
     local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
     if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) < CLOSEST_GATE2 
     then
@@ -159,10 +154,8 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
       table.insert(stand_cells, cell)
     end
   end)
-  --]]
     
   -- 4. place enemies
-  --[[
   local total = enemies_amount
   
   -- keep trying to place enemies until you run out of candidates
@@ -184,7 +177,6 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
         end end, enemies_amount)
   end
   --print("was unable to place", enemies_amount, "enemies of", total)
-  --]]
   
   -- 5. place vegetation
   stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)

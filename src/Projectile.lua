@@ -44,7 +44,7 @@ prototype.COLLIDES_WALLS = true
 
 -- private local function
 local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
-  --Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
+  Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
   blt.purge = true
 end
 
@@ -91,27 +91,6 @@ end
 METHODS
 --]]----------------------------------------------------------------------------
 
-newLine = function(x1, y1, x2, y2)
-  -- metatable
-  local l = GameObject.new(x1, y1, true, -10)  -- no id generated
-  setmetatable(l, {__index = prototype })
-  
-  l.x1, l.y1 = x1, y1
-  l.x2, l.y2 = x2, y2
-  l.draw = function(self)
-    love.graphics.line(self.x1, self.y1, self.x2, self.y2)
-    love.graphics.setColor(255, 0, 0)
-      love.graphics.rectangle("fill", self.x1-2, self.y1-2, 4, 4)
-    love.graphics.setColor(0, 0, 255)
-      love.graphics.rectangle("fill", self.x2-2, self.y2-2, 4, 4)
-    love.graphics.setColor(255, 255, 255)
-    
-  end
-  
-  -- return the instance
-  return l
-end
-
 function prototype.update(self, dt)
  
   -- super-class update
@@ -119,7 +98,6 @@ function prototype.update(self, dt)
 end
 
 prototype.onPurge = function(self)
-  newLine(self.start_x, self.start_y, self.pos.x, self.pos.y)
   splode(self)
 end
 
@@ -128,7 +106,8 @@ prototype.onWallCollision = function(self)
 end
 
 prototype.onObjectCollision = function(self, other)
-  self.pos:reset(other.pos)
+  self.pos.x = other.pos.x
+  self.pos.y = other.pos.y - other.h/2
   self.purge = true
 end
 

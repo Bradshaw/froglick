@@ -38,9 +38,9 @@ function Sparkle.new(x,y,dx,dy)
 end
 
 function Sparkle.newBooster(...)
-	--local self = Sparkle.new(...)
-	--self.fisix = Sparkle.FISIX.BOOSTER
-	--return self
+	local self = Sparkle.new(...)
+	self.fisix = Sparkle.FISIX.BOOSTER
+	return self
 end
 
 function Sparkle_mt.update( self, dt )

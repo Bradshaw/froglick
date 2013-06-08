@@ -87,7 +87,7 @@ function prototype.update(self, dt)
   ) -- end useful.map
   
   
-  -- add all background objects AFTER full update
+  -- add new objects at the end of the update
   for k, v in pairs(self.__deferred_add) do
     table.insert(self.game_objects, 1, v)
   end
@@ -97,11 +97,7 @@ function prototype.update(self, dt)
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
 end
 
-function prototype.addForeground(self, object)
-  table.insert(self.game_objects, object)
-end
-
-function prototype.addBackground(self, object)
+function prototype.addObject(self, object)
   -- inserting at the beginning of the table during an update is a BAD idea
   table.insert(self.__deferred_add, object)
 end

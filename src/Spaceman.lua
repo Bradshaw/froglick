@@ -266,7 +266,7 @@ function Spaceman.new(x, y)
   self.type = GameObject.TYPE_SPACEMAN
   
   -- MVC
-  self.view = DebugView --SpacemanView
+  self.view = SpacemanView
   self.controller = KeyboardController
   
   -- combat

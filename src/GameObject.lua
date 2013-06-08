@@ -123,7 +123,7 @@ function prototype.snap_to_collision(self, dx, dy, max)
   end
 end
 
-function prototype.wall_collisions_fastobject(self, dt)    
+function prototype.wall_collisions_fastobject(self, dt) 
   -- short-hand alias
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
@@ -134,7 +134,7 @@ function prototype.wall_collisions_fastobject(self, dt)
   
   -- broad-phase raycast
   local broad_collision, broad_x, broad_y 
-      = walls:lineCollision(self.pos_prev.x, self.pos_prev.y, self.pos.x, self.pos.y) 
+      = walls:lineCollision(self.pos.x, self.pos.y, new_x, new_y) 
   -- broad-phase collision ?
   if broad_collision then
     -- snap to collision
@@ -337,13 +337,7 @@ function GameObject.new(x, y, no_id, layer)
   end
   
   -- add to list of game objects in the current level 
-  if self.layer <= 0 then
-    -- insert at END of table (foreground)
-    Level.get():addForeground(self)
-  else
-    -- insert at the START of the table (background) *DEFER TILL END OF UPDATE*
-    Level.get():addBackground(self)
-  end
+  Level.get():addObject(self)
   
   return self
 end
@@ -422,6 +416,30 @@ GameObject.can_collide = function(a, b)
 return (a.in_view and b.in_view 
         and a.canCollideObject and b.canCollideObject
         and a:canCollideObject(b) and b:canCollideObject(a))
+end
+
+--[[----------------------------------------------------------------------------
+DEBUG
+--]]--
+
+DebugLine = function(x1, y1, x2, y2)
+  -- metatable
+  local l = GameObject.new(x1, y1, true, -10)  -- no id generated
+  setmetatable(l, {__index = prototype })
+  
+  l.x1, l.y1 = x1, y1
+  l.x2, l.y2 = x2, y2
+  l.draw = function(self)
+    love.graphics.line(self.x1, self.y1, self.x2, self.y2)
+    love.graphics.setColor(255, 0, 0)
+      love.graphics.rectangle("fill", self.x1-2, self.y1-2, 4, 4)
+    love.graphics.setColor(0, 0, 255)
+      love.graphics.rectangle("fill", self.x2-2, self.y2-2, 4, 4)
+    love.graphics.setColor(255, 255, 255)
+  end
+  
+  -- return the instance
+  return l
 end
 
 --[[----------------------------------------------------------------------------
