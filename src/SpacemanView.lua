@@ -70,6 +70,20 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
     if flip_x * sm.legs_side > 0 then
       offset_x = -4*flip_x
     end
+    local flash_angle = 0
+    if sm.torso_facing.x == 0 then
+      if sm.torso_facing.y > 0 then
+        flash_angle = useful.RAD90
+      elseif sm.torso_facing.y < 0 then
+        flash_angle = -useful.RAD90
+      end
+    else
+      if sm.torso_facing.y > 0 then
+        flash_angle = -useful.RAD45*flip_x
+      elseif sm.torso_facing.y < 0 then
+        flash_angle = useful.RAD45*flip_x
+      end
+    end
     
     local shootAnim
     if math.abs(sm.torso_facing.x) > 0 then
@@ -92,7 +106,8 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   	if sm:isAttacking() then
 	  	shootAnim:draw(sm.pos.x + offset_x, sm.pos.y - 32, 0, 
           flip_x, 1, 16+math.random(-1,1), math.random(-1,1))
-      SpacemanView.ANIM_MUZZLE:draw(sm.pos.x, sm.pos.y-19, 0, -sm.legs_side, 
+      SpacemanView.ANIM_MUZZLE:draw(sm.pos.x, sm.pos.y-19, 
+          flash_angle, flip_x, 
           useful.tri(self.muzflip,1,-1), 96+13+math.random(-1,1), 12)
     
     -- weapon raised but not attacking

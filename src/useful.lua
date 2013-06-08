@@ -113,6 +113,9 @@ function useful.dist2(x1, y1, x2, y2)
   return (dx*dx + dy*dy)
 end
 
+useful.RAD45 = math.pi / 4 
+useful.RAD90 = math.pi / 2 
+
 -- Hue-Saturation-Value function o' death
 function useful.hsv(H, S, V, A, div, max, ang)
   local max = max or 255
