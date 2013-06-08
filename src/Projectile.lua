@@ -63,9 +63,6 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
   local self = GameObject.new(x, y, true, 10)  -- no id generated, background
   setmetatable(self, {__index = prototype })
   
-  -- muzzle-blast o' death
-  --MuzzleBlast.new(x + ndx*5, y + ndy *5 + 15)
-  
   -- type
   --! FIXME
   self.type = GameObject.TYPE_SPACEMAN_PROJECTILE
@@ -79,6 +76,7 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
   
   self.start_x = self.pos.x
   self.start_y = self.pos.y
+  self.isSuperfast = true
   
   if onCollision then
     self.onCollision = onCollision
@@ -115,18 +113,23 @@ newLine = function(x1, y1, x2, y2)
 end
 
 function prototype.update(self, dt)
+ 
   -- super-class update
   super.update(self, dt)
 end
 
-prototype.onWallCollision = function(self)
+prototype.onPurge = function(self)
   newLine(self.start_x, self.start_y, self.pos.x, self.pos.y)
   splode(self)
 end
 
+prototype.onWallCollision = function(self)
+  self.purge = true
+end
+
 prototype.onObjectCollision = function(self, other)
   self.pos:reset(other.pos)
-  splode(self)
+  self.purge = true
 end
 
 prototype.canCollideObject = function(self, other)

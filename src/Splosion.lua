@@ -99,8 +99,9 @@ prototype.update = function(self, dt)
 end
 
 prototype.canCollideObject = function(self, other)
-  return ((other.type == GameObject.TYPE_ENEMY)
-        or (other.type == GameObject.TYPE_SPACEMAN))
+return false
+  --[[ return ((other.type == GameObject.TYPE_ENEMY)
+        or (other.type == GameObject.TYPE_SPACEMAN))--]]
 end
 
 

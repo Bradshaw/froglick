@@ -96,7 +96,8 @@ function prototype.__tostring(self)
 end
 
 function prototype.superfast(self)
-  return ((math.abs(self.inertia.x)*MAX_DT > Tile.SIZE.x + self.w) 
+  return (self.isSuperfast
+          or (math.abs(self.inertia.x)*MAX_DT > Tile.SIZE.x + self.w) 
           or (math.abs(self.inertia.y)*MAX_DT > Tile.SIZE.y + self.h))
 end
 
@@ -221,6 +222,7 @@ Called each frame
 --]]
 
 function prototype.update(self, dt)
+  
   -- short-hand alias
   local walls = Level.get().tilegrid
   local fisix = self.fisix or self
@@ -403,6 +405,7 @@ GameObject.__collision_slow_slow = function(a, b)
 end
 
 GameObject.collision = function(a, b)
+  
   -- collisions are handled different for very fast objects (ray-cast)
   if (not a:superfast()) and (not b:superfast()) then
     return GameObject.__collision_slow_slow(a, b)

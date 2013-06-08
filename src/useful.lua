@@ -9,6 +9,9 @@ function useful.map(objects, ...)
     local obj = objects[oi]
     -- check if the object needs to be removed
     if obj.purge then
+      if obj.onPurge then
+        obj:onPurge()
+      end
       table.remove(objects, oi)
     else
       -- for each function...
