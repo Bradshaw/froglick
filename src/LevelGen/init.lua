@@ -26,7 +26,17 @@ end
 LevelGen.generator = {}
 
 LevelGen.generator[LevelGen.DEFAULT] = function(grid)
-	local grid = TileGrid.new(100, 100)
+
+  local grid = TileGrid.new(5, 5)
+  for i,v in ipairs(grid.tiles) do
+    for j,u in ipairs(v) do
+      u.wall = Tile.EMPTY
+    end
+  end
+  return grid
+  
+  --[[
+  local grid = TileGrid.new(100, 100)
 	local blobbiness = 3
 	local dug = 0
 	LevelGen.dirty(grid,0.35,Tile.FULL,Tile.EMPTY)
@@ -56,7 +66,7 @@ LevelGen.generator[LevelGen.DEFAULT] = function(grid)
 	LevelGen.slopify(grid)
 	LevelGen.unspikeify(grid)
 	LevelGen.setPartsToDist(grid)
-	return grid
+	return grid --]]
 end
 
 

@@ -38,6 +38,7 @@ function love.load(arg)
 	gstate.switch(game)
 end
 
+DEBUG = true
 
 function love.focus(f)
 	gstate.focus(f)

@@ -133,14 +133,15 @@ function prototype.wall_collisions_fastobject(self, dt)
   
   -- broad-phase raycast
   local broad_collision, broad_x, broad_y 
-      = walls:lineCollision(self.pos.x, self.pos.y, new_x, new_y) 
+      = walls:lineCollision(self.pos_prev.x, self.pos_prev.y, self.pos.x, self.pos.y) 
   -- broad-phase collision ?
   if broad_collision then
     -- snap to collision
-    self.pos:reset(broad_x, broad_y)
+    --self.pos:reset(broad_x, broad_y)
     local snap_dir = self.inertia:normalized()
     self:snap_from_collision(-snap_dir.x, -snap_dir.y, 
                               Tile.SIZE.x + Tile.SIZE.y)
+    self:snap_to_collision(snap_dir.x, snap_dir.y)
     -- stop moving
     self.inertia:reset(0, 0)
     -- execute callback

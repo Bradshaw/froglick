@@ -68,11 +68,11 @@ prototype.update = function(self, dt)
   super.update(self, dt)
   
   -- fade away
-  local amount = dt*100
+  --[[local amount = dt*100
   self.w, self.h, self.pos.y = self.w - amount, self.h - amount, self.pos.y - amount/2
   if self.w <= 1 or self.h <= 1 then
     self.purge = true
-  end
+  end--]]
 end
 
 prototype.canCollideObject = function(self, other)

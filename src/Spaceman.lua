@@ -26,7 +26,6 @@ require("SpacemanView")
 require("KeyboardController")
 Sparkle = require("Sparkle")
 require("Projectile")
-require("Splosion")
 
 gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
 
@@ -267,7 +266,7 @@ function Spaceman.new(x, y)
   self.type = GameObject.TYPE_SPACEMAN
   
   -- MVC
-  self.view = SpacemanView
+  self.view = DebugView --SpacemanView
   self.controller = KeyboardController
   
   -- combat

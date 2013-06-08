@@ -44,7 +44,7 @@ prototype.COLLIDES_WALLS = true
 
 -- private local function
 local splode = function(blt) -- blt = Bacon, lettuce and tomato ;)
-  Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
+  --Splosion.new(blt.pos.x, blt.pos.y, 15, 10)
   blt.purge = true
 end
 
@@ -64,7 +64,7 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
   setmetatable(self, {__index = prototype })
   
   -- muzzle-blast o' death
-  MuzzleBlast.new(x + ndx*5, y + ndy *5 + 15)
+  --MuzzleBlast.new(x + ndx*5, y + ndy *5 + 15)
   
   -- type
   --! FIXME
@@ -76,6 +76,10 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
     self.pos_prev:reset(firer.pos)
     self.inertia:plusequals(firer.inertia)
   end
+  
+  self.start_x = self.pos.x
+  self.start_y = self.pos.y
+  
   if onCollision then
     self.onCollision = onCollision
   end
@@ -89,12 +93,34 @@ end
 METHODS
 --]]----------------------------------------------------------------------------
 
+newLine = function(x1, y1, x2, y2)
+  -- metatable
+  local l = GameObject.new(x1, y1, true, -10)  -- no id generated
+  setmetatable(l, {__index = prototype })
+  
+  l.x1, l.y1 = x1, y1
+  l.x2, l.y2 = x2, y2
+  l.draw = function(self)
+    love.graphics.line(self.x1, self.y1, self.x2, self.y2)
+    love.graphics.setColor(255, 0, 0)
+      love.graphics.rectangle("fill", self.x1-2, self.y1-2, 4, 4)
+    love.graphics.setColor(0, 0, 255)
+      love.graphics.rectangle("fill", self.x2-2, self.y2-2, 4, 4)
+    love.graphics.setColor(255, 255, 255)
+    
+  end
+  
+  -- return the instance
+  return l
+end
+
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
 end
 
 prototype.onWallCollision = function(self)
+  newLine(self.start_x, self.start_y, self.pos.x, self.pos.y)
   splode(self)
 end
 
