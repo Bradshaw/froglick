@@ -93,7 +93,12 @@ function prototype.update(self, dt)
   
   
   -- update view
-  self.view:update(dt)
+  if self.view:update(dt) then
+    -- animation end
+    self:setStateAnimation(new_state)
+  end
+  
+  
   if self.attach == Enemy.WALL_LEFT then
     self.view.rotation = useful.RAD90
   elseif self.attach == Enemy.WALL_RIGHT then
@@ -119,17 +124,27 @@ end
 States
 --]]--
 
-function prototype:setState(new_state)
+function prototype:setStateAnimation(new_state)
   if new_state == prototype.IDLING then
     self.view:setAnimation(self.body.anim_idle)
-    -- do stuff
   elseif new_state == prototype.HUNTING then
     self.view:setAnimation(self.body.anim_agressive)
-    self.timer = Enemy.HUNTING_TIMEOUT -- act as boredom timer
   elseif new_state == prototype.FIGHTING then
     self.view:setAnimation(self.body.anim_agressive)
+  elseif new_state == prototype.ATTACKING then
+    self.view:setAnimation(self.body.anim_agressive)
+  end
+end
+
+function prototype:setState(new_state)
+  if new_state == prototype.IDLING then
+    -- do stuff
+  elseif new_state == prototype.HUNTING then
+    self.timer = Enemy.HUNTING_TIMEOUT -- act as boredom timer
+  elseif new_state == prototype.FIGHTING then
     self.timer = 0 -- act as reload timer
   end
+  self:setStateAnimation(new_state)
   self.state = new_state
 end
 

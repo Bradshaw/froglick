@@ -52,6 +52,9 @@ EnemyWeapon.BITE =
     -- create a 'bite' object to deal damage to enemies
     MuzzleBlast.new(v.x, v.y, EnemyWeapon.BITE.DAMAGE, 
                     GameObject.TYPE_SPACEMAN)
+    
+    -- play bite animation
+    wielder.body.attackAnimation(wielder)
   end,
   
   canAttack = function(wielder, t)

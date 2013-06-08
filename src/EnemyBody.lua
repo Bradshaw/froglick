@@ -90,6 +90,12 @@ EnemyBody.SHROOM =
   getHitpoints = function()
     return 220
   end,
+      
+  attackAnimation = function(owner)
+    owner.view:setAnimation(owner.body.anim_attack)
+    owner.view.speed = 3
+  end,
+
             
   anim_idle = 
     Animation(SHROOM_SHEET, 32, 32, 1),
@@ -98,7 +104,7 @@ EnemyBody.SHROOM =
     Animation(SHROOM_SHEET, 32, 32, 1, 32),
   
   anim_attack = 
-    Animation(SHROOM_SHEET, 32, 32, 2, 64, 0),
+    Animation(SHROOM_SHEET, 32, 32, 3, 32, 0),
   
   __tostring = function()
     return "shroom"
