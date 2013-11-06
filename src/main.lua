@@ -76,10 +76,14 @@ function keyreleased(key, uni)
 	gstate.keyreleased(key)
 end
 
-MAX_DT = 1/30 -- global!
+MAX_DT = 1/60 -- global!
 function love.update(dt)
+  -- update
   dt = math.min(MAX_DT, dt)
-	gstate.update(dt)
+  gstate.update(dt)
+
+  -- collect garbage
+  --collectgarbage("collect")
 end
 
 function love.draw()
@@ -87,7 +91,7 @@ function love.draw()
 	love.graphics.print(love.timer.getFPS(),10,10)
 
 	-- draw the log
-	if DEBUG then
+	--if DEBUG then
 		log:draw()
-	end
+	--end
 end

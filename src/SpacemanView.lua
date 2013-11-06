@@ -47,7 +47,7 @@ CLASS (STATIC) FUNCTIONS
 function SpacemanView.draw(self, sm) -- sm = Spaceman
   
   -- ENERGY (halo background)
-  love.graphics.setColor(255, 255, 223, 64)
+  love.graphics.setColor(255, 255, 223, 32)
   love.graphics.setBlendMode("additive")
     local halo_size = (sm.energy/100)*24 + 16
       love.graphics.circle("fill", sm.pos.x + useful.signedRand(3), sm.pos.y - 16  + useful.signedRand(3), halo_size)

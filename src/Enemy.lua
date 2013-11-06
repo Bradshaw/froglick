@@ -115,6 +115,13 @@ function prototype.update(self, dt)
   self:state(dt)
 end
 
+function prototype.die(self)
+    -- Muy blood !
+    for i = 1, 20 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 14, math.random()*196 + 128)
+    end
+end
+
 --[[----------------------------------------------------------------------------
 States
 --]]--
@@ -218,6 +225,10 @@ prototype.onObjectCollision = function(self, other)
   and (not other.has_dealt_damage) then
     self:takeDamage(other.damage)
     other.has_dealt_damage = true
+    -- Blood !
+    for i = 1, 5 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64)
+    end
   end
 end
 
