@@ -24,6 +24,9 @@ require("EnemyBody")
 require("EnemyWeapon")
 local AnimationView = require("AnimationView")
 
+local deathsound = love.audio.newSource("audio/enemy_die.wav")
+deathsound:setVolume(1.6)
+
  
 --[[----------------------------------------------------------------------------
 CLASS
@@ -120,6 +123,8 @@ function prototype.die(self)
     for i = 1, 20 do
       Sparkle.newBlood(self.pos.x, self.pos.y - 14, math.random()*196 + 128)
     end
+    deathsound:rewind()
+    deathsound:play()
 end
 
 --[[----------------------------------------------------------------------------

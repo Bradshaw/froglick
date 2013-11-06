@@ -52,7 +52,7 @@ end
 -- default values
 prototype.w = 1
 prototype.h = 1
-prototype.damage = 33
+prototype.damage = 70
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS

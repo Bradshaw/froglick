@@ -27,7 +27,7 @@ require("KeyboardController")
 Sparkle = require("Sparkle")
 require("Projectile")
 
-gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
+local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
 
 --[[----------------------------------------------------------------------------
 CLASS

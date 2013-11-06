@@ -31,7 +31,8 @@ local AnimationView = Class
   init = function(self, anim, speed, frame)
     self.anim = anim
     self.speed = (speed or 0.0)
-    self.frame = (frame or math.random(self.anim.n_frames))
+    self.frame = useful.clamp(frame or math.random(self.anim.n_frames), 
+                              1, self.anim.n_frames)
   end,
       
   offx = 0,
@@ -61,7 +62,7 @@ function AnimationView:update(dt)
     return true -- animation end
   end
   if self.frame < 1 then
-    self.frame = self.frame + self.anim.n_frames - 1
+    self.frame = self.frame + self.anim.n_frames
     return true -- animation end
   end
   return false -- animation continues
