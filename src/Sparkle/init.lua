@@ -40,6 +40,7 @@ end
 function Sparkle.newBooster(...)
 	local self = Sparkle.new(...)
 	self.fisix = Sparkle.FISIX.BOOSTER
+  	self.inFrontOfVignette = true
 	return self
 end
 

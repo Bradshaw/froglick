@@ -28,6 +28,11 @@ Camera = require("Camera")
 require("Projectile")
 require("Splosion")
 
+--[[----------------------------------------------------------------------------
+RESOURCES
+--]]----------------------------------------------------------------------------
+
+local VIGNETTE = love.graphics.newImage("images/vignette.png")
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -104,24 +109,47 @@ end
   
 function prototype.draw(self)
   
-  love.graphics.push()
-    --Indent to show graphics stack level
-    local camx, camy = self.camera:getBounds()
-    love.graphics.translate(-camx, -camy)
+  local camx, camy = self.camera:getBounds()
 
-    -- draw the background
-    -- TODO
+  -- Indent to show graphics stack level
+  love.graphics.push()
+    -- take camera into account
+    love.graphics.translate(-camx, -camy)
     
     -- draw the terrain
     self.tilegrid:draw()
     
-    -- draw game objects (characters, particles, etc)
+    -- draw game objects (characters, particles, etc) that should be drawn behind vignette
     useful.map(self.game_objects, 
         function(object) 
-          object:draw() 
+          if not object.inFrontOfVignette then 
+            object:draw() 
+          end
         end)
-        
-  --unindent to show graphics stack level
+
+  -- unindent to show graphics stack level
+  love.graphics.pop()
+
+
+  -- draw vignette
+  love.graphics.setColor(0, 0, 0, ((1 - Spaceman[1].energy/100)*0.8 + 0.2)*255)
+    local scalex, scaley = love.graphics.getWidth()/VIGNETTE:getWidth(), love.graphics.getHeight()/VIGNETTE:getHeight()
+    love.graphics.draw(VIGNETTE, 0, 0, 0, scalex, scaley)
+  love.graphics.setColor(255, 255, 255)
+
+  -- Indent to show graphics stack level
+  love.graphics.push()
+    -- take camera into account
+      love.graphics.translate(-camx, -camy)
+
+    -- draw game objects (characters, particles, etc) that should be drawn behind vignette
+    useful.map(self.game_objects, 
+        function(object) 
+          if object.inFrontOfVignette or (object.type == GameObject.TYPE_SPACEMAN_PROJECTILE) then 
+            object:draw() 
+          end
+        end)
+  -- unindent to show graphics stack level
   love.graphics.pop()
 end
 

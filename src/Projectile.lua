@@ -64,14 +64,16 @@ Projectile.new = function(x, y, ndx, ndy, firer, onCollision) -- nd_ = normalise
   setmetatable(self, {__index = prototype })
   
   -- type
-  --! FIXME
   self.type = GameObject.TYPE_SPACEMAN_PROJECTILE
+
+  -- ignore shadows
+  self.inFrontOfVignette = true
   
   -- initialise attributes
   self.inertia:reset(ndx*self.SPEED, ndy*self.SPEED)
   if firer then 
     self.pos_prev:reset(firer.pos)
-    self.inertia:plusequals(firer.inertia)
+    --self.inertia:plusequals(firer.inertia)
   end
   
   self.start_x = self.pos.x

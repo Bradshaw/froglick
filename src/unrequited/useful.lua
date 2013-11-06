@@ -1,26 +1,39 @@
-useful = { }
+--[[
+"Unrequited", a Löve 2D extension library
+(C) Copyright 2013 William Dyce
+
+
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Lesser General Public License
+(LGPL) version 2.1 which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/lgpl-2.1.html
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
+--]]
+
+local useful = { }
 
 -- map a set of functions to a set of objects
-function useful.map(objects, ...)
-  local args = useful.packArgs(...)
+function useful.map(objects, func)--...)
+  --local args = useful.packArgs(...)
   local oi = 1
   -- for each object...
   while oi <= #objects do
     local obj = objects[oi]
     -- check if the object needs to be removed
     if obj.purge then
-      if obj.onPurge then
-        obj:onPurge()
-      end
       table.remove(objects, oi)
     else
       -- for each function...
-      for fi, func in ipairs(args) do
+      --for fi, func in ipairs(args) do
         -- map function to object
-        if type(func)=="function" then -- Make sure it's a function, because, the 1st arguement is an object
+        --if type(func)=="function" then -- Make sure it's a function, because, the 1st arguement is an object
           func(obj, oi, objects)
-        end
-      end -- for fi, func in ipairs(arg)
+        --end
+      --end -- for fi, func in ipairs(arg)
       -- next object
       oi = oi + 1
     end -- if obj.purge
@@ -65,7 +78,7 @@ function useful.round(x, n)
   else
     -- round to nearest integer
     local floor = math.floor(x)
-    if (x - floor) > 0.5 then
+    if (x - floor) < 0.5 then
       return floor
     else
       return math.ceil(x)
@@ -93,6 +106,7 @@ function useful.ceil(x, n)
   end
 end
 
+-- sign of a number: -1, 0 or 1
 function useful.sign(x)
   if x > 0 then 
     return 1 
@@ -103,10 +117,10 @@ function useful.sign(x)
   end
 end
 
+-- square a number
 function useful.sqr(x)
   return x*x
 end
-
 
 -- square distance between 2 points
 function useful.dist2(x1, y1, x2, y2)
@@ -143,51 +157,18 @@ function useful.lerp(a, b, amount)
   return ((1-amount)*a + amount*b)
 end
 
-useful.RAD45 = math.pi / 4 
-useful.RAD90 = math.pi / 2 
+function useful.printf(text, x, y, angle, maxwidth)
+  
+  maxwidth = (maxwidth or 0)/SCALE_MIN
 
--- Hue-Saturation-Value function o' death
-function useful.hsv(H, S, V, A, div, max, ang)
-  local max = max or 255
-  local ang = ang or 360
-  local ang6 = ang/6
-  local r, g, b
-  local div = div or 100
-  local S = (S or div)/div
-  local V = (V or div)/div
-  local A = (A or div)/div * max
-  local H = H%ang
-  if H>=0 and H<=ang6 then
-    r = 1
-    g = H/ang6
-    b = 0
-  elseif H>ang6 and H<=2*ang6 then
-    r = 1 - (H-ang6)/ang6
-    g = 1
-    b = 0
-  elseif H>2*ang6 and H<=3*ang6 then
-    r = 0
-    g = 1
-    b = (H-2*ang6)/ang6
-  elseif H>180 and H <= 240 then
-    r = 0
-    g = 1- (H-3*ang6)/ang6
-    b = 1
-  elseif H>4*ang6 and H<= 5*ang6 then
-    r = (H-4*ang6)/ang6
-    g = 0
-    b = 1
-  else
-    r = 1
-    g = 0
-    b = 1 - (H-5*ang6)/ang6
-  end
-  local top = (V*max)
-  local bot = top - top*S
-  local dif = top - bot
-  r = bot + r*dif
-  g = bot + g*dif
-  b = bot + b*dif
-
-  return r, g, b, A
+  love.graphics.push()
+    love.graphics.scale(SCALE_MIN, SCALE_MIN)
+    love.graphics.translate(x, y)
+    if angle then
+      love.graphics.rotate(angle)
+    end
+    love.graphics.printf(text, -maxwidth*0.5, 0, maxwidth, "center")
+  love.graphics.pop()
 end
+
+return useful

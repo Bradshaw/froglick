@@ -1,4 +1,10 @@
+
+
 function love.load(arg)
+
+	log = require("unrequited/log")
+	DEBUG = false
+
 	fontim = love.graphics.newImage("images/font.png")
     fontim:setFilter("nearest","nearest")
     font = love.graphics.newImageFont("images/myfont.png",
@@ -79,4 +85,9 @@ end
 function love.draw()
 	gstate.draw()
 	love.graphics.print(love.timer.getFPS(),10,10)
+
+	-- draw the log
+	if DEBUG then
+		log:draw()
+	end
 end

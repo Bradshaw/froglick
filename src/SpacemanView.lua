@@ -46,8 +46,16 @@ CLASS (STATIC) FUNCTIONS
 
 function SpacemanView.draw(self, sm) -- sm = Spaceman
   
+  -- ENERGY (halo background)
+  love.graphics.setColor(255, 255, 223, 64)
+  love.graphics.setBlendMode("additive")
+    local halo_size = (sm.energy/100)*24 + 16
+      love.graphics.circle("fill", sm.pos.x + useful.signedRand(3), sm.pos.y - 16  + useful.signedRand(3), halo_size)
+    local halo_size = halo_size*0.7
+      love.graphics.circle("fill", sm.pos.x + useful.signedRand(3), sm.pos.y - 16  + useful.signedRand(3), halo_size)
   love.graphics.setColor(255, 255, 255, 255)
-  
+  love.graphics.setBlendMode("alpha")
+
   -- LEGS
   if sm.airborne then
     SpacemanView.ANIM_AIRBORNE:draw(sm.pos.x, sm.pos.y - 32, 0, -sm.legs_side, 1, 16, 0)
@@ -119,8 +127,6 @@ function SpacemanView.draw(self, sm) -- sm = Spaceman
   	SpacemanView.ANIM_UPPER_BODY:draw(sm.pos.x, sm.pos.y - 32, 
                               0, -sm.legs_side, 1, 16, 0)
   end
-  love.graphics.setColor(64,127,255)
-  love.graphics.rectangle("fill",sm.pos.x-8,sm.pos.y-34,sm.energy/100*16,2)
 end
 
 
