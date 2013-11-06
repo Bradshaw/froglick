@@ -83,7 +83,7 @@ function love.update(dt)
   gstate.update(dt)
 
   -- collect garbage
-  --collectgarbage("collect")
+  collectgarbage("collect")
 end
 
 function love.draw()

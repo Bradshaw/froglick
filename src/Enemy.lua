@@ -25,7 +25,7 @@ require("EnemyWeapon")
 local AnimationView = require("AnimationView")
 
 local deathsound = love.audio.newSource("audio/enemy_die.wav")
-deathsound:setVolume(1.6)
+deathsound:setVolume(2)
 
  
 --[[----------------------------------------------------------------------------
@@ -121,7 +121,8 @@ end
 function prototype.die(self)
     -- Muy blood !
     for i = 1, 20 do
-      Sparkle.newBlood(self.pos.x, self.pos.y - 14, math.random()*196 + 128)
+      Sparkle.newBlood(self.pos.x, self.pos.y - 14, math.random()*196 + 128,
+        32, 255, 64)
     end
     deathsound:rewind()
     deathsound:play()
@@ -141,6 +142,8 @@ function prototype:setState(new_state)
   elseif new_state == prototype.FIGHTING then
     self.view:setAnimation(self.body.anim_agressive)
     self.timer = 0 -- act as reload timer
+  elseif new_state == prototype.ATTACKING then
+    self.view:setAnimation(self.body.anim_attack)
   end
   self.state = new_state
 end
@@ -232,7 +235,8 @@ prototype.onObjectCollision = function(self, other)
     other.has_dealt_damage = true
     -- Blood !
     for i = 1, 5 do
-      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64)
+      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64, 
+        32, 255, 64)
     end
   end
 end

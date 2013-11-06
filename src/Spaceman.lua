@@ -210,6 +210,27 @@ function prototype:weaponRaised()
   return (self.attackTime < self.attackTimeout*5)
 end
 
+--[[----------------------------------------------------------------------------
+Collisions
+--]]--
+
+prototype.onObjectCollision = function(self, other)
+
+  if (other.type == GameObject.TYPE_SPLOSION) and (not other.has_dealt_damage) then
+    self:takeDamage(other.damage)
+    other.has_dealt_damage = true
+    toggleDrunk = 3
+    -- Blood !
+    for i = 1, 20 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64,
+        255, 0, 20)
+    end
+  end
+end
+
+prototype.canCollideObject = function(self, other)
+  return (other.type == GameObject.TYPE_SPLOSION)
+end
 
 --[[----------------------------------------------------------------------------
 Update

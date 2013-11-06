@@ -53,7 +53,7 @@ Sparkle.FISIX.BLOOD =
   CLIMB_SLOPES = true
 }
 
-function Sparkle.newBlood(x, y, speed)
+function Sparkle.newBlood(x, y, speed, r, g, b)
 
 	local a = math.random()*math.pi
 	local dx, dy = math.cos(a)*speed, -math.sin(a)*speed
@@ -65,7 +65,7 @@ function Sparkle.newBlood(x, y, speed)
 	{
 		draw = function(self, target)
 			love.graphics.setBlendMode("additive")
-			love.graphics.setColor(32, 255, 64, 128 + 128*(1-(target.age/target.dieAt)))
+			love.graphics.setColor(r, g, b, 128 + 128*(1-(target.age/target.dieAt)))
 			love.graphics.point(target.pos.x, target.pos.y)
 			love.graphics.setBlendMode("alpha")
 		end

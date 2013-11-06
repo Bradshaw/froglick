@@ -49,7 +49,7 @@ function MuzzleBlast.new(x, y, damage, target_type)
   
   -- types
   self.type = GameObject.TYPE_SPLOSION
-  self.target_type = target_type or GameObject.TYPE_ENEMY
+  self.target_type = (target_type or GameObject.TYPE_ENEMY)
   
   -- size
   self.w, self.h = 30, 30
