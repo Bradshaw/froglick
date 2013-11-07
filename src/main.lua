@@ -1,5 +1,3 @@
-
-
 function love.load(arg)
 
 	log = require("unrequited/log")
@@ -28,9 +26,9 @@ function love.load(arg)
 	end
     love.graphics.setFont(font)
 	local modes = love.graphics.getModes()
-	table.sort(modes, function(a, b) return a.width*a.height < b.width*b.height end)
+	table.sort(modes, function(a, b) return a.width*a.height > b.width*b.height end)
 	local m = modes[#modes]
-  	--local success = love.graphics.setMode( m.width, m.height, true )
+  	local success = love.graphics.setMode( m.width, m.height, true )
   	local success = true
   
 	if not success then
@@ -42,6 +40,16 @@ function love.load(arg)
 	gstate = require "gamestate"
 	game = require("game")
 	gstate.switch(game)
+
+	-- music by Tom Fylnn !
+	local music = love.audio.newSource("audio/music.ogg")
+	music:setLooping(true)
+	music:setVolume(0.5)
+	music:play()
+
+
+    -- no mouse
+ 	love.mouse.setVisible(false)
 end
 
 function love.focus(f)
@@ -92,6 +100,6 @@ function love.draw()
 
 	-- draw the log
 	--if DEBUG then
-		log:draw()
+		--log:draw()
 	--end
 end

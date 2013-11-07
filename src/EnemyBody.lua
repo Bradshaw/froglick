@@ -78,7 +78,7 @@ EnemyBody.SHROOM =
   end,
       
   getSize = function()
-    return Tile.SIZE.x / 2, Tile.SIZE.y
+    return Tile.SIZE.x, Tile.SIZE.y
   end,
       
   getHitpoints = function()

@@ -155,7 +155,7 @@ function prototype.draw(self)
 
 
   -- draw blood overlay
-  love.graphics.setColor(255, 0, 0, (100-Spaceman[1].hitpoints)/100*255)
+  love.graphics.setColor(255, 0, 0, (100-Spaceman[1].hitpoints)/100*200)
     scalex, scaley = love.graphics.getWidth()/BLOOD:getWidth(), love.graphics.getHeight()/BLOOD:getHeight()
     love.graphics.draw(BLOOD, 0, 0, 0, scalex, scaley)
   love.graphics.setColor(255, 255, 255)
