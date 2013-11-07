@@ -28,6 +28,9 @@ Sparkle = require("Sparkle")
 require("Projectile")
 
 local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
+local hurtsound = love.audio.newSource("audio/player_hurt.wav")
+hurtsound:setVolume(3)
+local diesound = love.audio.newSource("audio/player_die.wav")
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -219,7 +222,9 @@ prototype.onObjectCollision = function(self, other)
   if (other.type == GameObject.TYPE_SPLOSION) and (not other.has_dealt_damage) then
     self:takeDamage(other.damage)
     other.has_dealt_damage = true
-    toggleDrunk = 3
+    toggleDrunk = (100-self.hitpoints)/10
+    hurtsound:rewind()
+    hurtsound:play()
     -- Blood !
     for i = 1, 20 do
       Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64,
@@ -230,6 +235,11 @@ end
 
 prototype.canCollideObject = function(self, other)
   return (other.type == GameObject.TYPE_SPLOSION)
+end
+
+prototype.die = function()
+  diesound:rewind()
+  diesound:play()
 end
 
 --[[----------------------------------------------------------------------------

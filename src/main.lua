@@ -88,10 +88,10 @@ end
 
 function love.draw()
 	gstate.draw()
-	love.graphics.print(love.timer.getFPS(),10,10)
+	--love.graphics.print(love.timer.getFPS(),10,10)
 
 	-- draw the log
-	--if DEBUG then
+	if DEBUG then
 		log:draw()
-	--end
+	end
 end

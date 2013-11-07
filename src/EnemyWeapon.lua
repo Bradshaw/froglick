@@ -38,7 +38,7 @@ EnemyWeapon.BITE =
 {
   RANGE = 20,
   RANGE2 = 20*20,
-  DAMAGE = 17,
+  DAMAGE = 6,
   RELOAD_TIME = 1.5,
   
   attack = function(wielder, target_pos)
