@@ -41,7 +41,7 @@ function state:init()
 	cnv:setFilter("nearest","nearest")
 	toggleDrunk = 0
 
-	self.remaining_time = 600
+	self.remaining_time = 150
 end
 
 
@@ -86,13 +86,13 @@ function state:keypressed(key, uni)
 	end
 	if DEBUG and key=="m" then
 		Level.reset()
-		self.remaining_time = 600
+		self.remaining_time = 150
 	end
 
 
-	if (Spaceman[1].hitpoints <= 0) or (Level.get().current_enemies == 0) or (self.remaining_time == 0) then
+	if (Spaceman[1].hitpoints < 1) or (Level.get().current_enemies == 0) or (self.remaining_time == 0) then
 		Level.reset()
-		self.remaining_time = 600
+		self.remaining_time = 150
 	end
 end
 
@@ -140,12 +140,12 @@ function state:draw()
 
 	 	total_enemies, current_enemies = Level.get().starting_enemies, Level.get().current_enemies
 
-		if (Spaceman[1].hitpoints <= 0) or (self.remaining_time == 0) then
+		if (Spaceman[1].hitpoints < 1) or (self.remaining_time == 0) then
 			love.graphics.setFont(font)
-			love.graphics.print("YOU LOSE", w*0.5, h*0.4)
+			love.graphics.print("YOU LOSE", w*0.47, h*0.4)
 		elseif total_enemies == 0 then
 			love.graphics.setFont(font)
-			love.graphics.print("YOU WIN", w*0.5, h*0.4)
+			love.graphics.print("YOU WIN", w*0.47, h*0.4)
 		end
 
 		love.graphics.setFont(font)

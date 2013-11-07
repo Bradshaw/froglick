@@ -84,7 +84,7 @@ function keyreleased(key, uni)
 	gstate.keyreleased(key)
 end
 
-MAX_DT = 1/60 -- global!
+MAX_DT = 1/20 -- global!
 function love.update(dt)
   -- update
   dt = math.min(MAX_DT, dt)

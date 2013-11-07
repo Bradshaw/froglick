@@ -34,6 +34,8 @@ local diesound = love.audio.newSource("audio/player_die.wav", "static")
 local boostsound = love.audio.newSource("audio/player_boost.ogg", "static")
   boostsound:setLooping(true)
   boostsound:setVolume(0.2)
+local zethersound = love.audio.newSource("audio/zether.wav", "static")
+
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -239,11 +241,17 @@ prototype.onObjectCollision = function(self, other)
       Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64,
         255, 0, 20)
     end
+  elseif other.type == GameObject.TYPE_ZETHER then
+    game.remaining_time = game.remaining_time + other.time_bonus
+    self.hitpoints = 100
+    other.purge = true
+    zethersound:rewind()
+    zethersound:play()
   end
 end
 
 prototype.canCollideObject = function(self, other)
-  return (other.type == GameObject.TYPE_SPLOSION)
+  return (other.type == GameObject.TYPE_SPLOSION) or (other.type == GameObject.TYPE_ZETHER)
 end
 
 prototype.die = function()

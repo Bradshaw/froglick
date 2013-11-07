@@ -21,6 +21,7 @@ IMPORTS
 
 require("Gate")
 require("Enemy")
+require("Zether")
 
 --[[----------------------------------------------------------------------------
 PRIVATE CONSTANTS -- tweak me ;)
@@ -29,6 +30,7 @@ PRIVATE CONSTANTS -- tweak me ;)
 local CLOSEST_ENEMY2 = 100*100
 local CLOSEST_GATE2 = 400*400
 local DEFAULT_GRASS = 0.5
+local DEFAULT_ZETHER = 0.2
 local DEFAULT_ENEMIES = 100
 
 --[[----------------------------------------------------------------------------
@@ -117,11 +119,12 @@ METHODS
 Main
 --]]--
 
-function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
+function LevelDecorator.decorate(lev, grass_amount, enemies_amount, zether_amount)
 
   -- 0. set missing parameters to default
   grass_amount = grass_amount or DEFAULT_GRASS
   enemies_amount = enemies_amount or DEFAULT_ENEMIES
+  zether_amount = zether_amount or DEFAULT_ZETHER
   
   -- 1. compile a list of all the cells with walls below, above and to the sides
   local stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
@@ -141,17 +144,17 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   -- end
   -- Gate.pos:reset(x, y) 
   
-  --FIXME
-  popCandidateCells(stand_cells, function(cell)
-    local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
-    if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) < CLOSEST_GATE2 
-    then
-      --Gate.pos:reset(x, y) 
-    else
-      -- reject this cell, put it back at the bottom of the stack
-      table.insert(stand_cells, cell)
-    end
-  end)
+  -- --FIXME
+  -- popCandidateCells(stand_cells, function(cell)
+  --   local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
+  --   if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) < CLOSEST_GATE2 
+  --   then
+  --     Gate.pos:reset(x, y) 
+  --   else
+  --     -- reject this cell, put it back at the bottom of the stack
+  --     table.insert(stand_cells, cell)
+  --   end
+  -- end)
     
   -- 4. place enemies
   local total = enemies_amount
@@ -184,11 +187,16 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   lev.starting_enemies = total - enemies_amount
   lev.current_enemies = lev.starting_enemies
   
-  -- 5. place vegetation
-  stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
+  -- 5. place zether
   popPercentageCandidateCells(stand_cells, function(cell)
     lev.tilegrid:gridToTile(cell.x, cell.y).decoration = Tile.DECORATION.GRASS
     end, grass_amount)
+
+  -- 6. place vegetation
+  stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)
+  popPercentageCandidateCells(stand_cells, function(cell)
+    Zether.new(cell.x*32, cell.y*32)
+    end, zether_amount)
 end
 
 
