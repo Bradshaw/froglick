@@ -181,6 +181,8 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
         end end, enemies_amount)
   end
   --print("was unable to place", enemies_amount, "enemies of", total)
+  lev.starting_enemies = total - enemies_amount
+  lev.current_enemies = lev.starting_enemies
   
   -- 5. place vegetation
   stand_cells = pushCandidateCells(lev.tilegrid, groundBelow)

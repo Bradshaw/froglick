@@ -29,9 +29,11 @@ require("Projectile")
 
 local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg", "static")
 local hurtsound = love.audio.newSource("audio/player_hurt.wav", "static")
-hurtsound:setVolume(3)
+  hurtsound:setVolume(3)
 local diesound = love.audio.newSource("audio/player_die.wav", "static")
-local boostsound = love.audio.newSource("audio/player_boost.wav", "static")
+local boostsound = love.audio.newSource("audio/player_boost.ogg", "static")
+  boostsound:setLooping(true)
+  boostsound:setVolume(0.2)
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -118,6 +120,9 @@ function prototype.tryBoost(self, dt)
 
   if self.energy> 10 then
     Sparkle.newBooster(self.pos.x-self.legs_side*8+math.random(-3,3) , self.pos.y-18+math.random(-3,3),-self.inertia.x+math.random(-50,50),math.max(self.inertia.y,0) + 500 + math.random(0,250))
+    boostsound:setPitch(1.3)
+  else
+    boostsound:setPitch((self.energy/100)*0.4 + 0.7)
   end
 
   -- boost consumes energy
@@ -129,6 +134,9 @@ function prototype.tryBoost(self, dt)
   
   -- cap maximum upward speed of boost (math.max 'coz up is negative) 
   self.inertia.y = math.max(-self.fisix.BOOST_MAX_DY, self.inertia.y - thrust*dt)
+
+  -- player sound
+  boostsound:play()
 end
 
 function prototype.tryMove(self, dt)
@@ -241,6 +249,7 @@ end
 prototype.die = function()
   diesound:rewind()
   diesound:play()
+  boostsound:stop()
 end
 
 --[[----------------------------------------------------------------------------
@@ -268,6 +277,8 @@ function prototype.update(self, dt)
   -- boost vertically if boost is requested
   if self.requested_boost then
     self:tryBoost(dt)
+  else
+    boostsound:pause()
   end
   
   -- accelerate horizontally if move is requested

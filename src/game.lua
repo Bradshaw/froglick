@@ -89,8 +89,6 @@ function state:keypressed(key, uni)
 
 	if Spaceman[1].hitpoints <= 0 then
 		Level.reset()
-	else
-		log:write(Spaceman[1].hitpoints)
 	end
 end
 
@@ -110,6 +108,9 @@ end
 
 
 function state:draw()
+
+	local w, h = love.graphics.getWidth(), love.graphics.getHeight()
+
 	love.graphics.setCanvas(cnv)
 	love.graphics.clear()
  	Level.get():draw()
@@ -117,21 +118,27 @@ function state:draw()
  	love.graphics.setCanvas(vib)
  	love.graphics.push()
 	 	love.graphics.setColor(255,255,255)
-	 	love.graphics.translate(love.graphics.getWidth()/2+math.sin(time)*2*toggleDrunk,love.graphics.getHeight()/2+math.sin(time/3)*2*toggleDrunk)
+	 	love.graphics.translate(w/2+math.sin(time)*2*toggleDrunk,h/2+math.sin(time/3)*2*toggleDrunk)
 	 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
-	 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
+	 	love.graphics.translate(-w/2,-h/2)
 	 	love.graphics.draw(cnv)
  	love.graphics.pop()
  	
  	love.graphics.setCanvas()
  	love.graphics.push()
 	 	love.graphics.setColor(255,255,255)
-	 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
+	 	love.graphics.translate(-w/2,-h/2)
 	 	love.graphics.scale(2,2)
 	 	love.graphics.draw(vib)
 		if Spaceman[1].hitpoints <= 0 then
-			love.graphics.printf("GAME OVER", love.graphics.getWidth()*0.5, love.graphics.getHeight()*0.3, 0, "center")
+			love.graphics.setFont(font)
+			love.graphics.printf("YOU LOSE", w*0.5, h*0.5, 0, "center")
 		end
+
+		love.graphics.setFont(font)
+		total_enemies, current_enemies = Level.get().starting_enemies, Level.get().current_enemies
+		love.graphics.print(tostring(total_enemies - current_enemies) .. " / " .. tostring(total_enemies), w*0.7, h*0.3)
+
  	love.graphics.pop()
 end
 

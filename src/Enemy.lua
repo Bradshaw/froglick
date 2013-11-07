@@ -82,11 +82,13 @@ function prototype.requestAttack(self, direction)
   local target_pos = self.pos + 10*direction
   if self.weapon.canAttack(self, target_pos) then
     self:__attack(target_pos)
+
   end
 end
 
 function prototype.__attack(self, target_pos)
   self.weapon.attack(self, target_pos)
+  self.view:setAnimation(self.body.anim_attack)
   self.timer = self.weapon.RELOAD_TIME
 end
 
@@ -96,7 +98,11 @@ function prototype.update(self, dt)
   
   
   -- update view
-  self.view:update(dt)
+  if self.view:update(dt) and (self.view.anim == self.body.anim_attack) then
+    self.view:setAnimation(self.body.anim_idle)
+  end
+
+
   if self.attach == Enemy.WALL_LEFT then
     self.view.rotation = useful.RAD90
   elseif self.attach == Enemy.WALL_RIGHT then
@@ -126,6 +132,8 @@ function prototype.die(self)
     end
     deathsound:rewind()
     deathsound:play()
+
+    Level.get().current_enemies = Level.get().current_enemies - 1
 end
 
 --[[----------------------------------------------------------------------------
@@ -142,8 +150,6 @@ function prototype:setState(new_state)
   elseif new_state == prototype.FIGHTING then
     self.view:setAnimation(self.body.anim_agressive)
     self.timer = 0 -- act as reload timer
-  elseif new_state == prototype.ATTACKING then
-    self.view:setAnimation(self.body.anim_attack)
   end
   self.state = new_state
 end
@@ -268,7 +274,7 @@ function Enemy.__new(x, y, attach)
   -- BODY
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
-  self.view = AnimationView(self.body.anim_idle)
+  self.view = AnimationView(self.body.anim_idle, 10.0)
   
   self.hitpoints = self.body.getHitpoints()
   if self:isAttachedWall() then
