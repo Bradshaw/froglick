@@ -18,6 +18,9 @@ function Sparkle.new(x,y,dx,dy)
 	self.inertia.y = (dy or 0)
 	self.age = 0
 	self.dieAt = 1
+
+	self.layer = -1000
+
 	return self
 end
 

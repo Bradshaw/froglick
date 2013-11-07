@@ -80,24 +80,29 @@ function prototype.update(self, dt)
         --! control FIRST always
         object:control()
         object:update(dt)
-      end,
-          
-      -- sort objects by layer
-      function(object, object_index)
-        if previous and previous.layer > object.layer then
-          self.game_objects[object_index] = previous
-          self.game_objects[object_index - 1] = object
-        end 
-        previous = object
       end
   ) -- end useful.map
   
-  
+
   -- add new objects at the end of the update
   for k, v in pairs(self.__deferred_add) do
     table.insert(self.game_objects, 1, v)
   end
   self.__deferred_add = {}
+
+  -- sort objects
+  local oi = 1
+  while oi <= (#self.game_objects) do
+    local obj = self.game_objects[oi]
+    if oi > 1 then
+      local prev = self.game_objects[oi-1]
+      if (prev.layer > obj.layer) then
+        self.game_objects[oi] = prev
+        self.game_objects[oi - 1] = obj
+      end
+    end
+    oi = oi + 1
+  end
   
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)

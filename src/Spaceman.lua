@@ -259,6 +259,9 @@ Update
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+
+  -- generate health
+  self.hitpoints = math.min(100, self.hitpoints + 10*dt)
   
   -- change fisix
   self.fisix 
@@ -329,6 +332,10 @@ function Spaceman.new(x, y)
   self.requested_attack = false
   self.requested_boost = false
   
+  -- layer
+  self.layer = 1000
+  self.inFrontOfVignette = true
+
   -- add this new Spaceman to the Spaceman list
   --table.insert(Spaceman, self) 
   Spaceman[1] = self

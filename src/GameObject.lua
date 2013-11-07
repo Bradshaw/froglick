@@ -45,9 +45,9 @@ GameObject = {}
 
 -- constants
 GameObject.TYPE_UNDEFINED = 0
-GameObject.TYPE_SPACEMAN = 1
+GameObject.TYPE_SPACEMAN = 3
 GameObject.TYPE_ENEMY = 2
-GameObject.TYPE_SPARKLE = 3
+GameObject.TYPE_SPARKLE = 1
 GameObject.TYPE_SPLOSION = 4
 GameObject.TYPE_SPACEMAN_PROJECTILE = 5
 GameObject.TYPE_ENEMY_PROJECTILE = 6

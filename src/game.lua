@@ -41,7 +41,7 @@ function state:init()
 	cnv:setFilter("nearest","nearest")
 	toggleDrunk = 0
 
-	self.remaining_time = 300
+	self.remaining_time = 600
 end
 
 
@@ -86,13 +86,13 @@ function state:keypressed(key, uni)
 	end
 	if DEBUG and key=="m" then
 		Level.reset()
-		self.remaining_time = 300
+		self.remaining_time = 600
 	end
 
 
 	if (Spaceman[1].hitpoints <= 0) or (Level.get().current_enemies == 0) or (self.remaining_time == 0) then
 		Level.reset()
-		self.remaining_time = 300
+		self.remaining_time = 600
 	end
 end
 
@@ -154,8 +154,11 @@ function state:draw()
 
 		local minutes = math.floor(self.remaining_time/60)
 		local seconds = math.floor(self.remaining_time - 60*minutes)
+		local dseconds = (self.remaining_time - math.floor(self.remaining_time))*100
 
-		love.graphics.print(minutes .. " : " .. seconds, w*0.65, h*0.35)
+		love.graphics.print(string.format("%02d", minutes) 
+			.. " : " .. string.format("%02d", seconds)
+			.. " : " .. string.format("%02d", dseconds), w*0.65, h*0.35)
 
  	love.graphics.pop()
 end
