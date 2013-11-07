@@ -24,7 +24,7 @@ require("EnemyBody")
 require("EnemyWeapon")
 local AnimationView = require("AnimationView")
 
-local deathsound = love.audio.newSource("audio/enemy_die.wav")
+local deathsound = love.audio.newSource("audio/enemy_die.wav", "static")
 deathsound:setVolume(2)
 
  

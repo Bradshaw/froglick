@@ -206,7 +206,7 @@ end
 
 function Level.reset()
   Level.__instance = nil
-  table.insert(Level.get().game_objects,Spaceman[1])
+  --table.insert(Level.get().game_objects, Spaceman[1])
 end
 
     

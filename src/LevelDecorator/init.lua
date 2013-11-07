@@ -129,26 +129,24 @@ function LevelDecorator.decorate(lev, grass_amount, enemies_amount)
   local hang_cells = pushCandidateCells(lev.tilegrid, groundAbove)
   
   -- 2. place the player character, Spaceman Joe
-  if not Spaceman[1] then
-    Spaceman.new(0, 0)
-  end
+  Spaceman[1] = Spaceman.new(0, 0)
   
   popCandidateCells(stand_cells, function(cell)
     Spaceman[1].pos:reset((cell.x + 0.5)*Tile.SIZE.x, 
                           (cell.y + 1)*Tile.SIZE.y) end)
   
   -- 3. place the level exit
-  if not Gate.pos then
-    Gate.new()
-  end
-  Gate.pos:reset(x, y) 
+  -- if not Gate.pos then
+  --   Gate.new()
+  -- end
+  -- Gate.pos:reset(x, y) 
   
   --FIXME
   popCandidateCells(stand_cells, function(cell)
     local x, y = (cell.x + 0.5)*Tile.SIZE.x, (cell.y + 1)*Tile.SIZE.y
     if useful.dist2(x, y, Spaceman[1].pos.x, Spaceman[1].pos.y) < CLOSEST_GATE2 
     then
-      Gate.pos:reset(x, y) 
+      --Gate.pos:reset(x, y) 
     else
       -- reject this cell, put it back at the bottom of the stack
       table.insert(stand_cells, cell)

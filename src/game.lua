@@ -82,8 +82,15 @@ function state:keypressed(key, uni)
 	if key=="escape" then
 		love.event.push("quit")
 	end
-	if key=="m" then
+	if DEBUG and key=="m" then
 		Level.reset()
+	end
+
+
+	if Spaceman[1].hitpoints <= 0 then
+		Level.reset()
+	else
+		log:write(Spaceman[1].hitpoints)
 	end
 end
 

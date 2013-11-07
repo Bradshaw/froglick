@@ -36,9 +36,9 @@ Bite, scratch, claw: a close-range attack.
 
 EnemyWeapon.BITE = 
 {
-  RANGE = 20,
-  RANGE2 = 20*20,
-  DAMAGE = 6,
+  RANGE = 32,
+  RANGE2 = 32*32,
+  DAMAGE = 1,
   RELOAD_TIME = 1.5,
   
   attack = function(wielder, target_pos)

@@ -63,6 +63,7 @@ function prototype.takeDamage(self, amount)
   if amount > self.hitpoints then
     self:die()
     self.purge = true
+    self.hitpoints = 0
   else
     self.hitpoints = self.hitpoints - amount
   end

@@ -27,10 +27,11 @@ require("KeyboardController")
 Sparkle = require("Sparkle")
 require("Projectile")
 
-local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
-local hurtsound = love.audio.newSource("audio/player_hurt.wav")
+local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg", "static")
+local hurtsound = love.audio.newSource("audio/player_hurt.wav", "static")
 hurtsound:setVolume(3)
-local diesound = love.audio.newSource("audio/player_die.wav")
+local diesound = love.audio.newSource("audio/player_die.wav", "static")
+local boostsound = love.audio.newSource("audio/player_boost.wav", "static")
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -222,7 +223,7 @@ prototype.onObjectCollision = function(self, other)
   if (other.type == GameObject.TYPE_SPLOSION) and (not other.has_dealt_damage) then
     self:takeDamage(other.damage)
     other.has_dealt_damage = true
-    toggleDrunk = (100-self.hitpoints)/10
+    toggleDrunk = (100-self.hitpoints)/100*5
     hurtsound:rewind()
     hurtsound:play()
     -- Blood !
@@ -318,7 +319,8 @@ function Spaceman.new(x, y)
   self.requested_boost = false
   
   -- add this new Spaceman to the Spaceman list
-  table.insert(Spaceman, self) 
+  --table.insert(Spaceman, self) 
+  Spaceman[1] = self
    
   -- return the instance
   return self
