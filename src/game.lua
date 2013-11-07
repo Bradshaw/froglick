@@ -116,19 +116,22 @@ function state:draw()
 
  	love.graphics.setCanvas(vib)
  	love.graphics.push()
- 	love.graphics.setColor(255,255,255)
- 	love.graphics.translate(love.graphics.getWidth()/2+math.sin(time)*2*toggleDrunk,love.graphics.getHeight()/2+math.sin(time/3)*2*toggleDrunk)
- 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
- 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
- 	love.graphics.draw(cnv)
+	 	love.graphics.setColor(255,255,255)
+	 	love.graphics.translate(love.graphics.getWidth()/2+math.sin(time)*2*toggleDrunk,love.graphics.getHeight()/2+math.sin(time/3)*2*toggleDrunk)
+	 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
+	 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
+	 	love.graphics.draw(cnv)
  	love.graphics.pop()
  	
  	love.graphics.setCanvas()
  	love.graphics.push()
- 	love.graphics.setColor(255,255,255)
- 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
- 	love.graphics.scale(2,2)
- 	love.graphics.draw(vib)
+	 	love.graphics.setColor(255,255,255)
+	 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
+	 	love.graphics.scale(2,2)
+	 	love.graphics.draw(vib)
+		if Spaceman[1].hitpoints <= 0 then
+			love.graphics.printf("GAME OVER", love.graphics.getWidth()*0.5, love.graphics.getHeight()*0.3, 0, "center")
+		end
  	love.graphics.pop()
 end
 
