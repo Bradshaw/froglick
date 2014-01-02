@@ -56,11 +56,8 @@ end
 
 function AnimationView:update(dt)
   self.frame = self.frame + self.speed*dt
---   if self.speed > 0 then
---     print(self.frame)
---   end
   if self.frame >= self.anim.n_frames + 1 then
-    self.frame = self.frame - self.anim.n_frames + 1
+    self.frame = self.frame - self.anim.n_frames
     return true -- animation end
   end
   if self.frame < 1 then
@@ -68,7 +65,7 @@ function AnimationView:update(dt)
     return true -- animation end
   end
   -- animation continues ?
-  return (self.speed*dt > self.anim.n_frames) 
+  return (math.abs(self.speed*dt) > self.anim.n_frames) 
   
 end
 

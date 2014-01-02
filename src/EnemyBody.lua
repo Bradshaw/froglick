@@ -20,6 +20,7 @@ INCLUDE
 --]]----------------------------------------------------------------------------
 
 local Animation = require("Animation")
+local AnimationView = require("AnimationView")
 
 --[[----------------------------------------------------------------------------
 CONTAINER
@@ -60,7 +61,16 @@ It's a 'shroom. It 'shrooms.
 
 local SHROOM_SHEET = 
   love.graphics.newImage("images/enemy_mushroom.png")
+     
+local SHROOM_IDLE = 
+  Animation(SHROOM_SHEET, 32, 32, 1)
+      
+local SHROOM_AGRESSIVE = 
+  Animation(SHROOM_SHEET, 32, 32, 1, 32)
 
+local SHROOM_ATTACK = 
+  Animation(SHROOM_SHEET, 32, 32, 3, 32, 0)
+  
 EnemyBody.SHROOM = 
 {
   tryMove = function(owner, direction)
@@ -90,21 +100,25 @@ EnemyBody.SHROOM =
   getHitpoints = function()
     return 220
   end,
+    
+  createView = function()
+    return AnimationView(SHROOM_IDLE)
+  end,
+      
+  idleAnimation = function(owner)
+    owner.view:setAnimation(SHROOM_IDLE)
+    owner.view.speed = 0
+  end,    
+      
+  agressiveAnimation = function(owner)
+    owner.view:setAnimation(SHROOM_AGRESSIVE)
+    owner.view.speed = 0
+  end,   
       
   attackAnimation = function(owner)
-    owner.view:setAnimation(owner.body.anim_attack)
+    owner.view:setAnimation(SHROOM_ATTACK)
     owner.view.speed = 3
   end,
-
-            
-  anim_idle = 
-    Animation(SHROOM_SHEET, 32, 32, 1),
-        
-  anim_agressive = 
-    Animation(SHROOM_SHEET, 32, 32, 1, 32),
-  
-  anim_attack = 
-    Animation(SHROOM_SHEET, 32, 32, 3, 32, 0),
   
   __tostring = function()
     return "shroom"

@@ -22,7 +22,6 @@ IMPORTS
 local super = require("Animal")
 require("EnemyBody")
 require("EnemyWeapon")
-local AnimationView = require("AnimationView")
 
  
 --[[----------------------------------------------------------------------------
@@ -126,13 +125,13 @@ States
 
 function prototype:setStateAnimation(new_state)
   if new_state == prototype.IDLING then
-    self.view:setAnimation(self.body.anim_idle)
+    self.body.idleAnimation(self)
   elseif new_state == prototype.HUNTING then
-    self.view:setAnimation(self.body.anim_agressive)
+    self.body.agressiveAnimation(self)
   elseif new_state == prototype.FIGHTING then
-    self.view:setAnimation(self.body.anim_agressive)
+    self.body.agressiveAnimation(self)
   elseif new_state == prototype.ATTACKING then
-    self.view:setAnimation(self.body.anim_agressive)
+    self.body.agressiveAnimation(self)
   end
 end
 
@@ -263,7 +262,7 @@ function Enemy.__new(x, y, attach)
   -- BODY
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
-  self.view = AnimationView(self.body.anim_idle)
+  self.view = EnemyBody.SHROOM.createView() 
   
   self.hitpoints = self.body.getHitpoints()
   if self:isAttachedWall() then
