@@ -47,8 +47,11 @@ function love.load(arg)
 	music:setVolume(0.5)
 	music:play()
 
+	-- randomise! 
+	math.randomseed(os.time())
 
-    -- no mouse
+
+   -- no mouse
  	love.mouse.setVisible(false)
 end
 
