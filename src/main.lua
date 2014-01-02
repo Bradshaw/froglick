@@ -1,7 +1,7 @@
 function love.load(arg)
 
 	log = require("unrequited/log")
-	DEBUG = true
+	DEBUG = false
 
 	fontim = love.graphics.newImage("images/font.png")
     fontim:setFilter("nearest","nearest")

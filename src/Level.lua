@@ -48,7 +48,7 @@ CLASS METHODS
 
 local check_collisions, check_collisions_period = 0, 10
 function prototype.update(self, dt)
-  
+
   -- animate tiles
   --! FIXME only animate those in the view
   for i,v in ipairs(self.tilegrid.tiles) do
@@ -83,13 +83,6 @@ function prototype.update(self, dt)
       end
   ) -- end useful.map
   
-
-  -- add new objects at the end of the update
-  for k, v in pairs(self.__deferred_add) do
-    table.insert(self.game_objects, 1, v)
-  end
-  self.__deferred_add = {}
-
   -- sort objects
   local oi = 1
   while oi <= (#self.game_objects) do
@@ -103,6 +96,14 @@ function prototype.update(self, dt)
     end
     oi = oi + 1
   end
+
+  -- add new objects at the end of the update
+  for k, v in pairs(self.__deferred_add) do
+    table.insert(self.game_objects, 1, v)
+  end
+  self.__deferred_add = {}
+
+
   
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
