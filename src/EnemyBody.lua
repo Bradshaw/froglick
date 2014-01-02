@@ -61,30 +61,15 @@ It's a 'shroom. It 'shrooms.
 
 local SHROOM_SHEET = 
   love.graphics.newImage("images/enemy_mushroom.png")
-     
-local SHROOM_IDLE = 
-  Animation(SHROOM_SHEET, 32, 32, 1)
-      
-local SHROOM_AGRESSIVE = 
-  Animation(SHROOM_SHEET, 32, 32, 1, 32)
 
-local SHROOM_ATTACK = 
-  Animation(SHROOM_SHEET, 32, 32, 3, 32, 0)
-  
 EnemyBody.SHROOM = 
 {
   tryMove = function(owner, direction)
-  
-  
-    -- face the player
-    if owner:isAttachedWall() 
-    and (math.abs(direction.y) > owner.h) then
-      if owner.attach == Enemy.WALL_LEFT then 
-        owner.view.flip_x = (direction.y > 0)
-      elseif owner.attach == Enemy.WALL_RIGHT then
-        owner.view.flip_x = (direction.y < 0)
-      end
-    elseif (math.abs(direction.x) > owner.w) then
+    if (owner.attach == Enemy.WALL_LEFT) then 
+      owner.view.flip_x = (direction.y > 0)
+    elseif (owner.attach == Enemy.WALL_RIGHT) then 
+      owner.view.flip_x = (direction.y < 0)
+    else
       owner.view.flip_x = (direction.x > 0)
     end
   end,
@@ -94,31 +79,21 @@ EnemyBody.SHROOM =
   end,
       
   getSize = function()
-    return Tile.SIZE.x / 2, Tile.SIZE.y
+    return Tile.SIZE.x, Tile.SIZE.y
   end,
       
   getHitpoints = function()
-    return 220
+    return 100--220
   end,
-    
-  createView = function()
-    return AnimationView(SHROOM_IDLE)
-  end,
-      
-  idleAnimation = function(owner)
-    owner.view:setAnimation(SHROOM_IDLE)
-    owner.view.speed = 0
-  end,    
-      
-  agressiveAnimation = function(owner)
-    owner.view:setAnimation(SHROOM_AGRESSIVE)
-    owner.view.speed = 0
-  end,   
-      
-  attackAnimation = function(owner)
-    owner.view:setAnimation(SHROOM_ATTACK)
-    owner.view.speed = 3
-  end,
+            
+  anim_idle = 
+    Animation(SHROOM_SHEET, 32, 32, 1),
+        
+  anim_agressive = 
+    Animation(SHROOM_SHEET, 32, 32, 1, 32),
+  
+  anim_attack = 
+    Animation(SHROOM_SHEET, 32, 32, 3, 32, 0),
   
   __tostring = function()
     return "shroom"

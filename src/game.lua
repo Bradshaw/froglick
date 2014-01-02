@@ -40,6 +40,8 @@ function state:init()
 	cnv = love.graphics.newCanvas(nextpow2,nextpow2)
 	cnv:setFilter("nearest","nearest")
 	toggleDrunk = 0
+
+	self.remaining_time = 150
 end
 
 
@@ -82,8 +84,15 @@ function state:keypressed(key, uni)
 	if key=="escape" then
 		love.event.push("quit")
 	end
-	if key=="m" then
+	if DEBUG and key=="m" then
 		Level.reset()
+		self.remaining_time = 150
+	end
+
+
+	if (Spaceman[1].hitpoints < 1) or (Level.get().current_enemies == 0) or (self.remaining_time == 0) then
+		Level.reset()
+		self.remaining_time = 150
 	end
 end
 
@@ -99,29 +108,58 @@ function state:update(dt)
   -- 2D "shaders"
   toggleDrunk = math.max(0,toggleDrunk-dt*10)
   time = (time or 0) + dt*100
+
+  -- time limit
+  self.remaining_time = math.max(0, self.remaining_time - dt)
 end
 
 
 function state:draw()
+
+	local w, h = love.graphics.getWidth(), love.graphics.getHeight()
+
 	love.graphics.setCanvas(cnv)
 	love.graphics.clear()
  	Level.get():draw()
 
  	love.graphics.setCanvas(vib)
  	love.graphics.push()
- 	love.graphics.setColor(255,255,255)
- 	love.graphics.translate(love.graphics.getWidth()/2+math.sin(time)*2*toggleDrunk,love.graphics.getHeight()/2+math.sin(time/3)*2*toggleDrunk)
- 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
- 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
- 	love.graphics.draw(cnv)
+	 	love.graphics.setColor(255,255,255)
+	 	love.graphics.translate(w/2+math.sin(time)*2*toggleDrunk,h/2+math.sin(time/3)*2*toggleDrunk)
+	 	love.graphics.rotate((math.cos(time/3)/100)*toggleDrunk)
+	 	love.graphics.translate(-w/2,-h/2)
+	 	love.graphics.draw(cnv)
  	love.graphics.pop()
  	
  	love.graphics.setCanvas()
  	love.graphics.push()
- 	love.graphics.setColor(255,255,255)
- 	love.graphics.translate(-love.graphics.getWidth()/2,-love.graphics.getHeight()/2)
- 	love.graphics.scale(2,2)
- 	love.graphics.draw(vib)
+	 	love.graphics.setColor(255,255,255)
+	 	love.graphics.translate(-w/2,-h/2)
+	 	love.graphics.scale(2,2)
+	 	love.graphics.draw(vib)
+
+	 	total_enemies, current_enemies = Level.get().starting_enemies, Level.get().current_enemies
+
+		if (Spaceman[1].hitpoints < 1) or (self.remaining_time == 0) then
+			love.graphics.setFont(font)
+			love.graphics.print("YOU LOSE", w*0.47, h*0.4)
+		elseif total_enemies == 0 then
+			love.graphics.setFont(font)
+			love.graphics.print("YOU WIN", w*0.47, h*0.4)
+		end
+
+		love.graphics.setFont(font)
+		
+		love.graphics.print(tostring(total_enemies - current_enemies) .. " / " .. tostring(total_enemies), w*0.65, h*0.3)
+
+		local minutes = math.floor(self.remaining_time/60)
+		local seconds = math.floor(self.remaining_time - 60*minutes)
+		local dseconds = (self.remaining_time - math.floor(self.remaining_time))*100
+
+		love.graphics.print(string.format("%02d", minutes) 
+			.. " : " .. string.format("%02d", seconds)
+			.. " : " .. string.format("%02d", dseconds), w*0.65, h*0.35)
+
  	love.graphics.pop()
 end
 

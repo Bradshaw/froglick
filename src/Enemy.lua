@@ -22,6 +22,10 @@ IMPORTS
 local super = require("Animal")
 require("EnemyBody")
 require("EnemyWeapon")
+local AnimationView = require("AnimationView")
+
+local deathsound = love.audio.newSource("audio/enemy_die.wav", "static")
+deathsound:setVolume(2)
 
  
 --[[----------------------------------------------------------------------------
@@ -83,6 +87,7 @@ end
 
 function prototype.__attack(self, target_pos)
   self.weapon.attack(self, target_pos)
+  self.view:setAnimation(self.body.anim_attack)
   self.timer = self.weapon.RELOAD_TIME
 end
 
@@ -92,12 +97,11 @@ function prototype.update(self, dt)
   
   
   -- update view
-  if self.view:update(dt) then
-    -- animation end
-    self:setStateAnimation(new_state)
+  if self.view:update(dt) and (self.view.anim == self.body.anim_attack) then
+    self.view:setAnimation(self.body.anim_idle)
   end
-  
-  
+
+
   if self.attach == Enemy.WALL_LEFT then
     self.view.rotation = useful.RAD90
   elseif self.attach == Enemy.WALL_RIGHT then
@@ -119,31 +123,33 @@ function prototype.update(self, dt)
   self:state(dt)
 end
 
+function prototype.die(self)
+    -- Muy blood !
+    for i = 1, 20 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 14, math.random()*196 + 128,
+        32, 255, 64)
+    end
+    deathsound:rewind()
+    deathsound:play()
+
+    Level.get().current_enemies = Level.get().current_enemies - 1
+end
+
 --[[----------------------------------------------------------------------------
 States
 --]]--
 
-function prototype:setStateAnimation(new_state)
-  if new_state == prototype.IDLING then
-    self.body.idleAnimation(self)
-  elseif new_state == prototype.HUNTING then
-    self.body.agressiveAnimation(self)
-  elseif new_state == prototype.FIGHTING then
-    self.body.agressiveAnimation(self)
-  elseif new_state == prototype.ATTACKING then
-    self.body.agressiveAnimation(self)
-  end
-end
-
 function prototype:setState(new_state)
   if new_state == prototype.IDLING then
+    self.view:setAnimation(self.body.anim_idle)
     -- do stuff
   elseif new_state == prototype.HUNTING then
+    self.view:setAnimation(self.body.anim_agressive)
     self.timer = Enemy.HUNTING_TIMEOUT -- act as boredom timer
   elseif new_state == prototype.FIGHTING then
+    self.view:setAnimation(self.body.anim_agressive)
     self.timer = 0 -- act as reload timer
   end
-  self:setStateAnimation(new_state)
   self.state = new_state
 end
 
@@ -232,6 +238,11 @@ prototype.onObjectCollision = function(self, other)
   and (not other.has_dealt_damage) then
     self:takeDamage(other.damage)
     other.has_dealt_damage = true
+    -- Blood !
+    for i = 1, 5 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64, 
+        32, 255, 64)
+    end
   end
 end
 
@@ -262,7 +273,7 @@ function Enemy.__new(x, y, attach)
   -- BODY
   --FIXME should be determined randomly depending on spawn position
   self.body = EnemyBody.SHROOM
-  self.view = EnemyBody.SHROOM.createView() 
+  self.view = AnimationView(self.body.anim_idle, 10.0)
   
   self.hitpoints = self.body.getHitpoints()
   if self:isAttachedWall() then

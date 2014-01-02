@@ -1,4 +1,8 @@
 function love.load(arg)
+
+	log = require("unrequited/log")
+	DEBUG = false
+
 	fontim = love.graphics.newImage("images/font.png")
     fontim:setFilter("nearest","nearest")
     font = love.graphics.newImageFont("images/myfont.png",
@@ -22,9 +26,9 @@ function love.load(arg)
 	end
     love.graphics.setFont(font)
 	local modes = love.graphics.getModes()
-	table.sort(modes, function(a, b) return a.width*a.height < b.width*b.height end)
+	table.sort(modes, function(a, b) return a.width*a.height > b.width*b.height end)
 	local m = modes[#modes]
-  	--local success = love.graphics.setMode( m.width, m.height, true )
+  	local success = love.graphics.setMode( m.width, m.height, true )
   	local success = true
   
 	if not success then
@@ -36,6 +40,16 @@ function love.load(arg)
 	gstate = require "gamestate"
 	game = require("game")
 	gstate.switch(game)
+
+	-- music by Tom Fylnn !
+	local music = love.audio.newSource("audio/music.ogg")
+	music:setLooping(true)
+	music:setVolume(0.5)
+	music:play()
+
+
+    -- no mouse
+ 	love.mouse.setVisible(false)
 end
 
 function love.focus(f)
@@ -70,13 +84,22 @@ function keyreleased(key, uni)
 	gstate.keyreleased(key)
 end
 
-MAX_DT = 1/30 -- global!
+MAX_DT = 1/20 -- global!
 function love.update(dt)
+  -- update
   dt = math.min(MAX_DT, dt)
-	gstate.update(dt)
+  gstate.update(dt)
+
+  -- collect garbage
+  collectgarbage("collect")
 end
 
 function love.draw()
 	gstate.draw()
-	love.graphics.print(love.timer.getFPS(),10,10)
+	--love.graphics.print(love.timer.getFPS(),10,10)
+
+	-- draw the log
+	--if DEBUG then
+		--log:draw()
+	--end
 end

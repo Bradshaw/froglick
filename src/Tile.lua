@@ -98,7 +98,7 @@ Tile.DECOQUADS.GRASS = {
   love.graphics.newQuad(64,96,32,32,256,160),
   love.graphics.newQuad(94,96,32,32,256,160)
 }
-
+Tile.DECOQUADS.ZETHER = love.graphics.newQuad(0,0,32,32,256,160)
 
 Tile.DECORATION = {}
 Tile.DECORATION.NONE = 0

@@ -26,7 +26,7 @@ CLASS
 --]]----------------------------------------------------------------------------
 
 -- global-scoped
-MuzzleBlast = {}
+Zether = {}
 
 
 --[[----------------------------------------------------------------------------
@@ -36,23 +36,25 @@ METATABLE (PROTOTYPE)
 local prototype = {}
 setmetatable(prototype, { __index = super })
 
-prototype.damage = 47
+prototype.time_bonus = 10
 
 --[[----------------------------------------------------------------------------
 CLASS (STATIC) FUNCTIONS
 --]]----------------------------------------------------------------------------
 
-function MuzzleBlast.new(x, y, damage, target_type)
+function Zether.new(x, y)
   -- metatable
-  local self = GameObject.new(x, y, true, -100) -- no id generated, foreground
+  local self = GameObject.new(x, y) -- no id generated, foreground
   setmetatable(self, {__index = prototype })
   
+  -- fixme
+  self.pos.x, self.pos.y = self.pos.x + 32, self.pos.y + 32
+
   -- types
-  self.type = GameObject.TYPE_SPLOSION
-  self.target_type = (target_type or GameObject.TYPE_ENEMY)
+  self.type = GameObject.TYPE_ZETHER
   
   -- size
-  self.w, self.h = 30, 30
+  self.w, self.h = 16, 16
   
   -- return instance
   return self
@@ -63,20 +65,15 @@ end
 METHODS
 --]]----------------------------------------------------------------------------
 
-prototype.update = function(self, dt)
-  -- super-class update
-  super.update(self, dt)
-  
-  -- fade away
-  --[[local amount = dt*100
-  self.w, self.h, self.pos.y = self.w - amount, self.h - amount, self.pos.y - amount/2
-  if self.w <= 1 or self.h <= 1 then
-    self.purge = true
-  end--]]
+prototype.canCollideObject = function(self, other)
+  return (other.type == GameObject.TYPE_SPACEMAN)
 end
 
-prototype.canCollideObject = function(self, other)
-  return (other.type == self.target_type)
+prototype.draw = function(self)
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.drawq(Tile.DECORATIONIMAGE, Tile.DECOQUADS.ZETHER, self.pos.x-32, self.pos.y-32)
+  --love.graphics.line(self.pos.x, self.pos.y, Spaceman[1].pos.x, Spaceman[1].pos.y)
+  --love.graphics.rectangle("line", self.pos.x-32, self.pos.y-32, self.w, self.h)
 end
 
 

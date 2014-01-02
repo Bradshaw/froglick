@@ -28,6 +28,12 @@ Camera = require("Camera")
 require("Projectile")
 require("Splosion")
 
+--[[----------------------------------------------------------------------------
+RESOURCES
+--]]----------------------------------------------------------------------------
+
+local VIGNETTE = love.graphics.newImage("images/vignette.png")
+local BLOOD = love.graphics.newImage("images/blood_overlay.png")
 
 --[[----------------------------------------------------------------------------
 METATABLE (PROTOTYPE)
@@ -74,24 +80,29 @@ function prototype.update(self, dt)
         --! control FIRST always
         object:control()
         object:update(dt)
-      end,
-          
-      -- sort objects by layer
-      function(object, object_index)
-        if previous and previous.layer > object.layer then
-          self.game_objects[object_index] = previous
-          self.game_objects[object_index - 1] = object
-        end 
-        previous = object
       end
   ) -- end useful.map
   
-  
+
   -- add new objects at the end of the update
   for k, v in pairs(self.__deferred_add) do
     table.insert(self.game_objects, 1, v)
   end
   self.__deferred_add = {}
+
+  -- sort objects
+  local oi = 1
+  while oi <= (#self.game_objects) do
+    local obj = self.game_objects[oi]
+    if oi > 1 then
+      local prev = self.game_objects[oi-1]
+      if (prev.layer > obj.layer) then
+        self.game_objects[oi] = prev
+        self.game_objects[oi - 1] = obj
+      end
+    end
+    oi = oi + 1
+  end
   
   -- camera follows player 1      
   self.camera:pointAt(Spaceman[1].pos.x, Spaceman[1].pos.y-16)
@@ -104,25 +115,55 @@ end
   
 function prototype.draw(self)
   
-  love.graphics.push()
-    --Indent to show graphics stack level
-    local camx, camy = self.camera:getBounds()
-    love.graphics.translate(-camx, -camy)
+  local camx, camy = self.camera:getBounds()
 
-    -- draw the background
-    -- TODO
+  -- Indent to show graphics stack level
+  love.graphics.push()
+    -- take camera into account
+    love.graphics.translate(-camx, -camy)
     
     -- draw the terrain
     self.tilegrid:draw()
     
-    -- draw game objects (characters, particles, etc)
+    -- draw game objects (characters, particles, etc) that should be drawn behind vignette
     useful.map(self.game_objects, 
         function(object) 
-          object:draw() 
+          if not object.inFrontOfVignette then 
+            object:draw() 
+          end
         end)
-        
-  --unindent to show graphics stack level
+
+  -- unindent to show graphics stack level
   love.graphics.pop()
+
+
+  -- draw vignette
+  love.graphics.setColor(0, 0, 0, ((1 - Spaceman[1].energy/100)*0.8 + 0.2)*255)
+    local scalex, scaley = love.graphics.getWidth()/VIGNETTE:getWidth(), love.graphics.getHeight()/VIGNETTE:getHeight()
+    love.graphics.draw(VIGNETTE, 0, 0, 0, scalex, scaley)
+  love.graphics.setColor(255, 255, 255)
+
+  -- Indent to show graphics stack level
+  love.graphics.push()
+    -- take camera into account
+      love.graphics.translate(-camx, -camy)
+
+    -- draw game objects (characters, particles, etc) that should be drawn behind vignette
+    useful.map(self.game_objects, 
+        function(object) 
+          if object.inFrontOfVignette or (object.type == GameObject.TYPE_SPACEMAN_PROJECTILE) then 
+            object:draw() 
+          end
+        end)
+  -- unindent to show graphics stack level
+  love.graphics.pop()
+
+
+  -- draw blood overlay
+  love.graphics.setColor(255, 0, 0, (100-Spaceman[1].hitpoints)/100*200)
+    scalex, scaley = love.graphics.getWidth()/BLOOD:getWidth(), love.graphics.getHeight()/BLOOD:getHeight()
+    love.graphics.draw(BLOOD, 0, 0, 0, scalex, scaley)
+  love.graphics.setColor(255, 255, 255)
 end
 
 --[[----------------------------------------------------------------------------
@@ -170,7 +211,7 @@ end
 
 function Level.reset()
   Level.__instance = nil
-  table.insert(Level.get().game_objects,Spaceman[1])
+  --table.insert(Level.get().game_objects, Spaceman[1])
 end
 
     

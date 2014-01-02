@@ -1,5 +1,7 @@
 --[[
+"Unrequited", a Löve 2D extension library
 (C) Copyright 2013 William Dyce
+
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Lesser General Public License
@@ -16,7 +18,7 @@ Lesser General Public License for more details.
 IMPORTS
 --]]------------------------------------------------------------
 
-local Class = require("hump/class")
+--local Class = require("hump/class")
 
 --[[------------------------------------------------------------
 ANIMATIONVIEW CLASS
@@ -28,16 +30,15 @@ Initialisation
 
 local AnimationView = Class
 {
-  init = function(self, anim, speed, frame)
+  init = function(self, anim, speed, frame, offx, offy)
     self.anim = anim
     self.speed = (speed or 0.0)
+    
     self.frame = useful.clamp(frame or math.random(self.anim.n_frames), 
                               1, self.anim.n_frames)
+    self.offx = (offx or 0)
+    self.offy = (offy or 0)
   end,
-      
-  offx = 0,
-  offy = 0,
-  rotation = 0
 }
   
   
@@ -45,26 +46,21 @@ local AnimationView = Class
 Game loop
 --]]
     
-function AnimationView:draw(object)
-  
-  self.anim:draw(object.pos.x + self.offx, 
-                  object.pos.y -object.h/2 + self.offy, 
-                  self.frame, 
-                  self.flip_x, 
-                  self.flip_y,
-                  self.rotation)
+function AnimationView:draw(object, x, y, angle)
+  self.anim:draw(x or object.x, y or object.y, self.frame, 
+                  self.flip_x, self.flip_y, self.offx, self.offy, angle or self.angle)
 end
 
 function AnimationView:update(dt)
   self.frame = self.frame + self.speed*dt
-  if self.frame >= self.anim.n_frames + 2 then
-    --self.frame = self.frame - self.anim.n_frames
+  if self.frame >= self.anim.n_frames + 1 then
+    self.frame = self.frame - self.anim.n_frames
     return true -- animation end
   end
-  -- if self.frame < 1 then
-  --   self.frame = self.frame + self.anim.n_frames
-  --   return true -- animation end
-  -- end
+  if self.frame < 1 then
+    self.frame = self.frame + self.anim.n_frames
+    return true -- animation end
+  end
   return false -- animation continues
 end
 
@@ -79,10 +75,6 @@ end
 function AnimationView:seekPercent(p)
   if p > 1 then p = 1 elseif p < 0 then p = 0 end
   self.frame = ((self.anim.n_frames-1) * p) + 1
-end
-
-function AnimationView:seekStart()
-  self.frame = 1
 end
 
 function AnimationView:setAnimation(anim)

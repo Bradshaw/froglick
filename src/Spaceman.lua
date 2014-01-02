@@ -27,7 +27,15 @@ require("KeyboardController")
 Sparkle = require("Sparkle")
 require("Projectile")
 
-gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg")
+local gunsound = love.audio.newSource("audio/gunshot_Seq01.ogg", "static")
+local hurtsound = love.audio.newSource("audio/player_hurt.wav", "static")
+  hurtsound:setVolume(3)
+local diesound = love.audio.newSource("audio/player_die.wav", "static")
+local boostsound = love.audio.newSource("audio/player_boost.ogg", "static")
+  boostsound:setLooping(true)
+  boostsound:setVolume(0.2)
+local zethersound = love.audio.newSource("audio/zether.wav", "static")
+
 
 --[[----------------------------------------------------------------------------
 CLASS
@@ -114,6 +122,9 @@ function prototype.tryBoost(self, dt)
 
   if self.energy> 10 then
     Sparkle.newBooster(self.pos.x-self.legs_side*8+math.random(-3,3) , self.pos.y-18+math.random(-3,3),-self.inertia.x+math.random(-50,50),math.max(self.inertia.y,0) + 500 + math.random(0,250))
+    boostsound:setPitch(1.3)
+  else
+    boostsound:setPitch((self.energy/100)*0.4 + 0.7)
   end
 
   -- boost consumes energy
@@ -125,6 +136,9 @@ function prototype.tryBoost(self, dt)
   
   -- cap maximum upward speed of boost (math.max 'coz up is negative) 
   self.inertia.y = math.max(-self.fisix.BOOST_MAX_DY, self.inertia.y - thrust*dt)
+
+  -- player sound
+  boostsound:play()
 end
 
 function prototype.tryMove(self, dt)
@@ -210,6 +224,41 @@ function prototype:weaponRaised()
   return (self.attackTime < self.attackTimeout*5)
 end
 
+--[[----------------------------------------------------------------------------
+Collisions
+--]]--
+
+prototype.onObjectCollision = function(self, other)
+
+  if (other.type == GameObject.TYPE_SPLOSION) and (not other.has_dealt_damage) then
+    self:takeDamage(other.damage)
+    other.has_dealt_damage = true
+    toggleDrunk = (100-self.hitpoints)/100*5
+    hurtsound:rewind()
+    hurtsound:play()
+    -- Blood !
+    for i = 1, 20 do
+      Sparkle.newBlood(self.pos.x, self.pos.y - 8, math.random()*128 + 64,
+        255, 0, 20)
+    end
+  elseif other.type == GameObject.TYPE_ZETHER then
+    game.remaining_time = game.remaining_time + other.time_bonus
+    self.hitpoints = 100
+    other.purge = true
+    zethersound:rewind()
+    zethersound:play()
+  end
+end
+
+prototype.canCollideObject = function(self, other)
+  return (other.type == GameObject.TYPE_SPLOSION) or (other.type == GameObject.TYPE_ZETHER)
+end
+
+prototype.die = function()
+  diesound:rewind()
+  diesound:play()
+  boostsound:stop()
+end
 
 --[[----------------------------------------------------------------------------
 Update
@@ -218,6 +267,9 @@ Update
 function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
+
+  -- regenerate health
+  --self.hitpoints = math.min(100, self.hitpoints + 10*dt)
   
   -- change fisix
   self.fisix 
@@ -236,6 +288,8 @@ function prototype.update(self, dt)
   -- boost vertically if boost is requested
   if self.requested_boost then
     self:tryBoost(dt)
+  else
+    boostsound:pause()
   end
   
   -- accelerate horizontally if move is requested
@@ -286,8 +340,13 @@ function Spaceman.new(x, y)
   self.requested_attack = false
   self.requested_boost = false
   
+  -- layer
+  self.layer = 1000
+  self.inFrontOfVignette = true
+
   -- add this new Spaceman to the Spaceman list
-  table.insert(Spaceman, self) 
+  --table.insert(Spaceman, self) 
+  Spaceman[1] = self
    
   -- return the instance
   return self

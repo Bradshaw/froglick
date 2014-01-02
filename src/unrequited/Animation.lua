@@ -1,5 +1,7 @@
 --[[
+"Unrequited", a Löve 2D extension library
 (C) Copyright 2013 William Dyce
+
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the GNU Lesser General Public License
@@ -16,7 +18,8 @@ Lesser General Public License for more details.
 IMPORTS
 --]]------------------------------------------------------------
 
-local Class = require("hump/class")
+--local Class = require("hump/class")
+--local useful = require("useful")
 
 --[[------------------------------------------------------------
 ANIMATION CLASS
@@ -38,8 +41,6 @@ local Animation = Class
   
     -- store reference to image
     self.img = img
-    
-    self.w, self.h = w, h
 
     -- create quads
     offx, offy = (offx or 0), (offy or 0)
@@ -59,22 +60,19 @@ local Animation = Class
 Game loop
 --]]
   
-function Animation:draw(x, y, subimage, flip_x, flip_y, r)
-  love.graphics.setColor(255, 255, 255, 255)
-  r = (r or 0)
-
+function Animation:draw(x, y, subimage, flip_x, flip_y, ox, oy, angle)
   if subimage then
     subimage = math.min(self.n_frames, math.floor(subimage))
   else
     subimage = 1
   end  
-        
+  
   flip_x = (flip_x or self.flip_x)
   flip_y = (flip_y or self.flip_y)
-  love.graphics.drawq(self.img, self.quads[subimage], x, y, r,
+  love.graphics.drawq(self.img, self.quads[subimage], x, y, angle or self.angle or 0,
       useful.tri(flip_x, -1, 1), 
       useful.tri(flip_y, -1, 1),
-      self.w/2, self.h/2)
+      ox, oy)
 end
 
 

@@ -36,9 +36,9 @@ Bite, scratch, claw: a close-range attack.
 
 EnemyWeapon.BITE = 
 {
-  RANGE = 20,
-  RANGE2 = 20*20,
-  DAMAGE = 17,
+  RANGE = 32,
+  RANGE2 = 32*32,
+  DAMAGE = 1,
   RELOAD_TIME = 1.5,
   
   attack = function(wielder, target_pos)
@@ -54,7 +54,7 @@ EnemyWeapon.BITE =
                     GameObject.TYPE_SPACEMAN)
     
     -- play bite animation
-    wielder.body.attackAnimation(wielder)
+    --wielder.body.attackAnimation(wielder)
   end,
   
   canAttack = function(wielder, t)
