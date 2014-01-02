@@ -268,8 +268,8 @@ function prototype.update(self, dt)
   -- super-class update
   super.update(self, dt)
 
-  -- generate health
-  self.hitpoints = math.min(100, self.hitpoints + 10*dt)
+  -- regenerate health
+  --self.hitpoints = math.min(100, self.hitpoints + 10*dt)
   
   -- change fisix
   self.fisix 

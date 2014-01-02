@@ -20,6 +20,7 @@ INCLUDE
 --]]----------------------------------------------------------------------------
 
 local Animation = require("Animation")
+local AnimationView = require("AnimationView")
 
 --[[----------------------------------------------------------------------------
 CONTAINER

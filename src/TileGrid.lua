@@ -90,7 +90,7 @@ function prototype.draw(self)
   self.decospritebatch:clear()
   local x,y = Level.get().camera:getBounds()
   love.graphics.setColor(64,64,64)
-  love.graphics.drawq(Tile.SINGLE, Tile.BACKQUAD, x+love.graphics.getWidth()/4-(x/2)%32, y+love.graphics.getHeight()/4-(y/2)%32)
+  love.graphics.draw(Tile.SINGLE, Tile.BACKQUAD, x+love.graphics.getWidth()/4-(x/2)%32, y+love.graphics.getHeight()/4-(y/2)%32)
   love.graphics.setColor(255,255,255)
   local function off(x,y)
     local ox = (Spaceman[1].pos.x-(x*Tile.SIZE.x))
@@ -127,29 +127,29 @@ function prototype.draw(self)
           tilegrid:gridToTile(x, y).decocolour[2],
           tilegrid:gridToTile(x, y).decocolour[3]
           )
-        tilegrid.decospritebatch:addq(Tile.DECOQUADS.GRASS[math.floor(tilegrid:gridToTile(x, y).animation)%2+1],
+        tilegrid.decospritebatch:add(Tile.DECOQUADS.GRASS[math.floor(tilegrid:gridToTile(x, y).animation)%2+1],
             x*Tile.SIZE.x, y*Tile.SIZE.y)
       end
       if tilegrid:gridToTile(x, y).wall == Tile.FULL then
         --tilegrid.spritebatch:add(x*Tile.SIZE.x, y*Tile.SIZE.y)
-        tilegrid.spritebatch:addq(Tile.FULLQUADS[tilegrid:gridToTile(x, y).variation%4+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+        tilegrid.spritebatch:add(Tile.FULLQUADS[tilegrid:gridToTile(x, y).variation%4+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
       elseif tilegrid:gridToTile(x, y).wall>=1 and tilegrid:gridToTile(x, y).wall<=4 then
-        tilegrid.spritebatch:addq(
+        tilegrid.spritebatch:add(
           Tile.CORNERQUADS[tilegrid:gridToTile(x, y).wall],
           x*Tile.SIZE.x,
           y*Tile.SIZE.y)
       elseif tilegrid:gridToTile(x, y).wall == Tile.EMPTY then
         if tilegrid:gridToTile(x+1, y).wall == Tile.FULL then
-          tilegrid.spritebatch:addq(Tile.EDGEQUADS.RIGHT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+          tilegrid.spritebatch:add(Tile.EDGEQUADS.RIGHT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
         end
         if tilegrid:gridToTile(x-1, y).wall == Tile.FULL then
-          tilegrid.spritebatch:addq(Tile.EDGEQUADS.LEFT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+          tilegrid.spritebatch:add(Tile.EDGEQUADS.LEFT[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
         end
         if tilegrid:gridToTile(x, y+1).wall == Tile.FULL then
-          tilegrid.spritebatch:addq(Tile.EDGEQUADS.BOTTOM[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+          tilegrid.spritebatch:add(Tile.EDGEQUADS.BOTTOM[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
         end
         if tilegrid:gridToTile(x, y-1).wall == Tile.FULL then
-          tilegrid.spritebatch:addq(Tile.EDGEQUADS.TOP[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
+          tilegrid.spritebatch:add(Tile.EDGEQUADS.TOP[tilegrid:gridToTile(x, y).variation%2+1],x*Tile.SIZE.x, y*Tile.SIZE.y)
         end
 
       else

@@ -116,4 +116,3 @@ EnemyWeapon.SPORES =
     return "spore"
   end
 }
-

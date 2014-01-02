@@ -82,7 +82,6 @@ function prototype.requestAttack(self, direction)
   local target_pos = self.pos + 10*direction
   if self.weapon.canAttack(self, target_pos) then
     self:__attack(target_pos)
-
   end
 end
 
