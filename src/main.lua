@@ -25,17 +25,17 @@ function love.load(arg)
 		pront(txt,math.floor(x),math.floor(y),...)
 	end
     love.graphics.setFont(font)
-	local modes = love.graphics.getModes()
+	local modes = love.window.getFullscreenModes()
 	table.sort(modes, function(a, b) return a.width*a.height > b.width*b.height end)
 	local m = modes[#modes]
-  	local success = love.graphics.setMode( m.width, m.height, true )
+  	local success = love.window.setMode( m.width, m.height, { fullscreen = true } )
   	local success = true
   
 	if not success then
 		print("Failed to set mode")
 		love.event.push("quit")
 	end
-	love.graphics.setDefaultImageFilter("nearest","nearest")
+	love.graphics.setDefaultFilter("nearest","nearest")
 	love.graphics.setLineStyle("rough",1)
 	gstate = require "gamestate"
 	game = require("game")

@@ -71,7 +71,7 @@ end
 
 prototype.draw = function(self)
   love.graphics.setColor(255, 255, 255)
-  love.graphics.drawq(Tile.DECORATIONIMAGE, Tile.DECOQUADS.ZETHER, self.pos.x-32, self.pos.y-32)
+  love.graphics.draw(Tile.DECORATIONIMAGE, Tile.DECOQUADS.ZETHER, self.pos.x-32, self.pos.y-32)
   --love.graphics.line(self.pos.x, self.pos.y, Spaceman[1].pos.x, Spaceman[1].pos.y)
   --love.graphics.rectangle("line", self.pos.x-32, self.pos.y-32, self.w, self.h)
 end
